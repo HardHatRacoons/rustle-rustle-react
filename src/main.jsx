@@ -1,8 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from "react-router";
+import { MantineProvider } from '@mantine/core';
 
 import './index.css'
+import '@mantine/core/styles.css';
 
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
@@ -27,6 +29,8 @@ export default function App() {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+      <MantineProvider>
+        <App />
+      </MantineProvider>
   </StrictMode>,
 )
