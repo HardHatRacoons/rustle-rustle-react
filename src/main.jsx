@@ -1,26 +1,32 @@
-import { StrictMode } from 'react'
+import { StrictMode, createContext } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from "react-router";
-import { MantineProvider } from '@mantine/core';
 
 import './index.css'
-import '@mantine/core/styles.css';
 
-import Layout from "./pages/Layout";
+import RootLayout from "./pages/RootLayout";
 import Home from "./pages/Home";
-//import Blogs from "./pages/Blogs";
-//import Contact from "./pages/Contact";
-//import NoPage from "./pages/NoPage";
+import FileLayout from "./pages/FileLayout";
+import BPView from "./pages/BPView";
+import TableView from "./pages/TableView";
+import MetricView from "./pages/MetricView";
+import NoPage from "./pages/NoPage";
+
+
+const ThemeContext = createContext('light');
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<RootLayout />} >
           <Route index element={<Home />} />
-{/*           <Route path="blogs" element={<Blogs />} /> */}
-{/*           <Route path="contact" element={<Contact />} /> */}
-{/*           <Route path="*" element={<NoPage />} /> */}
+          <Route path="file/:id" element={<FileLayout />} >
+            <Route path="blueprint" element={<BPView/>}/>
+            <Route path="table" element={<TableView/>}/>
+            <Route path="metrics" element={<MetricView/>}/>
+          </Route>
+          <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
@@ -29,8 +35,8 @@ export default function App() {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-      <MantineProvider>
+    <ThemeContext.Provider value="dark">
         <App />
-      </MantineProvider>
+    </ThemeContext.Provider>
   </StrictMode>,
 )
