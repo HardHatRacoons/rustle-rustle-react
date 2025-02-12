@@ -3,8 +3,7 @@ import { useState } from 'react';
 function Tabs({onChange, tabs, className}) {
 
   const [activeTab, setActiveTab] = useState(0);
-
-  const longestWord = tabs.reduce(
+  const longestWord = tabs?.reduce(
   (savedText, text) => (text.length > savedText.length ? text : savedText),'',);
 
   const change = (num) => {
@@ -13,7 +12,7 @@ function Tabs({onChange, tabs, className}) {
   }
   return (
     <div className={`grid grid-rows-1 grid-flow-col auto-cols-fr gap-2 mx-2 z-10 ${className? className: ""}`}>
-        {tabs.map((tab, num) =>
+        {tabs?.map((tab, num) =>
             <div key={num}
             className={`select-none rounded-t-md border-solid border-2 hover:bg-sky-200 border-sky-500 p-2 truncate ${activeTab === num? "border-b-white border-b-2 translate-y-[2px] bg-sky-100": "bg-white"}`}
             onClick={() => change(num)}>
