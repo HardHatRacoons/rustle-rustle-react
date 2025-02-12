@@ -8,8 +8,6 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "jest",
-    "coverage": "jest --coverage"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.3",
