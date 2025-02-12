@@ -27,10 +27,10 @@ function FileLayout(props) {
       if(valid && (pathname === ("/file/" + id))){
           navigate(`/file/${id}/${tab[0]}`);
         }
-    }, );
+    }, []);
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
         <div className="flex justify-between px-3 pt-3">
             <div className="flex">
                 <MdArrowBack onClick={back} size='40' className="align-self-center" />
@@ -39,7 +39,7 @@ function FileLayout(props) {
             {valid? <Tabs onChange={change} tabs={tab} className="w-1/4" /> : <></>}
         </div>
         {valid ? "" : "Error. select a valid file to use this."}
-        <Outlet/>
+        <Outlet />
     </div>
   )
 }
