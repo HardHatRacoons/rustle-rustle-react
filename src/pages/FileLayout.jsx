@@ -8,6 +8,7 @@ function FileLayout(props) {
 
   const tab = ["blueprint", "table", "metrics"]
   const navigate = useNavigate();
+  const [pdfURL, setPdfURL] = useState("/sarasota_areas_annotated.pdf")
 
   const { id } = useParams();
   let valid = id === "123";
@@ -24,22 +25,27 @@ function FileLayout(props) {
   const { hash, pathname, search } = location;
 
    useEffect(() => {
-      if(valid && (pathname === ("/file/" + id))){
+      if(valid && (pathname === ("/file/" + id) || pathname === ("/file/" + id + "/"))){
           navigate(`/file/${id}/${tab[0]}`);
         }
     }, []);
 
+  const getFileName = (url) => {
+    const spl = pdfURL.split("/");
+    return spl[spl.length - 1].slice(0, -4);
+  }
+
   return (
     <div className="flex flex-col h-full">
-        <div className="flex justify-between px-3 pt-3">
+        <div className="flex flex-col sm:flex-row justify-between px-3 pt-3">
             <div className="flex">
                 <MdArrowBack onClick={back} size='40' className="align-self-center" />
-                {valid ? <span className="text-2xl mx-2 my-auto">DocumentInfoHere</span> : <></>}
+                {valid ? <span className="text-2xl mx-2 my-auto">{getFileName(pdfURL)}</span> : <></>}
             </div>
-            {valid? <Tabs onChange={change} tabs={tab} className="w-1/4" /> : <></>}
+            {valid? <Tabs onChange={change} tabs={tab} className="w-3/4 sm:w-1/2 xl:w-1/4" /> : <></>}
         </div>
         {valid ? "" : "Error. select a valid file to use this."}
-        <Outlet />
+        <Outlet context={pdfURL} />
     </div>
   )
 }
