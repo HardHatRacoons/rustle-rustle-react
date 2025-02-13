@@ -42,7 +42,8 @@ function FileLayout(props) {
                 <MdArrowBack onClick={back} size='40' className="align-self-center" />
                 {valid ? <span className="text-2xl mx-2 my-auto">{getFileName(pdfURL)}</span> : <></>}
             </div>
-            {valid? <Tabs onChange={change} tabs={tab} className="w-3/4 sm:w-1/2 xl:w-1/4" /> : <></>}
+            {valid? <Tabs onChange={change} tabs={tab} className="w-1/4" /> : <></>}
+{/*             w-3/4 sm:w-1/2 xl:w-1/4 but causes full screen refresh so pdf refreshes too */}
         </div>
         {valid ? "" : "Error. select a valid file to use this."}
         <Outlet context={pdfURL} />
