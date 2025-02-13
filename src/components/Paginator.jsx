@@ -23,7 +23,7 @@ function Paginator({currPage, maxPages, onChange}) {
     useEffect(() => {
         try{
             const i = parseInt(page);
-            if(!isNaN(i) && i > 1 && i <= maxPages)
+            if(!isNaN(i) && i >= 1 && i <= maxPages)
                 onChange(i);
         } catch {}
     },[page])

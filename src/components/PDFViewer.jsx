@@ -5,16 +5,15 @@ import * as pdfjs from "pdfjs-dist/build/pdf";
 import Paginator from "./Paginator";
 
 function PDFViewer({pdfURL, className}) {
-    const canvasRef = useRef(null);
     const containerRef = useRef(null);
+    const resizeTimeoutRef = useRef(null); //debounce resizing
+    const observerRef = useRef(null);
     const [pageNum, setPageNum] = useState(1);
     const [pdfDocument, setPdfDocument] = useState(null);
     pdfjs.GlobalWorkerOptions.workerSrc = new URL(
                                             'pdfjs-dist/build/pdf.worker.min.mjs',
                                             import.meta.url
                                           ).toString()
-    const currRender = useRef(false);
-    const currPage = useRef(pageNum);
 
     const calculateScale = (page) => {
         if (containerRef.current) {
@@ -32,18 +31,17 @@ function PDFViewer({pdfURL, className}) {
         return 1; // default
       };
 
-    const renderPDF = async () => {
-        if (currRender.current) {
-            //currPage.current = pageNum;
-            return;
-         }
-         currRender.current = true;
+    const renderPDF = async (pageNum) => {
          try {
              const pdf = await pdfjs.getDocument(pdfURL).promise;
              setPdfDocument(pdf)
              const page = await pdf.getPage(pageNum);
 
-             const canvas = canvasRef.current;
+             const canvasContainer = containerRef.current;
+             canvasContainer.innerHTML = '';
+             const canvas = document.createElement('canvas');
+             canvasContainer.appendChild(canvas);
+
              const context = canvas.getContext('2d');
              const viewport = page.getViewport({ scale:calculateScale(page)});
 
@@ -55,38 +53,48 @@ function PDFViewer({pdfURL, className}) {
                  viewport: viewport,
              });
          } catch (error) {
-           console.error('Error rendering PDF:', error);
-         } finally {
-                 // Mark render as complete (no longer in progress)
-                 currRender.current = false;
-
-//                  if (currPage.current !== pageNum) {
-//                    renderPDF(); // Trigger the render for the new pageNum
-//                  }
+            if (error.name === 'AbortError') {
+               console.log('Rendering operation aborted');
+            } else {
+               console.error('Error rendering PDF:', error);
+            }
          }
     };
 
     useEffect(() => {
-       renderPDF();
+       renderPDF(pageNum);
     }, [pageNum]);
 
-//      doesnt work bc needs mutex
-//     useEffect(() => {
-//         const resizeObserver = new ResizeObserver(() => {
-//           renderPDF();
-//         });
-//
-//         if (containerRef.current) {
-//           resizeObserver.observe(containerRef.current);
-//         }
-//
-//         // Clean up the observer when the component is unmounted
-//         return () => {
-//           if (containerRef.current) {
-//             resizeObserver.disconnect();
-//           }
-//         };
-//       }, []);
+    useEffect(() => {
+        const resizeHandler = () => {
+            if (resizeTimeoutRef.current) {
+                clearTimeout(resizeTimeoutRef.current);
+            }
+
+            resizeTimeoutRef.current = setTimeout(() => {
+                renderPDF(pageNum);
+            }, 200); // Wait for 200ms after resizing stops
+        };
+
+        if (observerRef.current) {
+            // Disconnect the old observer first
+            observerRef.current.disconnect();
+        }
+
+        const resizeObserver = new ResizeObserver(resizeHandler);
+        observerRef.current = resizeObserver;
+
+        if (containerRef.current) {
+          resizeObserver.observe(containerRef.current);
+        }
+
+        // Clean up the observer when the component is unmounted
+        return () => {
+          if (containerRef.current) {
+            resizeObserver.disconnect();
+          }
+        };
+      }, []);
 
     const goToNextPage = () => {
         if (pageNum < pdfDocument.numPages) {
@@ -101,10 +109,8 @@ function PDFViewer({pdfURL, className}) {
     };
 
     return (
-        <div className={`flex flex-col h-full w-8/10 md:w-full ${className? className : ""}`}>
-            <div ref={containerRef} className="grow w-full">
-                <canvas ref={canvasRef} />
-            </div>
+        <div className={`flex flex-col h-full sm:w-8/10 w-full ${className? className : ""}`}>
+            <div ref={containerRef} className="grow w-full"></div>
             <Paginator currPage={pageNum} maxPages={pdfDocument?.numPages} onChange={setPageNum}/>
         </div>
     )

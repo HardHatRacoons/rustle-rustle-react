@@ -34,9 +34,9 @@ export default function App() {
 }
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+
     <ThemeContext.Provider value="dark">
         <App />
     </ThemeContext.Provider>
-  </StrictMode>,
+
 )
