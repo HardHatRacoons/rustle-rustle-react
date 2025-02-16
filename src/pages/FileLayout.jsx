@@ -37,7 +37,8 @@ function FileLayout(props) {
 
   return (
     <div className="flex flex-col h-full">
-        <div className="flex flex-col sm:flex-row justify-between px-3 pt-3">
+        <div className="flex flex-row justify-between px-3 pt-3">
+{/*          flex-col sm:flex-row */}
             <div className="flex">
                 <MdArrowBack onClick={back} size='40' className="align-self-center" />
                 {valid ? <span className="text-2xl mx-2 my-auto">{getFileName(pdfURL)}</span> : <></>}
