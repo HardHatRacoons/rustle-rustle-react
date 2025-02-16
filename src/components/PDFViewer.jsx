@@ -80,7 +80,7 @@ function PDFViewer({pdfURL, className}) {
                  const canvasRect = canvas.getBoundingClientRect(); // Get canvas position on the page
                  const mouseX = event.clientX - canvasRect.left; // Calculate mouse X relative to canvas
                  let mouseY = event.clientY - canvasRect.top;  // Calculate mouse Y relative to canvas
-                 mouseY = canvasRect.bottom - mouseY; //this logic is wrong
+                 mouseY = canvasRect.bottom - mouseY; //this logic is wrongn
 
                  calculateCollision(mouseX / scale, mouseY / scale)
               };
@@ -101,11 +101,7 @@ function PDFViewer({pdfURL, className}) {
                  viewport: viewport,
              });
          } catch (error) {
-            if (error.name === 'AbortError') {
-               console.log('Rendering operation aborted');
-            } else {
                console.error('Error rendering PDF:', error);
-            }
          }
     };
 
@@ -122,9 +118,10 @@ function PDFViewer({pdfURL, className}) {
             resizeTimeoutRef.current = setTimeout(() => {
                 if(!isMounted.current){
                     isMounted.current = true;
-                } else
+                } else {
                     renderPDF(pageNum);
-            }, 200); // Wait for 200ms after resizing stops
+                }
+            }, 500); // debounce
         };
 
         if (observerRef.current) {
@@ -135,15 +132,11 @@ function PDFViewer({pdfURL, className}) {
         const resizeObserver = new ResizeObserver(resizeHandler);
         observerRef.current = resizeObserver;
 
-        if (containerRef.current) {
-          resizeObserver.observe(containerRef.current);
-        }
+        resizeObserver.observe(document.body);
 
         // Clean up the observer when the component is unmounted
         return () => {
-          if (containerRef.current) {
             resizeObserver.disconnect();
-          }
         };
       }, []);
 
