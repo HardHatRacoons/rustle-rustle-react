@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react';
 import {Outlet, useNavigate, useLocation, useParams } from "react-router";
 import { MdArrowBack } from "react-icons/md";
+import { getUrl } from 'aws-amplify/storage';
 
 import Tabs from "../components/Tabs"
 
 function FileLayout(props) {
 
+
+      //console.log('signed URL: ', linkToStorageFile.url);
+      //console.log('URL expires at: ', linkToStorageFile.expiresAt);
+
   const tab = ["blueprint", "table", "metrics"]
   const navigate = useNavigate();
-  const [pdfURL, setPdfURL] = useState("/sarasota_areas_annotated.pdf")
+  const [pdfURL, setPdfURL] = useState(null)
 
   const { id } = useParams();
   let valid = id === "123";
@@ -30,7 +35,29 @@ function FileLayout(props) {
         }
     }, []);
 
+    useEffect(() => {
+          const getFileFromAWS = async () => {
+              const linkToStorageFile = await getUrl({
+                          path: "annotated/sarasota_areas_annotated.pdf",
+                           options: {
+                                bucket: 'raccoonTeamDrive',
+                                validateObjectExistence: true,
+                                // url expiration time in seconds.
+                                expiresIn: 900,
+                                // whether to use accelerate endpoint
+                                //useAccelerateEndpoint: true,
+                          }
+                          // Alternatively, path: ({identityId}) => `album/${identityId}/1.jpg`
+                        });
+              // console.log(linkToStorageFile);
+              setPdfURL(linkToStorageFile.url.toString());
+          }
+          getFileFromAWS();
+    }, []);
+
   const getFileName = (url) => {
+      if(!url)
+        return ""
     const spl = pdfURL.split("/");
     return spl[spl.length - 1].slice(0, -4);
   }

@@ -1,4 +1,5 @@
 import { RxAvatar } from "react-icons/rx";
+import { Authenticator } from '@aws-amplify/ui-react';
 
 function LoginNavbar() {
   return (
@@ -15,9 +16,17 @@ function Home() {
   <div className="h-full bg-sky-300 flex flex-col">
         <LoginNavbar />
         <div className="bg-sky-200 grow">
-              wah
-            </div>
-      </div>
+              <Authenticator>
+                    {({ signOut, user }) => (
+                      <main>
+                        <h1>Hello {user?.username}</h1>
+                        <button onClick={signOut}>Sign out</button>
+{/*                         <Component {...pageProps} /> */}
+                      </main>
+                    )}
+              </Authenticator>
+       </div>
+  </div>
   )
 }
 

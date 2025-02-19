@@ -1,6 +1,9 @@
 import { StrictMode, createContext } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from "react-router";
+import { Amplify } from "aws-amplify"
+import { ConsoleLogger } from 'aws-amplify/utils';
+import outputs from "../amplify_outputs.json"
 
 import './index.css'
 
@@ -12,6 +15,9 @@ import TableView from "./pages/TableView";
 import MetricView from "./pages/MetricView";
 import NoPage from "./pages/NoPage";
 
+const logger = new ConsoleLogger('Amplify', 'DEBUG');
+Amplify.configure(outputs);
+logger.debug('Amplify debug logging enabled');
 
 const ThemeContext = createContext('light');
 
