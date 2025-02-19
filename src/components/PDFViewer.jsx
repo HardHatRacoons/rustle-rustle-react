@@ -56,6 +56,8 @@ function PDFViewer({pdfURL, className}) {
     }
 
     const renderPDF = async (pageNum) => {
+        if(!pdfURL)
+            return;
          try {
              const pdf = await pdfjs.getDocument(pdfURL).promise;
              setPdfDocument(pdf)
@@ -107,7 +109,7 @@ function PDFViewer({pdfURL, className}) {
 
     useEffect(() => {
        renderPDF(pageNum);
-    }, [pageNum]);
+    }, [pageNum, pdfURL]);
 
     useLayoutEffect(() => {
         const resizeHandler = () => {
