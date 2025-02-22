@@ -59,7 +59,6 @@ function Home() {
       <UploadModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
-        onUpload={handleUpload} 
       />
 
       
