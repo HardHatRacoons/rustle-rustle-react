@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { RxAvatar } from "react-icons/rx";
+import { MdClose } from "react-icons/md";
 import { Authenticator } from '@aws-amplify/ui-react';
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
@@ -19,8 +20,13 @@ function UploadModal({ isOpen, onClose }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Upload File</h2>
+      <div className="bg-white w-2/5 max-w-3xl p-6 rounded-lg shadow-lg">
+        <div className=" flex flex-row mb-6">
+          <h2 className="text-2xl font-bold">Upload File</h2>
+          <button className=" ml-auto text-black hover:text-red-500" onClick={onClose}>
+            <MdClose size="30" />
+          </button>
+        </div>
         <FileUploader
             acceptedFileTypes={['.pdf']}
             path="unannotated/"
@@ -28,11 +34,6 @@ function UploadModal({ isOpen, onClose }) {
             isResumable={true}
             autoUpload={false}
         />
-        <div className="mt-4 flex justify-end">
-          <button className="mr-2 bg-red-500 text-white px-4 py-2 rounded" onClick={onClose}>
-            close
-          </button>
-        </div>
       </div>
     </div>
   );
@@ -43,14 +44,14 @@ function Home() {
 
   return (
   <div className="h-full bg-sky-300 flex flex-col">
+      
       <LoginNavbar />
 
       <div className="bg-sky-200 grow">
-
           <div className="m-6 flex flex-row bg-white p-8 rounded-lg">
               <h1 className="text-4xl font-bold"> Gallery </h1>
 
-              <button className="ml-4 bg-blue-500 text-white px-4 py-2 rounded" onClick={() => setIsModalOpen(true)}>
+              <button className="ml-auto bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600" onClick={() => setIsModalOpen(true)}>
                   Upload
               </button>
           </div>
