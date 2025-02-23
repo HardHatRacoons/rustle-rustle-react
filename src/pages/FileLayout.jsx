@@ -58,8 +58,9 @@ function FileLayout(props) {
   const getFileName = (url) => {
       if(!url)
         return ""
-    const spl = pdfURL.split("/");
-    return spl[spl.length - 1].slice(0, -4);
+    let spl = pdfURL.split("/");
+    spl = spl[spl.length - 1].split("?")[0];
+    return spl.slice(0, -4);
   }
 
   return (
@@ -67,7 +68,7 @@ function FileLayout(props) {
         <div className="flex flex-row justify-between px-3 pt-3">
 {/*          flex-col sm:flex-row */}
             <div className="flex">
-                <MdArrowBack onClick={back} size='40' className="align-self-center" />
+                <MdArrowBack onClick={back} size='40' className="align-self-center" aria-label="back" />
                 {valid ? <span className="text-2xl mx-2 my-auto">{getFileName(pdfURL)}</span> : <></>}
             </div>
             {valid? <Tabs onChange={change} tabs={tab} className="w-1/4" /> : <></>}
