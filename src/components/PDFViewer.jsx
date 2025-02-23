@@ -1,20 +1,24 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 
 import * as pdfjs from "pdfjs-dist/build/pdf";
 
 import Paginator from "./Paginator";
 
 function PDFViewer({pdfURL, className}) {
-    const canvasRef = useRef(null);
     const containerRef = useRef(null);
+
+    const resizeTimeoutRef = useRef(null); //debounce resizing
+    const observerRef = useRef(null);
+    const isMounted = useRef(false);
+
     const [pageNum, setPageNum] = useState(1);
     const [pdfDocument, setPdfDocument] = useState(null);
+    const [anno, setAnno] = useState([]);
+
     pdfjs.GlobalWorkerOptions.workerSrc = new URL(
                                             'pdfjs-dist/build/pdf.worker.min.mjs',
                                             import.meta.url
                                           ).toString()
-    const currRender = useRef(false);
-    const currPage = useRef(pageNum);
 
     const calculateScale = (page) => {
         if (containerRef.current) {
@@ -32,61 +36,109 @@ function PDFViewer({pdfURL, className}) {
         return 1; // default
       };
 
-    const renderPDF = async () => {
-        if (currRender.current) {
-            //currPage.current = pageNum;
-            return;
+    const calculateCollision = (mouseX, mouseY) => {
+        let t = false;
+        for (const element of anno) {
+           if(element.subtype == "Square"){
+                if (
+                    mouseX >= element.rect[0] &&
+                    mouseX <= element.rect[0] + element.rect[2] &&
+                    mouseY >= element.rect[1] &&
+                    mouseY <= element.rect[1] + element.rect[3]
+                  ){
+                    t = true;
+                }
+
+           }
+
          }
-         currRender.current = true;
+         if(t) console.log("inside")
+    }
+
+    const renderPDF = async (pageNum) => {
          try {
              const pdf = await pdfjs.getDocument(pdfURL).promise;
              setPdfDocument(pdf)
+
              const page = await pdf.getPage(pageNum);
 
-             const canvas = canvasRef.current;
+             const canvasContainer = containerRef.current;
+             canvasContainer.innerHTML = '';
+
+             const canvas = document.createElement('canvas');
+             canvasContainer.appendChild(canvas);
+
              const context = canvas.getContext('2d');
-             const viewport = page.getViewport({ scale:calculateScale(page)});
+             const scale = calculateScale(page);
+             const viewport = page.getViewport({ scale:scale});
 
              canvas.height = viewport.height;
              canvas.width = viewport.width;
+
+             //annotation processing
+             const trackMousePosition = (event) => {
+                 const canvasRect = canvas.getBoundingClientRect(); // Get canvas position on the page
+                 const mouseX = event.clientX - canvasRect.left; // Calculate mouse X relative to canvas
+                 let mouseY = event.clientY - canvasRect.top;  // Calculate mouse Y relative to canvas
+                 mouseY = canvasRect.bottom - mouseY; //this logic is wrongn
+
+                 calculateCollision(mouseX / scale, mouseY / scale)
+              };
+             canvas.addEventListener('mousemove', trackMousePosition);
+
+             page.getAnnotations().then((annotations) => {
+                let newAnnos = [];
+                 for (const element of annotations) {
+                   if(element.annotationType == 5){
+                    newAnnos.push(element)
+                   }
+                 }
+                 setAnno(newAnnos)
+              });
 
              await page.render({
                  canvasContext: context,
                  viewport: viewport,
              });
          } catch (error) {
-           console.error('Error rendering PDF:', error);
-         } finally {
-                 // Mark render as complete (no longer in progress)
-                 currRender.current = false;
-
-//                  if (currPage.current !== pageNum) {
-//                    renderPDF(); // Trigger the render for the new pageNum
-//                  }
+               console.error('Error rendering PDF:', error);
          }
     };
 
     useEffect(() => {
-       renderPDF();
+       renderPDF(pageNum);
     }, [pageNum]);
 
-//      doesnt work bc needs mutex
-//     useEffect(() => {
-//         const resizeObserver = new ResizeObserver(() => {
-//           renderPDF();
-//         });
-//
-//         if (containerRef.current) {
-//           resizeObserver.observe(containerRef.current);
-//         }
-//
-//         // Clean up the observer when the component is unmounted
-//         return () => {
-//           if (containerRef.current) {
-//             resizeObserver.disconnect();
-//           }
-//         };
-//       }, []);
+    useLayoutEffect(() => {
+        const resizeHandler = () => {
+            if (resizeTimeoutRef.current) {
+                clearTimeout(resizeTimeoutRef.current);
+            }
+
+            resizeTimeoutRef.current = setTimeout(() => {
+                if(!isMounted.current){
+                    isMounted.current = true;
+                } else {
+                    renderPDF(pageNum);
+                }
+            }, 500); // debounce
+        };
+
+        if (observerRef.current) {
+            // Disconnect the old observer first
+            observerRef.current.disconnect();
+        }
+
+        const resizeObserver = new ResizeObserver(resizeHandler);
+        observerRef.current = resizeObserver;
+
+        resizeObserver.observe(document.body);
+
+        // Clean up the observer when the component is unmounted
+        return () => {
+            resizeObserver.disconnect();
+        };
+      }, []);
 
     const goToNextPage = () => {
         if (pageNum < pdfDocument.numPages) {
@@ -101,10 +153,9 @@ function PDFViewer({pdfURL, className}) {
     };
 
     return (
-        <div className={`flex flex-col h-full w-8/10 md:w-full ${className? className : ""}`}>
-            <div ref={containerRef} className="grow w-full">
-                <canvas ref={canvasRef} />
-            </div>
+        <div className={`flex flex-col h-full w-8/10 ${className? className : ""}`}>
+{/*          w-8/10*/}
+            <div ref={containerRef} className="grow w-full"></div>
             <Paginator currPage={pageNum} maxPages={pdfDocument?.numPages} onChange={setPageNum}/>
         </div>
     )
