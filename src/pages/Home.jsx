@@ -62,17 +62,15 @@ function Home() {
         onClose={() => setIsModalOpen(false)} 
       />
 
-      
-
-            {/* <Authenticator>
-                {({ signOut, user }) => (
-                    <main>
-                        <h1>Hello {user?.username}</h1>
-                        <button onClick={signOut}>Sign out</button>
-                            <Component {...pageProps} />
-                    </main>
-                )}
-            </Authenticator> */}
+      <Authenticator socialProviders={["google"]} hideSignUp>
+          {({ signOut, user }) => (
+              <main>
+                  <h1>Hello {user?.username}</h1>
+                  <button onClick={signOut}>Sign out</button>
+                      <Component {...pageProps} />
+              </main>
+          )}
+      </Authenticator>
   </div>
   )
 }
