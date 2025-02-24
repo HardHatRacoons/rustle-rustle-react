@@ -10,7 +10,7 @@ function NoPage() {
   return (
     <div className="select-none">
        Error. Page does not exist.
-       <div onClick={back}>Click here to return to home.</div>
+       <div onClick={back} aria-label="back">Click here to return to home.</div>
     </div>
   )
 }

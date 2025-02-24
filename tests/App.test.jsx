@@ -85,6 +85,23 @@ describe('Testing main setup and routing', () => {
     expect(screen.getByLabelText("metrics")).toBeInTheDocument();
   });
 
+  test('can move between pages with navbar', () => {
+      render(
+        <MemoryRouter initialEntries={['/file/123/blueprint']}>
+          <App />
+        </MemoryRouter>
+      );
+
+      expect(screen.getByLabelText("pdf viewer")).toBeInTheDocument();
+
+      fireEvent.click(screen.getByText(/Table/));
+      expect(screen.getByLabelText("table")).toBeInTheDocument();
+      fireEvent.click(screen.getByText(/Metrics/));
+      expect(screen.getByLabelText("metrics")).toBeInTheDocument();
+      fireEvent.click(screen.getByText(/Blueprint/));
+      expect(screen.getByLabelText("pdf viewer")).toBeInTheDocument();
+  });
+
   test('back button returns to home', () => {
     render(
       <MemoryRouter initialEntries={['/file/123/blueprint']}>
@@ -106,6 +123,12 @@ describe('Testing main setup and routing', () => {
     );
 
     expect(screen.getByText(/Error/)).toBeInTheDocument();
+
+    //go back home
+    fireEvent.click(screen.getByLabelText("back"));
+    expect(screen.getByText(/Hello/)).toBeInTheDocument();
+    expect(screen.getByText(/Gallery/)).toBeInTheDocument();
+    expect(screen.getByText(/Upload/)).toBeInTheDocument();
   });
 
   test('error when loading nonexistent file', () => {
@@ -116,6 +139,7 @@ describe('Testing main setup and routing', () => {
     );
 
     expect(screen.getByText(/Error/)).toBeInTheDocument();
+
   });
 });
 

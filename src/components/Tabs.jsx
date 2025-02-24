@@ -10,6 +10,7 @@ function Tabs({onChange, tabs, className}) {
     setActiveTab(num);
     onChange(num);
   }
+
   return (
     <div className={`grid grid-rows-1 grid-flow-col auto-cols-fr gap-2 mx-2 z-10 ${className? className: ""}`}>
         {tabs?.map((tab, num) =>

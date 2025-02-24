@@ -142,18 +142,6 @@ function PDFViewer({pdfURL, className}) {
         };
       }, []);
 
-    const goToNextPage = () => {
-        if (pageNum < pdfDocument.numPages) {
-          setPageNum((prev) => prev + 1);
-        }
-    };
-
-    const goToPreviousPage = () => {
-        if (pageNum > 1) {
-          setPageNum((prev) => prev - 1);
-        }
-    };
-
     return (
         <div aria-label="pdf viewer" className={`flex flex-col h-full w-8/10 ${className? className : ""}`}>
 {/*          w-8/10*/}
