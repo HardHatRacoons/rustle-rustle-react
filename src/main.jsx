@@ -36,7 +36,9 @@ export default function App() {
 createRoot(document.getElementById('root')).render(
 
     <ThemeContext.Provider value="dark">
-        <App />
+       <BrowserRouter>
+          <App />
+        </BrowserRouter>
     </ThemeContext.Provider>
 
 )
