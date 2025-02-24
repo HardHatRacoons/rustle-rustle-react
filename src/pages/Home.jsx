@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { RxAvatar } from "react-icons/rx";
 import { MdClose } from "react-icons/md";
-import { Authenticator } from '@aws-amplify/ui-react';
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
 
@@ -61,15 +60,6 @@ function Home() {
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
       />
-
-      <Authenticator socialProviders={["google"]} hideSignUp>
-          {({ signOut, user }) => (
-              <main>
-                  <h1>Hello {user?.username}</h1>
-                  <button onClick={signOut}>Sign out</button>
-              </main>
-          )}
-      </Authenticator>
   </div>
   )
 }
