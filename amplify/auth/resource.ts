@@ -16,8 +16,8 @@ export const auth = defineAuth({
         },
       },
       
-      callbackUrls: ['http://localhost:4321/home'],
-      logoutUrls: ['http://localhost:4321/home']
+      callbackUrls: ['http://localhost:4321'],
+      logoutUrls: ['http://localhost:4321/logout']
     }
   },
 });
