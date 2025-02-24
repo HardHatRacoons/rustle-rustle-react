@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router";
 
 import RootLayout from "./layouts/RootLayout";
 import Home from "./pages/Home";
-import LoginView from "./pages/LoginView";
 import FileLayout from "./layouts/FileLayout";
 import BPView from "./pages/BPView";
 import TableView from "./pages/TableView";
