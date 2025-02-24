@@ -19,7 +19,7 @@ createRoot(document.getElementById('root')).render(
     <ThemeContext.Provider value="dark">
        <BrowserRouter>
           <App />
-        </BrowserRouter?
+        </BrowserRouter>
     </ThemeContext.Provider>
 
 )
