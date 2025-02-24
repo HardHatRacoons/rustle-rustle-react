@@ -50,10 +50,6 @@ function TableView() {
 // }
 
   return (
-<<<<<<< Updated upstream
-    <div className="select-none rounded-md border-solid border-2 border-sky-500 mx-2 mb-2 p-2 bg-white ">
-        table part
-=======
     <div className="select-none h-full rounded-md border-solid border-2 border-sky-500 mx-2 mb-2 p-2 bg-white" aria-label="table">
         <AgGridReact
             rowData={rowData}
@@ -61,7 +57,6 @@ function TableView() {
             pagination={true}
             rowSelection={rowSelection}
         />
->>>>>>> Stashed changes
     </div>
   )
 }

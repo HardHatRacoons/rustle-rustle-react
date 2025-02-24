@@ -17,7 +17,6 @@ const ThemeContext = createContext('light');
 
 export default function App() {
   return (
-    <BrowserRouter>
       <Routes>
         <Route path="/" element={<RootLayout />} >
           <Route index element={<Home />} />
@@ -29,7 +28,6 @@ export default function App() {
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
-    </BrowserRouter>
   );
 }
 
