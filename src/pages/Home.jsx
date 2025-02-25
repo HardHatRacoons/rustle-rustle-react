@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { RxAvatar } from "react-icons/rx";
 import { MdClose } from "react-icons/md";
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
-import { useOutletContext } from 'react-router'
 import { fetchUserAttributes } from 'aws-amplify/auth';
+import GoogleSignOut from '../components/GoogleSignOut';
 
 function LoginNavbar() {
-    const signOut = useOutletContext();
-
     const [userAttributes, setUserAttributes] = useState(null);
 
     useEffect(() => {
@@ -30,8 +27,7 @@ function LoginNavbar() {
             <div className="text-4xl grow-10 text-nowrap mx-2">
                 {userAttributes ? `Welcome, ${userAttributes.given_name}` : "Loading..."}
             </div>
-            <button className="underline italic text-2xl grow-1 mx-2" onClick={signOut}>Sign Out</button>
-            <RxAvatar size='40' />
+            <GoogleSignOut />
         </div>
     )
 }
