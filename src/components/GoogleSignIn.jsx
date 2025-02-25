@@ -14,7 +14,7 @@ export default function LoginButton() {
                         <p className="font-bold color-gray-200 content-center">Sign In with Google</p>
                     </button>
                 </div>
-        </div>
+            </div>
         </div>
     );
 }
