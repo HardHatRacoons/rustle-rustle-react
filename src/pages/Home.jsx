@@ -34,6 +34,23 @@ function LoginNavbar() {
 
 function UploadModal({ isOpen, onClose }) {
     if (!isOpen) return null;
+    
+    const [userAttributes, setUserAttributes] = useState(null);
+
+    useEffect(() => {
+        async function getUserInfo() {
+            try {
+                const attributes = await fetchUserAttributes();
+                // email, name, family_name, given_name, sub, email_verified
+                // console.log("Fetched Attributes:", attributes);
+                setUserAttributes(attributes);
+            } catch (error) {
+                console.error("Error fetching user attributes:", error);
+            }
+        }
+        getUserInfo();
+    }, []);
+    const filepath = userAttributes ? `unannotated/${userAttributes.sub}/` : "unannotated/";
 
     return (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
@@ -46,7 +63,7 @@ function UploadModal({ isOpen, onClose }) {
                 </div>
                 <FileUploader
                     acceptedFileTypes={['.pdf']}
-                    path="unannotated/"
+                    path={filepath}
                     maxFileCount={1}
                     isResumable={true}
                     autoUpload={false}
