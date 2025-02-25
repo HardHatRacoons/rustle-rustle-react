@@ -6,12 +6,13 @@ import { getUrl } from 'aws-amplify/storage';
 import Tabs from "../components/Tabs"
 
 function FileLayout(props) {
+  const tabs = ["blueprint", "table", "metrics"]
 
+  const location = useLocation();
+  const { hash, pathname, search } = location;
 
-      //console.log('signed URL: ', linkToStorageFile.url);
-      //console.log('URL expires at: ', linkToStorageFile.expiresAt);
-
-  const tab = ["blueprint", "table", "metrics"]
+  const page = pathname.split("/").at(-1);
+  const [activeTab, setActiveTab] = useState(tabs.findIndex((e) => e === page));
   const navigate = useNavigate();
   const [pdfURL, setPdfURL] = useState(null)
 
@@ -19,20 +20,18 @@ function FileLayout(props) {
   let valid = id === "123";
 
   const change = (num) => {
-    navigate(`/file/${id}/${tab[num]}`);
+    setActiveTab(num);
+    navigate(`/file/${id}/${tabs[num]}`);
   }
 
   const back = () => {
     navigate('/');
   }
 
-  const location = useLocation();
-  const { hash, pathname, search } = location;
-
    useEffect(() => {
       if(valid && (pathname === ("/file/" + id) || pathname === ("/file/" + id + "/"))){
-          navigate(`/file/${id}/${tab[0]}`);
-        }
+          navigate(`/file/${id}/${tabs[0]}`);
+      }
     }, []);
 
     useEffect(() => {
@@ -71,7 +70,7 @@ function FileLayout(props) {
                 <MdArrowBack onClick={back} size='40' className="align-self-center" aria-label="back" />
                 {valid ? <span className="text-2xl mx-2 my-auto">{getFileName(pdfURL)}</span> : <></>}
             </div>
-            {valid? <Tabs onChange={change} tabs={tab} className="w-1/4" /> : <></>}
+            {valid? <Tabs onChange={change} tabs={tabs} activeTab={activeTab} className="w-1/4" /> : <></>}
 {/*             w-3/4 sm:w-1/2 xl:w-1/4 but causes full screen refresh so pdf refreshes too */}
         </div>
         {valid ? "" : "Error. select a valid file to use this."}
