@@ -56,6 +56,8 @@ function PDFViewer({pdfURL, className}) {
     }
 
     const renderPDF = async (pageNum) => {
+        if(!pdfURL)
+            return;
          try {
              const pdf = await pdfjs.getDocument(pdfURL).promise;
              setPdfDocument(pdf)
@@ -107,7 +109,7 @@ function PDFViewer({pdfURL, className}) {
 
     useEffect(() => {
        renderPDF(pageNum);
-    }, [pageNum]);
+    }, [pageNum, pdfURL]);
 
     useLayoutEffect(() => {
         const resizeHandler = () => {
@@ -153,7 +155,7 @@ function PDFViewer({pdfURL, className}) {
     };
 
     return (
-        <div className={`flex flex-col h-full w-8/10 ${className? className : ""}`}>
+        <div aria-label="pdf viewer" className={`flex flex-col h-full w-8/10 ${className? className : ""}`}>
 {/*          w-8/10*/}
             <div ref={containerRef} className="grow w-full"></div>
             <Paginator currPage={pageNum} maxPages={pdfDocument?.numPages} onChange={setPageNum}/>
