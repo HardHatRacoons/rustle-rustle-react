@@ -16,8 +16,8 @@ export const auth = defineAuth({
         },
       },
       
-      callbackUrls: ['http://localhost:4321'],
-      logoutUrls: ['http://localhost:4321/login']
+      callbackUrls: ['http://localhost:4321', 'https://main.dr2pih1gb78f3.amplifyapp.com/'],
+      logoutUrls: ['http://localhost:4321/login', 'https://main.dr2pih1gb78f3.amplifyapp.com/login']
     }
   },
 });
