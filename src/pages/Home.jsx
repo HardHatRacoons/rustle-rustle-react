@@ -15,7 +15,8 @@ function LoginNavbar() {
         async function getUserInfo() {
             try {
                 const attributes = await fetchUserAttributes();
-                console.log("Fetched Attributes:", attributes);
+                // email, name, family_name, given_name, sub, email_verified
+                // console.log("Fetched Attributes:", attributes);
                 setUserAttributes(attributes);
             } catch (error) {
                 console.error("Error fetching user attributes:", error);
@@ -26,7 +27,9 @@ function LoginNavbar() {
 
     return (
         <div className="w-full h-20 flex text-white align-items-center p-5">
-            <div className="text-4xl grow-10 text-nowrap mx-2">Hello {userAttributes?.given_name || "User"}!</div>
+            <div className="text-4xl grow-10 text-nowrap mx-2">
+                {userAttributes ? `Welcome, ${userAttributes.given_name}` : "Loading..."}
+            </div>
             <button className="underline italic text-2xl grow-1 mx-2" onClick={signOut}>Sign Out</button>
             <RxAvatar size='40' />
         </div>
