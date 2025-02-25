@@ -14,7 +14,7 @@ export default function App() {
     return (
         <Routes>
             <Route path="/" element={<RootLayout />} >
-                <Route path="login" element={<div className="h-screen place-content-center"><GoogleSignIn /></div>}/>
+                <Route path="login" element={<GoogleSignIn />}/>
                     <Route index element={<ProtectedRoute><Home /></ProtectedRoute>} />
                     <Route path="file/:id" element={<ProtectedRoute><FileLayout /></ProtectedRoute>} >
                         <Route path="blueprint" element={<BPView />} />
