@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 
-import * as pdfjs from "pdfjs-dist/build/pdf";
+import * as pdfjs from 'pdfjs-dist/build/pdf';
 
-import Paginator from "./Paginator";
+import Paginator from './Paginator';
 
-function PDFViewer({pdfURL, className}) {
+function PDFViewer({ pdfURL, className }) {
     const containerRef = useRef(null);
 
     const resizeTimeoutRef = useRef(null); //debounce resizing
@@ -13,102 +13,110 @@ function PDFViewer({pdfURL, className}) {
 
     const [pageNum, setPageNum] = useState(1);
     const [pdfDocument, setPdfDocument] = useState(null);
-    const [anno, setAnno] = useState([]);
+    //const [anno, setAnno] = useState([]);
+    const anno = useRef([]);
 
     pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-                                            'pdfjs-dist/build/pdf.worker.min.mjs',
-                                            import.meta.url
-                                          ).toString()
+        'pdfjs-dist/build/pdf.worker.min.mjs',
+        import.meta.url,
+    ).toString();
 
     const calculateScale = (page) => {
-        if (containerRef.current) {
-          const containerWidth = containerRef.current.offsetWidth;
-          const containerHeight = containerRef.current.offsetHeight;
+        //must happen after containerRef is loaded so checking is irrelevant
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const containerWidth = containerRect.width;
+        const containerHeight = containerRect.height;
 
-          const viewport = page.getViewport({ scale: 1 });
-          const isLandscape = viewport.width > viewport.height;
+        const viewport = page.getViewport({ scale: 1 });
+        const isLandscape = viewport.width > viewport.height;
 
-          let scaleWidth = containerWidth / viewport.width;
-          let scaleHeight = containerHeight / viewport.height;
+        let scaleWidth = containerWidth / viewport.width;
+        let scaleHeight = containerHeight / viewport.height;
 
-          return Math.min(scaleWidth, scaleHeight);
-        }
-        return 1; // default
-      };
+        //console.log(containerHeight)
+
+        return Math.min(scaleWidth, scaleHeight);
+    };
 
     const calculateCollision = (mouseX, mouseY) => {
-        let t = false;
-        for (const element of anno) {
-           if(element.subtype == "Square"){
-                if (
-                    mouseX >= element.rect[0] &&
-                    mouseX <= element.rect[0] + element.rect[2] &&
-                    mouseY >= element.rect[1] &&
-                    mouseY <= element.rect[1] + element.rect[3]
-                  ){
-                    t = true;
-                }
-
-           }
-
-         }
-         if(t) console.log("inside")
-    }
+        //         console.log(mouseX)
+        //         console.log(mouseY)
+        //         console.log(anno)
+        for (const element of anno.current) {
+            //             if (element.subtype == 'Square') {
+            //                 if (
+            //                     mouseX >= element.rect[0] &&
+            //                     mouseX <= element.rect[0] + element.rect[2] &&
+            //                     mouseY >= element.rect[1] &&
+            //                     mouseY <= element.rect[1] + element.rect[3]
+            //                 ) {
+            //                 }
+            //             }
+        }
+    };
 
     const renderPDF = async (pageNum) => {
-        if(!pdfURL)
-            return;
-         try {
-             const pdf = await pdfjs.getDocument(pdfURL).promise;
-             setPdfDocument(pdf)
+        if (!pdfURL) return;
+        try {
+            //console.log(pdfjs.getDocument(""));
+            const pdf = await pdfjs.getDocument(pdfURL).promise;
+            setPdfDocument(pdf);
 
-             const page = await pdf.getPage(pageNum);
+            const page = await pdf.getPage(pageNum);
+            //console.log(page)
 
-             const canvasContainer = containerRef.current;
-             canvasContainer.innerHTML = '';
+            const canvasContainer = containerRef.current;
+            canvasContainer.innerHTML = '';
 
-             const canvas = document.createElement('canvas');
-             canvasContainer.appendChild(canvas);
+            const canvas = document.createElement('canvas');
+            canvas.setAttribute('aria-label', 'pdf display canvas');
 
-             const context = canvas.getContext('2d');
-             const scale = calculateScale(page);
-             const viewport = page.getViewport({ scale:scale});
+            canvasContainer.appendChild(canvas);
 
-             canvas.height = viewport.height;
-             canvas.width = viewport.width;
+            const context = canvas.getContext('2d');
+            const scale = calculateScale(page);
+            const viewport = page.getViewport({ scale: scale });
 
-             //annotation processing
-             const trackMousePosition = (event) => {
-                 const canvasRect = canvas.getBoundingClientRect(); // Get canvas position on the page
-                 const mouseX = event.clientX - canvasRect.left; // Calculate mouse X relative to canvas
-                 let mouseY = event.clientY - canvasRect.top;  // Calculate mouse Y relative to canvas
-                 mouseY = canvasRect.bottom - mouseY; //this logic is wrongn
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
 
-                 calculateCollision(mouseX / scale, mouseY / scale)
-              };
-             canvas.addEventListener('mousemove', trackMousePosition);
+            //annotation processing
+            const trackMousePosition = (event) => {
+                const canvasRect = canvas.getBoundingClientRect(); // Get canvas position on the page
+                const mouseX = event.clientX - canvasRect.left; // Calculate mouse X relative to canvas
+                let mouseY = event.clientY - canvasRect.top; // Calculate mouse Y relative to canvas
+                //mouseY = canvasRect.bottom - mouseY; //this logic is wrongn
 
-             page.getAnnotations().then((annotations) => {
-                let newAnnos = [];
-                 for (const element of annotations) {
-                   if(element.annotationType == 5){
-                    newAnnos.push(element)
-                   }
-                 }
-                 setAnno(newAnnos)
-              });
+                //console.log(mouseX);
+                //console.log(mouseY);
+                //console.log(scale)
 
-             await page.render({
-                 canvasContext: context,
-                 viewport: viewport,
-             });
-         } catch (error) {
-               console.error('Error rendering PDF:', error);
-         }
+                calculateCollision(mouseX / scale, mouseY / scale);
+            };
+            canvas.addEventListener('mousemove', trackMousePosition);
+
+            page.getAnnotations().then((annotations) => {
+                //let newAnnos = [];
+                for (const element of annotations) {
+                    // if (element.annotationType == 5) {
+                    //newAnnos.push(element);
+                    anno.current.push(element);
+                    //}
+                }
+                //setAnno(newAnnos);
+            });
+
+            await page.render({
+                canvasContext: context,
+                viewport: viewport,
+            });
+        } catch (error) {
+            console.error('Error rendering PDF:', error);
+        }
     };
 
     useEffect(() => {
-       renderPDF(pageNum);
+        renderPDF(pageNum);
     }, [pageNum, pdfURL]);
 
     useLayoutEffect(() => {
@@ -118,7 +126,7 @@ function PDFViewer({pdfURL, className}) {
             }
 
             resizeTimeoutRef.current = setTimeout(() => {
-                if(!isMounted.current){
+                if (!isMounted.current) {
                     isMounted.current = true;
                 } else {
                     renderPDF(pageNum);
@@ -140,15 +148,26 @@ function PDFViewer({pdfURL, className}) {
         return () => {
             resizeObserver.disconnect();
         };
-      }, []);
+    }, []);
 
     return (
-        <div aria-label="pdf viewer" className={`flex flex-col h-full w-8/10 ${className? className : ""}`}>
-{/*          w-8/10*/}
-            <div ref={containerRef} className="grow w-full"></div>
-            <Paginator currPage={pageNum} maxPages={pdfDocument?.numPages} onChange={setPageNum}/>
+        <div
+            aria-label="pdf viewer"
+            className={`flex flex-col h-full w-8/10 ${className ? className : ''}`}
+        >
+            {/*          w-8/10*/}
+            <div
+                ref={containerRef}
+                className="grow w-full"
+                style={{ flexGrow: 1 }}
+            ></div>
+            <Paginator
+                currPage={pageNum}
+                maxPages={pdfDocument?.numPages}
+                onChange={setPageNum}
+            />
         </div>
-    )
+    );
 }
 
-export default PDFViewer
+export default PDFViewer;
