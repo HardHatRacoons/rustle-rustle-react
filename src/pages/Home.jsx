@@ -114,6 +114,12 @@ function FileList({folder}) {
 
 function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [refreshKey, setRefreshKey] = useState(0); // Single state for refreshing
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setRefreshKey((prev) => prev + 1); // Incrementing key triggers re-render
+    };
 
     return (
         <div className="h-full bg-sky-300 flex flex-col">
@@ -132,15 +138,15 @@ function Home() {
                 </div>
                 <div>
                     <h2>Annotated Files: </h2>
-                    <FileList folder="annotated" />
+                    <FileList key={`annotated-${refreshKey}`} folder="annotated" />
                     <h2>Unannotated Files: </h2>
-                    <FileList folder="unannotated" />
+                    <FileList key={`unannotated-${refreshKey}`} folder="unannotated" />
                 </div>
             </div>
 
             <UploadModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                onClose={() => handleCloseModal()}
             />
 
             
