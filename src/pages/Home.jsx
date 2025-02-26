@@ -21,6 +21,27 @@ function LoginNavbar() {
     );
 }
 
+const processFile = async ({ file }) => {
+    const fileExtension = file.name.split('.').pop();
+  
+    return file
+      .arrayBuffer()
+      .then((filebuffer) => window.crypto.subtle.digest('SHA-1', filebuffer))
+      .then((hashBuffer) => {
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray
+          .map((a) => a.toString(16).padStart(2, '0'))
+          .join('');
+        return {
+            file,
+            key: `${hashHex}.${fileExtension}`,
+            metadata: {
+                name: file.name.split('.')[0]
+            }
+        };
+      });
+  };
+
 function UploadModal({ isOpen, onClose }) {
     if (!isOpen) return null;
 
@@ -47,6 +68,7 @@ function UploadModal({ isOpen, onClose }) {
                     maxFileCount={1}
                     isResumable={true}
                     autoUpload={false}
+                    processFile={processFile}
                 />
             </div>
         </div>
