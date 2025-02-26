@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { fetchUserAttributes } from "aws-amplify/auth"; // Adjust import path
+import { createContext, useContext, useEffect, useState } from 'react';
+import { fetchUserAttributes } from 'aws-amplify/auth'; // Adjust import path
 
 const UserContext = createContext(null);
 
@@ -12,7 +12,7 @@ export function UserProvider({ children }) {
                 const attributes = await fetchUserAttributes();
                 setUserAttributes(attributes);
             } catch (error) {
-                console.error("Error fetching user attributes:", error);
+                console.error('Error fetching user attributes:', error);
             }
         }
         getUserInfo();
