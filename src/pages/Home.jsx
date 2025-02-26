@@ -48,7 +48,7 @@ function UploadModal({ isOpen, onClose }) {
     );
 }
 
-function FileList() {
+function FileList({folder}) {
     const userAttributes = useUser();
     const [files, setFiles] = useState({}); // file contains {filename: path} pairs
     const [loading, setLoading] = useState(true);
@@ -57,7 +57,7 @@ function FileList() {
         // Wait until userAttributes is available
         if (!userAttributes) return;
 
-        const filepath = `unannotated/${userAttributes.sub}/`;
+        const filepath = `${folder}/${userAttributes.sub}/`;
 
         const fetchFiles = async () => {
             setLoading(true); // Start loading
@@ -91,7 +91,6 @@ function FileList() {
 
     return (
         <div>
-            <h2>Unannotated Files: </h2>
             {Object.keys(files).length === 0 ? (
                 <p>No files found.</p>
             ) : (
@@ -125,7 +124,10 @@ function Home() {
                     </button>
                 </div>
                 <div>
-                    <FileList />
+                    <h2>Annotated Files: </h2>
+                    <FileList folder="annotated" />
+                    <h2>Unannotated Files: </h2>
+                    <FileList folder="unannotated" />
                 </div>
             </div>
 
