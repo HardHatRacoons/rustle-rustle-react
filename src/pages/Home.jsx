@@ -4,6 +4,7 @@ import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
 import GoogleSignOut from '../components/GoogleSignOut';
 import { useUser } from '../components/UserContext';
+import { list, getUrl } from 'aws-amplify/storage';
 
 function LoginNavbar() {
     const userAttributes = useUser();
@@ -22,7 +23,9 @@ function UploadModal({ isOpen, onClose }) {
     if (!isOpen) return null;
     
     const userAttributes = useUser();
+    // console.log("userAttributes in upload modal", userAttributes)
     const filepath = userAttributes ? `unannotated/${userAttributes.sub}/` : "unannotated/";
+    // console.log("filepath in upload modal", filepath);
 
     return (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
@@ -45,6 +48,66 @@ function UploadModal({ isOpen, onClose }) {
     );
 }
 
+function FileList() {
+    const userAttributes = useUser();
+    const [files, setFiles] = useState({}); // file contains {filename: path} pairs
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Wait until userAttributes is available
+        if (!userAttributes) return;
+
+        const filepath = `unannotated/${userAttributes.sub}/`;
+
+        const fetchFiles = async () => {
+            setLoading(true); // Start loading
+            try {
+                const result = await list({
+                    path: filepath,
+                    options: { listAll: true },
+                });
+
+                const fileData = {};
+                result.items.forEach((file) => {
+                    const filename = file.path.split("/").pop().slice(0, -4); // Extract filename
+                    fileData[filename] = file.path;
+                });
+
+                setFiles(fileData);
+            } catch (error) {
+                console.error("Error listing files:", error);
+            } finally {
+                setLoading(false); // Stop loading after fetching files
+            }
+        };
+
+        fetchFiles();
+    }, [userAttributes]); // Ensure effect runs only when userAttributes is available
+
+    // Show a loading message until both userAttributes and files are fetched
+    if (!userAttributes || loading) {
+        return <div>Loading files...</div>;
+    }
+
+    return (
+        <div>
+            <h2>Unannotated Files: </h2>
+            {Object.keys(files).length === 0 ? (
+                <p>No files found.</p>
+            ) : (
+                <ul>
+                    {Object.entries(files).map(([filename, path]) => (
+                        <li key={filename}>
+                            {filename}
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
+    );
+}
+
+
 function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -61,12 +124,17 @@ function Home() {
                         Upload
                     </button>
                 </div>
+                <div>
+                    <FileList />
+                </div>
             </div>
 
             <UploadModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
             />
+
+            
         </div>
     )
 }
