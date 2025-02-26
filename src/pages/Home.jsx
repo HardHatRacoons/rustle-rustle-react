@@ -2,25 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { MdClose } from "react-icons/md";
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
-import { fetchUserAttributes } from 'aws-amplify/auth';
 import GoogleSignOut from '../components/GoogleSignOut';
+import { useUser } from '../components/UserContext';
 
 function LoginNavbar() {
-    const [userAttributes, setUserAttributes] = useState(null);
-
-    useEffect(() => {
-        async function getUserInfo() {
-            try {
-                const attributes = await fetchUserAttributes();
-                // email, name, family_name, given_name, sub, email_verified
-                // console.log("Fetched Attributes:", attributes);
-                setUserAttributes(attributes);
-            } catch (error) {
-                console.error("Error fetching user attributes:", error);
-            }
-        }
-        getUserInfo();
-    }, []);
+    const userAttributes = useUser();
 
     return (
         <div className="w-full h-20 flex text-white align-items-center p-5">
@@ -35,21 +21,7 @@ function LoginNavbar() {
 function UploadModal({ isOpen, onClose }) {
     if (!isOpen) return null;
     
-    const [userAttributes, setUserAttributes] = useState(null);
-
-    useEffect(() => {
-        async function getUserInfo() {
-            try {
-                const attributes = await fetchUserAttributes();
-                // email, name, family_name, given_name, sub, email_verified
-                // console.log("Fetched Attributes:", attributes);
-                setUserAttributes(attributes);
-            } catch (error) {
-                console.error("Error fetching user attributes:", error);
-            }
-        }
-        getUserInfo();
-    }, []);
+    const userAttributes = useUser();
     const filepath = userAttributes ? `unannotated/${userAttributes.sub}/` : "unannotated/";
 
     return (

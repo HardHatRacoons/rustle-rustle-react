@@ -2,6 +2,7 @@ import { StrictMode, createContext } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Amplify } from "aws-amplify"
 import { BrowserRouter } from 'react-router';
+import { UserProvider } from "./components/UserContext"; // Adjust path
 //import { ConsoleLogger } from 'aws-amplify/utils';
 import outputs from "../amplify_outputs.json"
 
@@ -17,9 +18,11 @@ const ThemeContext = createContext('light');
 
 createRoot(document.getElementById('root')).render(
     <ThemeContext.Provider value="dark">
-       <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <UserProvider>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </UserProvider>
     </ThemeContext.Provider>
 
 )
