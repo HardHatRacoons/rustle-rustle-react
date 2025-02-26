@@ -1,15 +1,15 @@
 import boto3
-import os
-from datetime import datetime
 
 s3_client = boto3.client('s3')
 
 def handler(event, context):
-    file_key = f"annotated/{datetime.now().isoformat()}.pdf"
+    for record in event['Records']:
+        original_key = record['s3']['object']['key']
+        file_key = f"annotated/{original_key.split('/')[1]}/{original_key.split('/')[-1]}"
 
-    s3_client.put_object(
-        Bucket=os.getenv('raccoonTeamDrive_BUCKET_NAME'),
-        Key=file_key,
-        Body="",
-        ContentType="application/pdf"
-    )
+        s3_client.put_object(
+            Bucket=record['s3']['bucket']['name'], # pull from environment variable
+            Key=file_key,
+            Body="",
+            ContentType="application/pdf"
+        )
