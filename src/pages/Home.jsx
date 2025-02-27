@@ -4,6 +4,7 @@ import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
 import GoogleSignOut from '../components/GoogleSignOut';
 import { useUser } from '../components/UserContext';
+import { list, getUrl } from 'aws-amplify/storage';
 
 function LoginNavbar() {
     const userAttributes = useUser();
@@ -52,8 +53,73 @@ function UploadModal({ isOpen, onClose }) {
     );
 }
 
+function FileList({folder}) {
+    const userAttributes = useUser();
+    const [files, setFiles] = useState({}); // file contains {filename: path} pairs
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Wait until userAttributes is available
+        if (!userAttributes) return;
+
+        const filepath = `${folder}/${userAttributes.sub}/`;
+
+        const fetchFiles = async () => {
+            setLoading(true); // Start loading
+            try {
+                const result = await list({
+                    path: filepath,
+                    options: { listAll: true },
+                });
+
+                const fileData = {};
+                result.items.forEach((file) => {
+                    const filename = file.path.split("/").pop().slice(0, -4); // Extract filename
+                    fileData[filename] = file.path;
+                });
+
+                setFiles(fileData);
+            } catch (error) {
+                console.error("Error listing files:", error);
+            } finally {
+                setLoading(false); // Stop loading after fetching files
+            }
+        };
+
+        fetchFiles();
+    }, [userAttributes]); // Ensure effect runs only when userAttributes is available
+
+    // Show a loading message until both userAttributes and files are fetched
+    if (!userAttributes || loading) {
+        return <div>Loading files...</div>;
+    }
+
+    return (
+        <div>
+            {Object.keys(files).length === 0 ? (
+                <p>No files found.</p>
+            ) : (
+                <ul>
+                    {Object.entries(files).map(([filename, path]) => (
+                        <li key={filename}>
+                            {filename}
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
+    );
+}
+
+
 function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [refreshKey, setRefreshKey] = useState(0); // Single state for refreshing
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setRefreshKey((prev) => prev + 1); // Incrementing key triggers re-render
+    };
 
     return (
         <div className="h-full bg-sky-300 flex flex-col">
@@ -70,12 +136,20 @@ function Home() {
                         Upload
                     </button>
                 </div>
+                <div>
+                    <h2>Annotated Files: </h2>
+                    <FileList key={`annotated-${refreshKey}`} folder="annotated" />
+                    <h2>Unannotated Files: </h2>
+                    <FileList key={`unannotated-${refreshKey}`} folder="unannotated" />
+                </div>
             </div>
 
             <UploadModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                onClose={() => handleCloseModal()}
             />
+
+            
         </div>
     );
 }
