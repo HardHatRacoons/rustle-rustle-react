@@ -153,7 +153,9 @@ function PDFViewer({ pdfURL, className }) {
     return (
         <div
             aria-label="pdf viewer"
-            className={`flex flex-col h-full w-8/10 ${className ? className : ''}`}
+            className={`flex flex-col h-full w-8/10 ${
+                className ? className : ''
+            }`}
         >
             {/*          w-8/10*/}
             <div
