@@ -39,8 +39,8 @@ const processFile = async ({ file }) => {
                 name: file.name.split('.')[0]
             }
         };
-      });
-  };
+    });
+};
 
 function UploadModal({ isOpen, onClose }) {
     if (!isOpen) return null;
