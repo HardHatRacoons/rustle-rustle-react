@@ -23,23 +23,23 @@ function LoginNavbar() {
 
 const processFile = async ({ file }) => {
     const fileExtension = file.name.split('.').pop();
-  
+
     return file
-      .arrayBuffer()
-      .then((filebuffer) => window.crypto.subtle.digest('SHA-1', filebuffer))
-      .then((hashBuffer) => {
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray
-          .map((a) => a.toString(16).padStart(2, '0'))
-          .join('');
-        return {
-            file,
-            key: `${hashHex}.${fileExtension}`,
-            metadata: {
-                name: file.name.split('.')[0]
-            }
-        };
-    });
+        .arrayBuffer()
+        .then((filebuffer) => window.crypto.subtle.digest('SHA-1', filebuffer))
+        .then((hashBuffer) => {
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray
+                .map((a) => a.toString(16).padStart(2, '0'))
+                .join('');
+            return {
+                file,
+                key: `${hashHex}.${fileExtension}`,
+                metadata: {
+                    name: file.name.split('.')[0],
+                },
+            };
+        });
 };
 
 function UploadModal({ isOpen, onClose }) {
@@ -75,7 +75,7 @@ function UploadModal({ isOpen, onClose }) {
     );
 }
 
-function FileList({folder}) {
+function FileList({ folder }) {
     const userAttributes = useUser();
     const [files, setFiles] = useState({}); // file contains {filename: path} pairs
     const [loading, setLoading] = useState(true);
@@ -96,13 +96,13 @@ function FileList({folder}) {
 
                 const fileData = {};
                 result.items.forEach((file) => {
-                    const filename = file.path.split("/").pop().slice(0, -4); // Extract filename
+                    const filename = file.path.split('/').pop().slice(0, -4); // Extract filename
                     fileData[filename] = file.path;
                 });
 
                 setFiles(fileData);
             } catch (error) {
-                console.error("Error listing files:", error);
+                console.error('Error listing files:', error);
             } finally {
                 setLoading(false); // Stop loading after fetching files
             }
@@ -123,16 +123,13 @@ function FileList({folder}) {
             ) : (
                 <ul>
                     {Object.entries(files).map(([filename, path]) => (
-                        <li key={filename}>
-                            {filename}
-                        </li>
+                        <li key={filename}>{filename}</li>
                     ))}
                 </ul>
             )}
         </div>
     );
 }
-
 
 function Home() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -160,9 +157,15 @@ function Home() {
                 </div>
                 <div>
                     <h2>Annotated Files: </h2>
-                    <FileList key={`annotated-${refreshKey}`} folder="annotated" />
+                    <FileList
+                        key={`annotated-${refreshKey}`}
+                        folder="annotated"
+                    />
                     <h2>Unannotated Files: </h2>
-                    <FileList key={`unannotated-${refreshKey}`} folder="unannotated" />
+                    <FileList
+                        key={`unannotated-${refreshKey}`}
+                        folder="unannotated"
+                    />
                 </div>
             </div>
 
@@ -170,8 +173,6 @@ function Home() {
                 isOpen={isModalOpen}
                 onClose={() => handleCloseModal()}
             />
-
-            
         </div>
     );
 }

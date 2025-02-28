@@ -10,17 +10,17 @@ import { algorithmHandler } from './functions/algorithm/resource';
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
  */
 const backend = defineBackend({
-  auth,
-  data,
-  storage,
-  algorithmHandler,
+    auth,
+    data,
+    storage,
+    algorithmHandler,
 });
 
 backend.storage.resources.bucket.addEventNotification(
-	EventType.OBJECT_CREATED_PUT,
-	new LambdaDestination(backend.algorithmHandler.resources.lambda),
-	{
-		prefix: 'unannotated/',
-		suffix: '.pdf',
-	}
+    EventType.OBJECT_CREATED_PUT,
+    new LambdaDestination(backend.algorithmHandler.resources.lambda),
+    {
+        prefix: 'unannotated/',
+        suffix: '.pdf',
+    },
 );
