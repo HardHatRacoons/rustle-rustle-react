@@ -14,7 +14,6 @@ export default function App() {
     return (
         <Routes>
             <Route path="/" element={<RootLayout />}>
-                <Route path="login" element={<LoginPage />} />
                 <Route
                     index
                     element={
@@ -23,6 +22,7 @@ export default function App() {
                         </ProtectedRoute>
                     }
                 />
+                <Route path="login" element={<LoginPage />} />
                 <Route
                     path="file/:id"
                     element={

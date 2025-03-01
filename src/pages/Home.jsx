@@ -58,6 +58,7 @@ function UploadModal({ isOpen, onClose }) {
                     <button
                         className=" ml-auto text-black hover:text-red-500"
                         onClick={onClose}
+                        aria-label="close-upload-button"
                     >
                         <MdClose size="30" />
                     </button>
@@ -151,6 +152,7 @@ function Home() {
                     <button
                         className="ml-auto bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
                         onClick={() => setIsModalOpen(true)}
+                        aria-label="open-upload-button"
                     >
                         Upload
                     </button>
