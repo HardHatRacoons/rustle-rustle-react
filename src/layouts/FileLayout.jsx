@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation, useParams } from 'react-router';
 import { MdArrowBack } from 'react-icons/md';
-import { getUrl } from 'aws-amplify/storage';
+import { getUrl, getProperties } from 'aws-amplify/storage';
 import { useUser } from '../components/UserContext';
 
 import Tabs from '../components/Tabs';
@@ -22,8 +22,10 @@ function FileLayout() {
 
     const { id } = useParams();
 
+    const [docName, setDocName] = useState(null);
+
     useEffect(() => {
-        if (!userAttributes) 
+        if (!userAttributes)
             return;
 
         const getFileFromAWS = async () => {
@@ -41,6 +43,21 @@ function FileLayout() {
             });
             // console.log(linkToStorageFile);
             setPdfURL(linkToStorageFile.url.toString());
+
+            try {
+                const result = await getProperties({
+                    path: `annotated/${userAttributes.sub}/${id}.pdf`,
+                });
+                // console.log(result);
+                if (result.metadata && result.metadata.name) {
+                    setDocName(result.metadata.name);
+                }
+                else {
+                    setDocName('Document');
+                }
+            } catch (error) {
+                console.log('Error ', error);
+            }
         };
         getFileFromAWS();
     }, [userAttributes]);
@@ -56,13 +73,6 @@ function FileLayout() {
         if (valid && (pathname === '/file/' + id || pathname === '/file/' + id + '/'))
             navigate(`/file/${id}/${tabs[0]}`);
     }, [valid]);
-
-    const getFileName = (url) => {
-        if (!url) return '';
-        let spl = pdfURL.split('/');
-        spl = spl[spl.length - 1].split('?')[0];
-        return spl.slice(0, -4);
-    };
 
     if (!valid)
         return (
@@ -95,7 +105,7 @@ function FileLayout() {
                         aria-label="back"
                     />
                     <span className="text-2xl mx-2 my-auto">
-                        {getFileName(pdfURL)}
+                        {docName}
                     </span>
                 </div>
                 <Tabs
