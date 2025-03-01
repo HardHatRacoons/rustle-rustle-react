@@ -66,6 +66,24 @@ function FileLayout(props) {
         return spl.slice(0, -4);
     };
 
+    if (!valid)
+        return (
+            <div className="flex flex-col h-full">
+                <div className="flex flex-row justify-between px-3 pt-3">
+                    <MdArrowBack
+                        onClick={() => {
+                            navigate('/');
+                        }}
+                        size="40"
+                        className="align-self-center cursor-pointer"
+                        aria-label="back"
+                    />
+                </div>
+                <div>Error. select a valid file to use this.</div>
+            </div>
+        );
+
+
     return (
         <div className="flex flex-col h-full">
             <div className="flex flex-row justify-between px-3 pt-3">
