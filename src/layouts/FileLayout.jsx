@@ -69,35 +69,26 @@ function FileLayout(props) {
     return (
         <div className="flex flex-col h-full">
             <div className="flex flex-row justify-between px-3 pt-3">
-                {/*          flex-col sm:flex-row */}
                 <div className="flex">
                     <MdArrowBack
-                        onClick={back}
+                        onClick={() => {
+                            navigate('/');
+                        }}
                         size="40"
                         className="align-self-center"
                         aria-label="back"
                     />
-                    {valid ? (
-                        <span className="text-2xl mx-2 my-auto">
-                            {getFileName(pdfURL)}
-                        </span>
-                    ) : (
-                        <></>
-                    )}
+                    <span className="text-2xl mx-2 my-auto">
+                        {getFileName(pdfURL)}
+                    </span>
                 </div>
-                {valid ? (
-                    <Tabs
-                        onChange={change}
-                        tabs={tabs}
-                        activeTab={activeTab}
-                        className="w-1/4"
-                    />
-                ) : (
-                    <></>
-                )}
-                {/*             w-3/4 sm:w-1/2 xl:w-1/4 but causes full screen refresh so pdf refreshes too */}
+                <Tabs
+                    onChange={change}
+                    tabs={tabs}
+                    activeTab={activeTab}
+                    className="w-1/4"
+                />
             </div>
-            {valid ? '' : 'Error. select a valid file to use this.'}
             <Outlet context={pdfURL} />
         </div>
     );
