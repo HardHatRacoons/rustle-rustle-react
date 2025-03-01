@@ -17,11 +17,17 @@ const ProtectedRoute = ({ children }) => {
         checkUser();
     }, []);
 
-    if (isAuthenticated === null) {
-        return <p>Loading...</p>; // Show a loading state while checking auth
-    }
+    //     if (isAuthenticated === null) {
+    //         return <p>Loading...</p>; // Show a loading state while checking auth
+    //     }
 
-    return isAuthenticated ? children : <Navigate to="/login" />;
+    return isAuthenticated === null ? (
+        <p>Loading...</p>
+    ) : isAuthenticated ? (
+        children
+    ) : (
+        <Navigate to="/login" />
+    );
 };
 
 export default ProtectedRoute;
