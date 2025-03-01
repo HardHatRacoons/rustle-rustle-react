@@ -25,8 +25,7 @@ function FileLayout() {
     const [docName, setDocName] = useState(null);
 
     useEffect(() => {
-        if (!userAttributes)
-            return;
+        if (!userAttributes) return;
 
         const getFileFromAWS = async () => {
             const linkToStorageFile = await getUrl({
@@ -51,8 +50,7 @@ function FileLayout() {
                 // console.log(result);
                 if (result.metadata && result.metadata.name) {
                     setDocName(result.metadata.name);
-                }
-                else {
+                } else {
                     setDocName('Document');
                 }
             } catch (error) {
@@ -70,7 +68,10 @@ function FileLayout() {
     };
 
     useEffect(() => {
-        if (valid && (pathname === '/file/' + id || pathname === '/file/' + id + '/'))
+        if (
+            valid &&
+            (pathname === '/file/' + id || pathname === '/file/' + id + '/')
+        )
             navigate(`/file/${id}/${tabs[0]}`);
     }, [valid]);
 
@@ -91,7 +92,6 @@ function FileLayout() {
             </div>
         );
 
-
     return (
         <div className="flex flex-col h-full">
             <div className="flex flex-row justify-between px-3 pt-3">
@@ -104,9 +104,7 @@ function FileLayout() {
                         className="align-self-center"
                         aria-label="back"
                     />
-                    <span className="text-2xl mx-2 my-auto">
-                        {docName}
-                    </span>
+                    <span className="text-2xl mx-2 my-auto">{docName}</span>
                 </div>
                 <Tabs
                     onChange={change}

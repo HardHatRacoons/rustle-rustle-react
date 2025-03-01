@@ -126,7 +126,9 @@ function FileList({ folder }) {
                 <ul>
                     {Object.entries(files).map(([filename, path]) => (
                         <li key={filename} className="cursor-pointer">
-                            <a onClick={() => navigate(`/file/${filename}`)}>{filename}</a>
+                            <a onClick={() => navigate(`/file/${filename}`)}>
+                                {filename}
+                            </a>
                         </li>
                     ))}
                 </ul>
