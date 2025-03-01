@@ -77,7 +77,7 @@ function FileLayout() {
                         aria-label="back"
                     />
                 </div>
-                <div>Error. select a valid file to use this.</div>
+                <div>Loading...</div>
             </div>
         );
 
