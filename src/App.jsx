@@ -8,13 +8,13 @@ import TableView from './pages/TableView';
 import MetricView from './pages/MetricView';
 import NoPage from './pages/NoPage';
 import ProtectedRoute from './components/ProtectedRoute';
-import GoogleSignIn from './components/GoogleSignIn';
+import LoginPage from './pages/LoginPage';
 
 export default function App() {
     return (
         <Routes>
             <Route path="/" element={<RootLayout />}>
-                <Route path="login" element={<GoogleSignIn />} />
+                <Route path="login" element={<LoginPage />} />
                 <Route
                     index
                     element={
