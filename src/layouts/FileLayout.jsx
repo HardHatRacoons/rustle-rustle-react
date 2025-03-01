@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation, useParams } from 'react-router';
 import { MdArrowBack } from 'react-icons/md';
 import { getUrl } from 'aws-amplify/storage';
+import { useUser } from '../components/UserContext';
 
 import Tabs from '../components/Tabs';
 
-function FileLayout(props) {
+function FileLayout() {
     const tabs = ['blueprint', 'table', 'metrics'];
 
     const location = useLocation();
@@ -17,39 +18,25 @@ function FileLayout(props) {
     );
     const navigate = useNavigate();
     const [pdfURL, setPdfURL] = useState(null);
+    const userAttributes = useUser();
 
     const { id } = useParams();
-    let valid = id === '123';
-
-    const change = (num) => {
-        setActiveTab(num);
-        navigate(`/file/${id}/${tabs[num]}`);
-    };
-
-    const back = () => {
-        navigate('/');
-    };
 
     useEffect(() => {
-        if (
-            valid &&
-            (pathname === '/file/' + id || pathname === '/file/' + id + '/')
-        ) {
-            navigate(`/file/${id}/${tabs[0]}`);
-        }
-    }, []);
+        if (!userAttributes) 
+            return;
 
     useEffect(() => {
         const getFileFromAWS = async () => {
             const linkToStorageFile = await getUrl({
-                path: 'annotated/sarasota_areas_annotated.pdf',
+                path: `annotated/${userAttributes.sub}/${id}.pdf`,
                 options: {
                     bucket: 'raccoonTeamDrive',
                     validateObjectExistence: true,
                     // url expiration time in seconds.
                     expiresIn: 900,
                     // whether to use accelerate endpoint
-                    //useAccelerateEndpoint: true,
+                    // useAccelerateEndpoint: true,
                 },
                 // Alternatively, path: ({identityId}) => `album/${identityId}/1.jpg`
             });
@@ -57,6 +44,18 @@ function FileLayout(props) {
             setPdfURL(linkToStorageFile.url.toString());
         };
         getFileFromAWS();
+    }, [userAttributes]);
+
+    let valid = pdfURL !== null;
+
+    const change = (num) => {
+        setActiveTab(num);
+        navigate(`/file/${id}/${tabs[num]}`);
+    };
+
+    useEffect(() => {
+        if (valid && (pathname === '/file/' + id || pathname === '/file/' + id + '/'))
+            navigate(`/file/${id}/${tabs[0]}`);
     }, []);
 
     const getFileName = (url) => {
