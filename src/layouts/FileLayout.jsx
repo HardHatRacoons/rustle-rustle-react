@@ -26,7 +26,6 @@ function FileLayout() {
         if (!userAttributes) 
             return;
 
-    useEffect(() => {
         const getFileFromAWS = async () => {
             const linkToStorageFile = await getUrl({
                 path: `annotated/${userAttributes.sub}/${id}.pdf`,
