@@ -55,7 +55,7 @@ function FileLayout() {
     useEffect(() => {
         if (valid && (pathname === '/file/' + id || pathname === '/file/' + id + '/'))
             navigate(`/file/${id}/${tabs[0]}`);
-    }, []);
+    }, [valid]);
 
     const getFileName = (url) => {
         if (!url) return '';
