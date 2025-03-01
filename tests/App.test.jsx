@@ -82,7 +82,7 @@ describe('Testing main setup and routing after auth', () => {
         });
     });
 
-    test.only('home page should be rendered first', async () => {
+    test('home page should be rendered first', async () => {
         render(
             <MemoryRouter>
                 <UserProvider>
