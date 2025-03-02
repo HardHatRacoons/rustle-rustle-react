@@ -4,7 +4,8 @@ import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
 import GoogleSignOut from '../components/GoogleSignOut';
 import { useUser } from '../components/UserContext';
-import { list, getUrl } from 'aws-amplify/storage';
+import { list } from 'aws-amplify/storage';
+import { useNavigate } from 'react-router';
 
 function LoginNavbar() {
     const userAttributes = useUser();
@@ -81,6 +82,7 @@ function FileList({ folder }) {
     const [files, setFiles] = useState({}); // file contains {filename: path} pairs
     const [loading, setLoading] = useState(true);
 
+    const navigate = useNavigate();
     useEffect(() => {
         // Wait until userAttributes is available
         if (!userAttributes) return;
@@ -124,7 +126,11 @@ function FileList({ folder }) {
             ) : (
                 <ul>
                     {Object.entries(files).map(([filename, path]) => (
-                        <li key={filename}>{filename}</li>
+                        <li key={filename} className="cursor-pointer">
+                            <a onClick={() => navigate(`/file/${filename}`)}>
+                                {filename}
+                            </a>
+                        </li>
                     ))}
                 </ul>
             )}
