@@ -3,7 +3,6 @@ import {
     screen,
     fireEvent,
     act,
-    waitFor,
 } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 
@@ -14,9 +13,71 @@ import * as Auth from 'aws-amplify/auth';
 import App from '../src/App';
 import { UserProvider } from '../src/components/UserContext';
 
-describe('Testing authentication blocking', () => {
-    test('auth blocks access to all pages', async () => {});
-});
+// will have to refactor this later; need to use mocking values x times
+// describe('Testing authentication blocking', () => {
+//
+//     beforeAll(() => {
+//         vi.mock(import('aws-amplify/storage'), async (importOriginal) => {
+//             const actual = await importOriginal();
+//             return {
+//                 ...actual,
+//                 getUrl: vi.fn().mockResolvedValue({
+//                     url: new URL('https://fake-pdf-endpoint/pdf.pdf'),
+//                 }),
+//             };
+//         });
+//
+//         vi.mock(import('pdfjs-dist'), async (importOriginal) => {
+//             const actual = await importOriginal();
+//             return {
+//                 ...actual,
+//                 getDocument: vi.fn().mockResolvedValue({
+//                     numPages: 1,
+//                     getPage: vi.fn().mockResolvedValue({
+//                         getTextContent: vi
+//                             .fn()
+//                             .mockResolvedValue({ items: [] }),
+//                     }),
+//                 }),
+//             };
+//         });
+//
+//         global.ResizeObserver = class {
+//             observe() {}
+//             unobserve() {}
+//             disconnect() {}
+//         };
+//
+//     });
+//
+//     test('auth blocks access to all pages', async () => {
+//         render(
+//                     <MemoryRouter initialEntries={['/file/123/blueprint']}>
+//                         <UserProvider>
+//                             <App />
+//                         </UserProvider>
+//                     </MemoryRouter>,
+//                 );
+//                 await act(() => {});
+//
+//                 expect(screen.getByText(/Sign In/)).toBeInTheDocument();
+//     });
+//
+//     test('login page flow', async () => {
+//         render(
+//                     <MemoryRouter initialEntries={['/file/123/blueprint']}>
+//                         <UserProvider>
+//                             <App />
+//                         </UserProvider>
+//                     </MemoryRouter>,
+//                 );
+//                 await act(() => {});
+//
+//                 expect(screen.getByText(/Sign In/)).toBeInTheDocument();
+//
+//                 await expect(fireEvent.click(screen.getByLabelText("sign-in-button"))).rejects.toThrow('Specific error message');
+//     });
+// });
 
 describe('Testing main setup and routing after auth', () => {
     // render app to test
@@ -66,7 +127,7 @@ describe('Testing main setup and routing after auth', () => {
                 signInWithRedirect: vi
                     .fn()
                     .mockImplementation(({ provider }) => {
-                        console.log(provider);
+
                     }),
                 getCurrentUser: vi.fn().mockResolvedValue({
                     username: 'user123',

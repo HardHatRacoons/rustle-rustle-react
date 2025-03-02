@@ -11,6 +11,7 @@ export default function LoginButton() {
                 <div className="flex justify-center">
                     <button
                         className="flex flex-row content-center bg-white border-solid border-1 border-gray-500 px-5 py-3 gap-2 rounded-lg shadow-lg hover:bg-sky-100 cursor-pointer"
+                        aria-label="sign-in-button"
                         onClick={() =>
                             signInWithRedirect({ provider: 'Google' })
                         }

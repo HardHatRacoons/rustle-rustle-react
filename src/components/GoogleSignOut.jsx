@@ -5,6 +5,7 @@ export default function LogoutButton() {
     return (
         <button
             className="px-3 gap-2 cursor-pointer text-sky-500 hover:bg-sky-100 rounded-lg shadow bg-white margin-3"
+            aria-label="sign-out-button"
             onClick={async () => {
                 try {
                     await signOut();
