@@ -7,7 +7,7 @@ import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
 import GoogleSignOut from '../components/GoogleSignOut';
 import { useUser } from '../components/UserContext';
-import { list, getProperties } from 'aws-amplify/storage';
+import { list, getProperties, remove } from 'aws-amplify/storage';
 import { useNavigate } from 'react-router';
 
 
@@ -82,12 +82,46 @@ function UploadModal({ isOpen, onClose }) {
     );
 }
 
-function FileList({ folder }) {
+function DeleteConfirmationModal({ isOpen, onClose, onConfirm, fileName }) {
+    if(!isOpen) return null;
+    return(
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg">
+                <div className=" flex flex-row mb-6">
+                    <h2 className="text-2xl font-bold">Delete File</h2>
+                </div>
+                <p className="text-lg font-bold text-sky-900">
+                    Are you sure you want to delete "{fileName}"? <br/>
+                    <strong>This action is not reversible!</strong>
+                </p>
+                
+                <div className='flex flex-row justify-end mt-6 gap-4'>
+                    <button
+                        onClick={onClose}
+                        className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition">
+                        Cancel
+                    </button>
+                    <button 
+                        onClick={onConfirm} 
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                        Delete
+                    </button>
+                </div>
+                
+            </div>
+            
+        </div>
+
+    );
+}
+
+function FileList({ folder, setSelectedFile, setIsDeleteModalOpen }) {
     const userAttributes = useUser();
     const [files, setFiles] = useState({}); // file contains {fileID: docName} pairs
     const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
+
     useEffect(() => {
         // Wait until userAttributes is available
         if (!userAttributes) return;
@@ -149,7 +183,7 @@ function FileList({ folder }) {
                         <div key={fileId} 
                              className="cursor-pointer bg-sky-100 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102 hover:shadow-xl" 
                              onClick={() => navigate(`/file/${fileId}`)}>
-                            <img src={`https://placehold.co/600x400/ECECEC/CACACA`} alt={fileName} className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg" />
+                            <img src={`https://placehold.co/600x400/ECECEC/CACACA?text=placeholder`} alt={fileName} className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg" />
                             <div className="flex flex-row py-2 content-center">
                                 <p className="text-lg font-bold text-sky-900">
                                     {fileName}
@@ -158,7 +192,8 @@ function FileList({ folder }) {
                                     className="ml-auto hover:text-red-500 hover:cursor-pointer"
                                     onClick={(event) => {
                                             event.stopPropagation(); // Prevent card click event
-                                            // Add your delete logic here
+                                            setSelectedFile({fileId, fileName, folder});
+                                            setIsDeleteModalOpen(true);
                                     }}>
                                     <FaTrashAlt size="20"/>
                                 </button>
@@ -172,12 +207,60 @@ function FileList({ folder }) {
 }
 
 function Home() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
     const [refreshKey, setRefreshKey] = useState(0); // Single state for refreshing
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
+    const userAttributes = useUser();
+
+    const handleCloseUploadModal = () => {
+        setIsUploadModalOpen(false);
         setRefreshKey((prev) => prev + 1); // Incrementing key triggers re-render
+    };
+
+    const handleDeleteFile = async () => {
+        if (!selectedFile) return;
+        
+        // if the folder is annotated, delete the csv file, and the unnanotated pdf file
+        if (selectedFile.folder === 'annotated') {
+            try {
+                // Construct the csv file path
+                const csvPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.csv`; // Adjust extension as needed
+                // Construct the unannotated pdf file path
+                const pdfPath = `unannotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`; // Adjust extension as needed
+                
+                // Call Amplify remove function
+                await remove({ 
+                    path: csvPath, 
+                });
+                await remove({
+                    path: pdfPath,
+                });
+            } catch (error) {
+                console.error('Error deleting file:', error);
+            } finally {
+                setIsDeleteModalOpen(false);
+            }
+        }
+        // deleting the current pdf file
+        try {
+            // Construct the full file path
+            const filePath = `${selectedFile.folder}/${userAttributes.sub}/${selectedFile.fileId}.pdf`; // Adjust extension as needed
+            
+            // Call Amplify remove function
+            await remove({ 
+                path: filePath, 
+            });
+    
+            // trigger refresh
+            setRefreshKey((prev) => prev + 1);
+    
+        } catch (error) {
+            console.error('Error deleting file:', error);
+        } finally {
+            setIsDeleteModalOpen(false);
+        }
     };
 
     return (
@@ -190,7 +273,7 @@ function Home() {
 
                     <button
                         className="ml-auto bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 cursor-pointer"
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => setIsUploadModalOpen(true)}
                         aria-label="open-upload-button"
                     >
                         Upload
@@ -209,6 +292,8 @@ function Home() {
                     <FileList
                         key={`annotated-${refreshKey}`}
                         folder="annotated"
+                        setSelectedFile={setSelectedFile}
+                        setIsDeleteModalOpen={setIsDeleteModalOpen}
                     />
                 </div>
                 <div className="ml-6 mr-6">
@@ -216,13 +301,22 @@ function Home() {
                     <FileList
                         key={`unannotated-${refreshKey}`}
                         folder="unannotated"
+                        setSelectedFile={setSelectedFile}
+                        setIsDeleteModalOpen={setIsDeleteModalOpen}
                     />
                 </div>
             </div>
 
             <UploadModal
-                isOpen={isModalOpen}
-                onClose={() => handleCloseModal()}
+                isOpen={isUploadModalOpen}
+                onClose={() => handleCloseUploadModal()}
+            />
+
+            <DeleteConfirmationModal 
+                isOpen={isDeleteModalOpen} 
+                onClose={() => setIsDeleteModalOpen(false)} 
+                onConfirm={handleDeleteFile} 
+                fileName={selectedFile?.fileName}
             />
         </div>
     );
