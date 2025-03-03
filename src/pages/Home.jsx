@@ -221,7 +221,29 @@ function Home() {
 
     const handleDeleteFile = async () => {
         if (!selectedFile) return;
-    
+        
+        // if the folder is annotated, delete the csv file, and the unnanotated pdf file
+        if (selectedFile.folder === 'annotated') {
+            try {
+                // Construct the csv file path
+                const csvPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.csv`; // Adjust extension as needed
+                // Construct the unannotated pdf file path
+                const pdfPath = `unannotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`; // Adjust extension as needed
+                
+                // Call Amplify remove function
+                await remove({ 
+                    path: csvPath, 
+                });
+                await remove({
+                    path: pdfPath,
+                });
+            } catch (error) {
+                console.error('Error deleting file:', error);
+            } finally {
+                setIsDeleteModalOpen(false);
+            }
+        }
+        // deleting the current pdf file
         try {
             // Construct the full file path
             const filePath = `${selectedFile.folder}/${userAttributes.sub}/${selectedFile.fileId}.pdf`; // Adjust extension as needed
@@ -234,7 +256,6 @@ function Home() {
             // trigger refresh
             setRefreshKey((prev) => prev + 1);
     
-            console.log(`File "${selectedFile.fileName}" deleted successfully.`);
         } catch (error) {
             console.error('Error deleting file:', error);
         } finally {
