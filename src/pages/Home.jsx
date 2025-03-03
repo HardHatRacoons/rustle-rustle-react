@@ -132,23 +132,28 @@ function FileList({ folder }) {
 
     // Show a loading message until both userAttributes and files are fetched
     if (!userAttributes || loading) {
-        return <div>Loading files...</div>;
+        return <div className="bg-white m-6 p-6 rounded-lg" >Loading files...</div>;
     }
 
     return (
-        <div>
+        <div className="bg-white m-6 p-6 rounded-lg bg-opacity-50">
             {Object.keys(files).length === 0 ? (
                 <p>No files found.</p>
             ) : (
-                <ul>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                     {Object.entries(files).map(([fileId, fileName]) => (
-                        <li key={fileId} className="cursor-pointer">
-                            <a onClick={() => navigate(`/file/${fileId}`)}>
-                                {fileName}
-                            </a>
-                        </li>
+                        <div key={fileId} 
+                             className="cursor-pointer bg-sky-100 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102 hover:shadow-xl" 
+                             onClick={() => navigate(`/file/${fileId}`)}>
+                            <img src={`https://placehold.co/600x400/ECECEC/CACACA`} alt={fileName} className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg" />
+                            <div className="py-2">
+                                <p className="text-lg font-bold text-sky-900">
+                                    {fileName}
+                                </p>
+                            </div>
+                        </div>
                     ))}
-                </ul>
+                </div>
             )}
         </div>
     );
@@ -169,10 +174,10 @@ function Home() {
 
             <div className="bg-sky-200 grow">
                 <div className="m-6 flex flex-row bg-white p-8 rounded-lg">
-                    <h1 className="text-4xl font-bold"> Gallery </h1>
+                    <h1 className="text-4xl font-bold text-sky-950"> Gallery </h1>
 
                     <button
-                        className="ml-auto bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+                        className="ml-auto bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 cursor-pointer"
                         onClick={() => setIsModalOpen(true)}
                         aria-label="open-upload-button"
                     >
@@ -180,12 +185,14 @@ function Home() {
                     </button>
                 </div>
                 <div>
-                    <h2>Annotated Files: </h2>
+                    <h2 className="ml-6 mr-6 font-bold text-2xl text-sky-900">Annotated Files: </h2>
                     <FileList
                         key={`annotated-${refreshKey}`}
                         folder="annotated"
                     />
-                    <h2>Unannotated Files: </h2>
+                </div>
+                <div>
+                    <h2 className="ml-6 mr-6 font-bold text-2xl text-sky-900">Unannotated Files: </h2>
                     <FileList
                         key={`unannotated-${refreshKey}`}
                         folder="unannotated"
