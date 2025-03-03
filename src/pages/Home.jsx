@@ -7,7 +7,7 @@ import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
 import GoogleSignOut from '../components/GoogleSignOut';
 import { useUser } from '../components/UserContext';
-import { list, getProperties } from 'aws-amplify/storage';
+import { list, getProperties, remove } from 'aws-amplify/storage';
 import { useNavigate } from 'react-router';
 
 
@@ -88,6 +88,33 @@ function FileList({ folder }) {
     const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
+
+    const handleDeleteFile = async (fileId, fileName) => {
+        if (!window.confirm(`Are you sure you want to delete "${fileName}"?`)) return;
+    
+        try {
+            // Construct the full file path
+            const filePath = `${folder}/${userAttributes.sub}/${fileId}.pdf`; // Adjust extension as needed
+            
+            // Call Amplify remove function
+            await remove({ 
+                path: filePath, 
+                bucket: 'assignedNameInAmplifyBackend' // Ensure this matches your Amplify storage setup
+            });
+    
+            // Update state to remove the deleted file
+            setFiles(prevFiles => {
+                const updatedFiles = { ...prevFiles };
+                delete updatedFiles[fileId];
+                return updatedFiles;
+            });
+    
+            console.log(`File "${fileName}" deleted successfully.`);
+        } catch (error) {
+            console.error('Error deleting file:', error);
+        }
+    };
+
     useEffect(() => {
         // Wait until userAttributes is available
         if (!userAttributes) return;
@@ -158,7 +185,7 @@ function FileList({ folder }) {
                                     className="ml-auto hover:text-red-500 hover:cursor-pointer"
                                     onClick={(event) => {
                                             event.stopPropagation(); // Prevent card click event
-                                            // Add your delete logic here
+                                            handleDeleteFile(fileId, fileName);
                                     }}>
                                     <FaTrashAlt size="20"/>
                                 </button>
