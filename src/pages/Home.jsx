@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { MdClose } from 'react-icons/md';
+import { FaTrashAlt } from "react-icons/fa";
+import { HiMiniSparkles } from "react-icons/hi2";
+import { IoMdRefreshCircle } from "react-icons/io";
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
 import GoogleSignOut from '../components/GoogleSignOut';
 import { useUser } from '../components/UserContext';
-import { list } from 'aws-amplify/storage';
+import { list, getProperties } from 'aws-amplify/storage';
 import { useNavigate } from 'react-router';
+
 
 function LoginNavbar() {
     const userAttributes = useUser();
 
     return (
         <div className="w-full h-20 flex text-white align-items-center p-5">
-            <div className="text-4xl grow-10 text-nowrap mx-2">
+            <div className="flex flex-row gap-2 text-4xl grow-10 text-nowrap mx-2">
+                <HiMiniSparkles />
                 {userAttributes
                     ? `Welcome, ${userAttributes.given_name}`
                     : 'Loading...'}
@@ -79,7 +84,7 @@ function UploadModal({ isOpen, onClose }) {
 
 function FileList({ folder }) {
     const userAttributes = useUser();
-    const [files, setFiles] = useState({}); // file contains {filename: path} pairs
+    const [files, setFiles] = useState({}); // file contains {fileID: docName} pairs
     const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
@@ -91,17 +96,32 @@ function FileList({ folder }) {
 
         const fetchFiles = async () => {
             setLoading(true); // Start loading
+            // get the file name
             try {
                 const result = await list({
                     path: filepath,
                     options: { listAll: true },
                 });
 
-                const fileData = {};
-                result.items.forEach((file) => {
-                    const filename = file.path.split('/').pop().slice(0, -4); // Extract filename
-                    fileData[filename] = file.path;
-                });
+                const fileData = {}; // Stores fileID -> metadata name mapping
+                for (const file of result.items) {
+                    const fileID = file.path.split('/').pop().slice(0, -4); // Extract fileID
+
+                    try {
+                        const metadataResult = await getProperties({
+                            path: file.path, // Use the file path to get metadata
+                        });
+
+                        const docName = metadataResult.metadata && metadataResult.metadata.name
+                            ? metadataResult.metadata.name
+                            : 'Document'; // Default name if no metadata found
+
+                        fileData[fileID] = docName; // Store fileID -> metadata name
+                    } catch (error) {
+                        console.error('Error fetching metadata:', error);
+                        fileData[fileID] = 'Document'; // Fallback to default name
+                    }
+                }
 
                 setFiles(fileData);
             } catch (error) {
@@ -116,23 +136,36 @@ function FileList({ folder }) {
 
     // Show a loading message until both userAttributes and files are fetched
     if (!userAttributes || loading) {
-        return <div>Loading files...</div>;
+        return <div className="bg-white p-6 rounded-lg text-lg font-bold text-sky-900" >Loading files...</div>;
     }
 
     return (
-        <div>
+        <div className="mt-3 mb-6 bg-white p-6 rounded-lg bg-opacity-50 overflow-y-auto">
             {Object.keys(files).length === 0 ? (
-                <p>No files found.</p>
+                <p className="text-lg font-bold text-sky-900">No files found.</p>
             ) : (
-                <ul>
-                    {Object.entries(files).map(([filename, path]) => (
-                        <li key={filename} className="cursor-pointer">
-                            <a onClick={() => navigate(`/file/${filename}`)}>
-                                {filename}
-                            </a>
-                        </li>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    {Object.entries(files).map(([fileId, fileName]) => (
+                        <div key={fileId} 
+                             className="cursor-pointer bg-sky-100 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102 hover:shadow-xl" 
+                             onClick={() => navigate(`/file/${fileId}`)}>
+                            <img src={`https://placehold.co/600x400/ECECEC/CACACA`} alt={fileName} className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg" />
+                            <div className="flex flex-row py-2 content-center">
+                                <p className="text-lg font-bold text-sky-900">
+                                    {fileName}
+                                </p>
+                                <button 
+                                    className="ml-auto hover:text-red-500 hover:cursor-pointer"
+                                    onClick={(event) => {
+                                            event.stopPropagation(); // Prevent card click event
+                                            // Add your delete logic here
+                                    }}>
+                                    <FaTrashAlt size="20"/>
+                                </button>
+                            </div>
+                        </div>
                     ))}
-                </ul>
+                </div>
             )}
         </div>
     );
@@ -151,25 +184,35 @@ function Home() {
         <div className="h-full bg-sky-300 flex flex-col">
             <LoginNavbar />
 
-            <div className="bg-sky-200 grow">
+            <div className="bg-sky-200 grow overflow-y-hidden">
                 <div className="m-6 flex flex-row bg-white p-8 rounded-lg">
-                    <h1 className="text-4xl font-bold"> Gallery </h1>
+                    <h1 className="text-4xl font-bold text-sky-950"> Gallery </h1>
 
                     <button
-                        className="ml-auto bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+                        className="ml-auto bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 cursor-pointer"
                         onClick={() => setIsModalOpen(true)}
                         aria-label="open-upload-button"
                     >
                         Upload
                     </button>
                 </div>
-                <div>
-                    <h2>Annotated Files: </h2>
+                <div className="ml-6 mr-6">
+                    <div className="flex flex-row justify-between">
+                        <h2 className=" font-bold text-2xl text-sky-900">Annotated Files: </h2>
+                        <IoMdRefreshCircle 
+                            className="text-sky-900 hover:cursor-pointer hover:text-sky-700"
+                            onClick={() => setRefreshKey((prev) => prev + 1)}
+                            size = "30"
+                        />
+                    </div>
+                    
                     <FileList
                         key={`annotated-${refreshKey}`}
                         folder="annotated"
                     />
-                    <h2>Unannotated Files: </h2>
+                </div>
+                <div className="ml-6 mr-6">
+                    <h2 className="font-bold text-2xl text-sky-900">Unannotated Files: </h2>
                     <FileList
                         key={`unannotated-${refreshKey}`}
                         folder="unannotated"
