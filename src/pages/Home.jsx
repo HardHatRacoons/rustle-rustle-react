@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MdClose } from 'react-icons/md';
 import { FaTrashAlt } from "react-icons/fa";
+import { HiMiniSparkles } from "react-icons/hi2";
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
 import GoogleSignOut from '../components/GoogleSignOut';
@@ -14,7 +15,8 @@ function LoginNavbar() {
 
     return (
         <div className="w-full h-20 flex text-white align-items-center p-5">
-            <div className="text-4xl grow-10 text-nowrap mx-2">
+            <div className="flex flex-row gap-2 text-4xl grow-10 text-nowrap mx-2">
+                <HiMiniSparkles />
                 {userAttributes
                     ? `Welcome, ${userAttributes.given_name}`
                     : 'Loading...'}
@@ -152,7 +154,7 @@ function FileList({ folder }) {
                                     {fileName}
                                 </p>
                                 <button 
-                                    className="ml-auto hover:text-red-500"
+                                    className="ml-auto hover:text-red-500 hover:cursor-pointer"
                                     onClick={(event) => {
                                             event.stopPropagation(); // Prevent card click event
                                             // Add your delete logic here
