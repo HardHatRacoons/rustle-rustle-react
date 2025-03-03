@@ -10,7 +10,6 @@ export function UserProvider({ children }) {
         async function getUserInfo() {
             try {
                 const attributes = await fetchUserAttributes();
-                console.log(attributes);
                 setUserAttributes(attributes);
             } catch (error) {
                 console.error('Error fetching user attributes:', error);

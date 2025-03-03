@@ -16,12 +16,11 @@ export default defineConfig({
         coverage: {
             reporter: ['text', 'html', 'lcov'],
             reportsDirectory: './tests/coverage',
+            include: [
+                'src/**',
+            ],
             exclude: [
-                './amplify/**',
-                './.amplify/**',
-                './src/main.jsx',
-                './tests/**',
-                ...configDefaults.exclude,
+                'src/main.jsx',
             ],
         },
     },

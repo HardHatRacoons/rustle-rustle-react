@@ -12,6 +12,7 @@ function Card({ children, idx, onChange }) {
     return (
         <div
             className="w-full h-full shadow-lg rounded-md border-2 border-slate-100 flex flex-col place-items-center"
+            aria-label={"card-" + idx}
             onClick={onPin}
         >
             <div className="h-5 pt-2 w-full flex">
