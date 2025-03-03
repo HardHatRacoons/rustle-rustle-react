@@ -4,8 +4,9 @@ import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
 import GoogleSignOut from '../components/GoogleSignOut';
 import { useUser } from '../components/UserContext';
-import { list } from 'aws-amplify/storage';
+import { list, getProperties } from 'aws-amplify/storage';
 import { useNavigate } from 'react-router';
+
 
 function LoginNavbar() {
     const userAttributes = useUser();
@@ -79,7 +80,7 @@ function UploadModal({ isOpen, onClose }) {
 
 function FileList({ folder }) {
     const userAttributes = useUser();
-    const [files, setFiles] = useState({}); // file contains {filename: path} pairs
+    const [files, setFiles] = useState({}); // file contains {fileID: docName} pairs
     const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
@@ -91,17 +92,32 @@ function FileList({ folder }) {
 
         const fetchFiles = async () => {
             setLoading(true); // Start loading
+            // get the file name
             try {
                 const result = await list({
                     path: filepath,
                     options: { listAll: true },
                 });
 
-                const fileData = {};
-                result.items.forEach((file) => {
-                    const filename = file.path.split('/').pop().slice(0, -4); // Extract filename
-                    fileData[filename] = file.path;
-                });
+                const fileData = {}; // Stores fileID -> metadata name mapping
+                for (const file of result.items) {
+                    const fileID = file.path.split('/').pop().slice(0, -4); // Extract fileID
+
+                    try {
+                        const metadataResult = await getProperties({
+                            path: file.path, // Use the file path to get metadata
+                        });
+
+                        const docName = metadataResult.metadata && metadataResult.metadata.name
+                            ? metadataResult.metadata.name
+                            : 'Document'; // Default name if no metadata found
+
+                        fileData[fileID] = docName; // Store fileID -> metadata name
+                    } catch (error) {
+                        console.error('Error fetching metadata:', error);
+                        fileData[fileID] = 'Document'; // Fallback to default name
+                    }
+                }
 
                 setFiles(fileData);
             } catch (error) {
@@ -125,10 +141,10 @@ function FileList({ folder }) {
                 <p>No files found.</p>
             ) : (
                 <ul>
-                    {Object.entries(files).map(([filename, path]) => (
-                        <li key={filename} className="cursor-pointer">
-                            <a onClick={() => navigate(`/file/${filename}`)}>
-                                {filename}
+                    {Object.entries(files).map(([fileId, fileName]) => (
+                        <li key={fileId} className="cursor-pointer">
+                            <a onClick={() => navigate(`/file/${fileId}`)}>
+                                {fileName}
                             </a>
                         </li>
                     ))}
