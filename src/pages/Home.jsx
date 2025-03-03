@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MdClose } from 'react-icons/md';
 import { FaTrashAlt } from "react-icons/fa";
 import { HiMiniSparkles } from "react-icons/hi2";
+import { IoMdRefreshCircle } from "react-icons/io";
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
 import GoogleSignOut from '../components/GoogleSignOut';
@@ -135,13 +136,13 @@ function FileList({ folder }) {
 
     // Show a loading message until both userAttributes and files are fetched
     if (!userAttributes || loading) {
-        return <div className="bg-white m-6 p-6 rounded-lg text-lg font-bold text-sky-900" >Loading files...</div>;
+        return <div className="bg-white p-6 rounded-lg text-lg font-bold text-sky-900" >Loading files...</div>;
     }
 
     return (
-        <div className="bg-white m-6 p-6 rounded-lg bg-opacity-50 overflow-y-auto">
+        <div className="mt-3 mb-6 bg-white p-6 rounded-lg bg-opacity-50 overflow-y-auto">
             {Object.keys(files).length === 0 ? (
-                <p>No files found.</p>
+                <p className="text-lg font-bold text-sky-900">No files found.</p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                     {Object.entries(files).map(([fileId, fileName]) => (
@@ -195,15 +196,23 @@ function Home() {
                         Upload
                     </button>
                 </div>
-                <div>
-                    <h2 className="ml-6 mr-6 font-bold text-2xl text-sky-900">Annotated Files: </h2>
+                <div className="ml-6 mr-6">
+                    <div className="flex flex-row justify-between">
+                        <h2 className=" font-bold text-2xl text-sky-900">Annotated Files: </h2>
+                        <IoMdRefreshCircle 
+                            className="text-sky-900 hover:cursor-pointer hover:text-sky-700"
+                            onClick={() => setRefreshKey((prev) => prev + 1)}
+                            size = "30"
+                        />
+                    </div>
+                    
                     <FileList
                         key={`annotated-${refreshKey}`}
                         folder="annotated"
                     />
                 </div>
-                <div>
-                    <h2 className="ml-6 mr-6 font-bold text-2xl text-sky-900">Unannotated Files: </h2>
+                <div className="ml-6 mr-6">
+                    <h2 className="font-bold text-2xl text-sky-900">Unannotated Files: </h2>
                     <FileList
                         key={`unannotated-${refreshKey}`}
                         folder="unannotated"
