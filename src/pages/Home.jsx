@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MdClose } from 'react-icons/md';
+import { FaTrashAlt } from "react-icons/fa";
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
 import GoogleSignOut from '../components/GoogleSignOut';
@@ -132,11 +133,11 @@ function FileList({ folder }) {
 
     // Show a loading message until both userAttributes and files are fetched
     if (!userAttributes || loading) {
-        return <div className="bg-white m-6 p-6 rounded-lg" >Loading files...</div>;
+        return <div className="bg-white m-6 p-6 rounded-lg text-lg font-bold text-sky-900" >Loading files...</div>;
     }
 
     return (
-        <div className="bg-white m-6 p-6 rounded-lg bg-opacity-50">
+        <div className="bg-white m-6 p-6 rounded-lg bg-opacity-50 overflow-y-auto">
             {Object.keys(files).length === 0 ? (
                 <p>No files found.</p>
             ) : (
@@ -146,10 +147,18 @@ function FileList({ folder }) {
                              className="cursor-pointer bg-sky-100 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102 hover:shadow-xl" 
                              onClick={() => navigate(`/file/${fileId}`)}>
                             <img src={`https://placehold.co/600x400/ECECEC/CACACA`} alt={fileName} className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg" />
-                            <div className="py-2">
+                            <div className="flex flex-row py-2 content-center">
                                 <p className="text-lg font-bold text-sky-900">
                                     {fileName}
                                 </p>
+                                <button 
+                                    className="ml-auto hover:text-red-500"
+                                    onClick={(event) => {
+                                            event.stopPropagation(); // Prevent card click event
+                                            // Add your delete logic here
+                                    }}>
+                                    <FaTrashAlt size="20"/>
+                                </button>
                             </div>
                         </div>
                     ))}
@@ -172,7 +181,7 @@ function Home() {
         <div className="h-full bg-sky-300 flex flex-col">
             <LoginNavbar />
 
-            <div className="bg-sky-200 grow">
+            <div className="bg-sky-200 grow overflow-y-hidden">
                 <div className="m-6 flex flex-row bg-white p-8 rounded-lg">
                     <h1 className="text-4xl font-bold text-sky-950"> Gallery </h1>
 
