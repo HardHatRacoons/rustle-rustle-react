@@ -176,7 +176,7 @@ function FileList({ folder }) {
                         <div key={fileId} 
                              className="cursor-pointer bg-sky-100 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102 hover:shadow-xl" 
                              onClick={() => navigate(`/file/${fileId}`)}>
-                            <img src={`https://placehold.co/600x400/ECECEC/CACACA`} alt={fileName} className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg" />
+                            <img src={`https://placehold.co/600x400/ECECEC/CACACA?text=placeholder`} alt={fileName} className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg" />
                             <div className="flex flex-row py-2 content-center">
                                 <p className="text-lg font-bold text-sky-900">
                                     {fileName}
