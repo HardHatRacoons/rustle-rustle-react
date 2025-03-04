@@ -14,11 +14,10 @@ export default function LoginButton() {
                     <button
                         className="flex flex-row content-center bg-white border-solid border-1 border-gray-500 px-5 py-3 gap-2 rounded-lg shadow-lg hover:bg-sky-100 cursor-pointer"
                         aria-label="sign-in-button"
-                        onClick={async() =>
-                            {if(userAttributes !== null)
-                                await signOut();
-                            signInWithRedirect({ provider: 'Google' })}
-                        }
+                        onClick={async () => {
+                            if (userAttributes !== null) await signOut();
+                            signInWithRedirect({ provider: 'Google' });
+                        }}
                     >
                         <FcGoogle size="30" />
                         <p className="font-bold color-gray-200 content-center">
