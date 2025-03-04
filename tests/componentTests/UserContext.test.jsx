@@ -10,14 +10,15 @@ describe('Testing user context component', () => {
             const actual = await importOriginal();
             return {
                 ...actual,
-                fetchUserAttributes: vi.fn()
-                .mockRejectedValueOnce(new Error("an error!"))
-                .mockResolvedValue({
-                    email: 'user@example.com',
-                    phone_number: '+1234567890',
-                    given_name: 'John',
-                    sub: 'some-uuid',
-                }),
+                fetchUserAttributes: vi
+                    .fn()
+                    .mockRejectedValueOnce(new Error('an error!'))
+                    .mockResolvedValue({
+                        email: 'user@example.com',
+                        phone_number: '+1234567890',
+                        given_name: 'John',
+                        sub: 'some-uuid',
+                    }),
             };
         });
     });
@@ -26,16 +27,14 @@ describe('Testing user context component', () => {
         const consoleSpy = vi.spyOn(console, 'error');
 
         render(
-                        <UserProvider>
-                            <div>Hello Hello</div>
-                        </UserProvider>,
-                    );
+            <UserProvider>
+                <div>Hello Hello</div>
+            </UserProvider>,
+        );
 
-        await act(() => {
-        });
+        await act(() => {});
 
         expect(consoleSpy).toHaveBeenCalledTimes(1);
-
     });
 
     test('user context with children', async () => {
@@ -50,18 +49,18 @@ describe('Testing user context component', () => {
         expect(screen.getByText(/Hello/)).toBeInTheDocument();
     });
 
-// this might be untestable for now
-//     test('user context use user', async () => {
-//         await act(() => {
-//             render(
-//                 <UserProvider>
-//                     <div>Hello Hello</div>
-//                 </UserProvider>,
-//             );
-//         });
-//
-//         //const user = useUser();
-//
-//         //console.log(user);
-//     });
+    // this might be untestable for now
+    //     test('user context use user', async () => {
+    //         await act(() => {
+    //             render(
+    //                 <UserProvider>
+    //                     <div>Hello Hello</div>
+    //                 </UserProvider>,
+    //             );
+    //         });
+    //
+    //         //const user = useUser();
+    //
+    //         //console.log(user);
+    //     });
 });
