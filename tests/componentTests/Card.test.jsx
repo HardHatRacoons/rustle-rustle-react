@@ -7,7 +7,7 @@ describe('Testing card component', () => {
         render(<Card />);
     });
 
-    test('pin card', async() => {
+    test('pin card', async () => {
         let t = false;
         let i = 1;
         const change = (val, idx) => {
@@ -15,7 +15,11 @@ describe('Testing card component', () => {
             i = idx;
         };
 
-        render(<Card onChange={change} idx={0} >Hello Hello</ Card>);
+        render(
+            <Card onChange={change} idx={0}>
+                Hello Hello
+            </Card>,
+        );
 
         //card pin click
         expect(t).to.equal(false);
