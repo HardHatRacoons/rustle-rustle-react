@@ -18,11 +18,12 @@ function FileLayout() {
     );
     const navigate = useNavigate();
     const [pdfURL, setPdfURL] = useState(null);
+    const [docName, setDocName] = useState(null);
+
+    const [valid, setValid] = useState(false);
     const userAttributes = useUser();
 
     const { id } = useParams();
-
-    const [docName, setDocName] = useState(null);
 
     useEffect(() => {
         if (!userAttributes) return;
@@ -40,14 +41,21 @@ function FileLayout() {
                 },
                 // Alternatively, path: ({identityId}) => `album/${identityId}/1.jpg`
             });
-            // console.log(linkToStorageFile);
+
             setPdfURL(linkToStorageFile.url.toString());
+            setValid(true);
+            if (!linkToStorageFile || !linkToStorageFile.url) {
+                setValid(false);
+                return;
+            }
+
+            console.log(linkToStorageFile);
+            console.log(valid);
 
             try {
                 const result = await getProperties({
                     path: `annotated/${userAttributes.sub}/${id}.pdf`,
                 });
-                // console.log(result);
                 if (result.metadata && result.metadata.name) {
                     setDocName(result.metadata.name);
                 } else {
@@ -59,8 +67,6 @@ function FileLayout() {
         };
         getFileFromAWS();
     }, [userAttributes]);
-
-    let valid = pdfURL !== null;
 
     const change = (num) => {
         setActiveTab(num);

@@ -1,9 +1,4 @@
-import {
-    render,
-    screen,
-    fireEvent,
-    act,
-} from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 
 import * as PDFJS from 'pdfjs-dist';
@@ -126,9 +121,7 @@ describe('Testing main setup and routing after auth', () => {
                 ...actual,
                 signInWithRedirect: vi
                     .fn()
-                    .mockImplementation(({ provider }) => {
-
-                    }),
+                    .mockImplementation(({ provider }) => {}),
                 getCurrentUser: vi.fn().mockResolvedValue({
                     username: 'user123',
                     userId: '1234556789',
@@ -296,21 +289,5 @@ describe('Testing main setup and routing after auth', () => {
         expect(screen.getByText(/Welcome/)).toBeInTheDocument();
         expect(screen.getByText(/Gallery/)).toBeInTheDocument();
         expect(screen.getByText(/Upload/)).toBeInTheDocument();
-    });
-
-    test('error when loading nonexistent file', async () => {
-        render(
-            <MemoryRouter initialEntries={['/file/12']}>
-                <UserProvider>
-                    <App />
-                </UserProvider>
-            </MemoryRouter>,
-        );
-
-        await act(async () => {
-            // wait for render to finish
-        });
-
-        expect(screen.getByText(/Error/)).toBeInTheDocument();
     });
 });

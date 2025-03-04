@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { MdClose } from 'react-icons/md';
-import { FaTrashAlt } from "react-icons/fa";
-import { HiMiniSparkles } from "react-icons/hi2";
-import { IoMdRefreshCircle } from "react-icons/io";
+import { FaTrashAlt } from 'react-icons/fa';
+import { HiMiniSparkles } from 'react-icons/hi2';
+import { IoMdRefreshCircle } from 'react-icons/io';
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
 import GoogleSignOut from '../components/GoogleSignOut';
 import { useUser } from '../components/UserContext';
 import { list, getProperties, remove } from 'aws-amplify/storage';
 import { useNavigate } from 'react-router';
-
 
 function LoginNavbar() {
     const userAttributes = useUser();
@@ -83,35 +82,34 @@ function UploadModal({ isOpen, onClose }) {
 }
 
 function DeleteConfirmationModal({ isOpen, onClose, onConfirm, fileName }) {
-    if(!isOpen) return null;
-    return(
+    if (!isOpen) return null;
+    return (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
             <div className="bg-white p-6 rounded-lg shadow-lg">
                 <div className=" flex flex-row mb-6">
                     <h2 className="text-2xl font-bold">Delete File</h2>
                 </div>
                 <p className="text-lg font-bold text-sky-900">
-                    Are you sure you want to delete "{fileName}"? <br/>
+                    Are you sure you want to delete "{fileName}"? <br />
                     <strong>This action is not reversible!</strong>
                 </p>
-                
-                <div className='flex flex-row justify-end mt-6 gap-4'>
+
+                <div className="flex flex-row justify-end mt-6 gap-4">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition">
+                        className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition"
+                    >
                         Cancel
                     </button>
-                    <button 
-                        onClick={onConfirm} 
-                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                    <button
+                        onClick={onConfirm}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                    >
                         Delete
                     </button>
                 </div>
-                
             </div>
-            
         </div>
-
     );
 }
 
@@ -146,9 +144,11 @@ function FileList({ folder, setSelectedFile, setIsDeleteModalOpen }) {
                             path: file.path, // Use the file path to get metadata
                         });
 
-                        const docName = metadataResult.metadata && metadataResult.metadata.name
-                            ? metadataResult.metadata.name
-                            : 'Document'; // Default name if no metadata found
+                        const docName =
+                            metadataResult.metadata &&
+                            metadataResult.metadata.name
+                                ? metadataResult.metadata.name
+                                : 'Document'; // Default name if no metadata found
 
                         fileData[fileID] = docName; // Store fileID -> metadata name
                     } catch (error) {
@@ -170,32 +170,49 @@ function FileList({ folder, setSelectedFile, setIsDeleteModalOpen }) {
 
     // Show a loading message until both userAttributes and files are fetched
     if (!userAttributes || loading) {
-        return <div className="bg-white p-6 rounded-lg text-lg font-bold text-sky-900" >Loading files...</div>;
+        return (
+            <div className="bg-white p-6 rounded-lg text-lg font-bold text-sky-900">
+                Loading files...
+            </div>
+        );
     }
 
     return (
         <div className="mt-3 mb-6 bg-white p-6 rounded-lg bg-opacity-50 overflow-y-auto">
             {Object.keys(files).length === 0 ? (
-                <p className="text-lg font-bold text-sky-900">No files found.</p>
+                <p className="text-lg font-bold text-sky-900">
+                    No files found.
+                </p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                     {Object.entries(files).map(([fileId, fileName]) => (
-                        <div key={fileId} 
-                             className="cursor-pointer bg-sky-100 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102 hover:shadow-xl" 
-                             onClick={() => navigate(`/file/${fileId}`)}>
-                            <img src={`https://placehold.co/600x400/ECECEC/CACACA?text=placeholder`} alt={fileName} className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg" />
+                        <div
+                            key={fileId}
+                            className="cursor-pointer bg-sky-100 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102 hover:shadow-xl"
+                            onClick={() => navigate(`/file/${fileId}`)}
+                        >
+                            <img
+                                src={`https://placehold.co/600x400/ECECEC/CACACA?text=placeholder`}
+                                alt={fileName}
+                                className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg"
+                            />
                             <div className="flex flex-row py-2 content-center">
                                 <p className="text-lg font-bold text-sky-900">
                                     {fileName}
                                 </p>
-                                <button 
+                                <button
                                     className="ml-auto hover:text-red-500 hover:cursor-pointer"
                                     onClick={(event) => {
-                                            event.stopPropagation(); // Prevent card click event
-                                            setSelectedFile({fileId, fileName, folder});
-                                            setIsDeleteModalOpen(true);
-                                    }}>
-                                    <FaTrashAlt size="20"/>
+                                        event.stopPropagation(); // Prevent card click event
+                                        setSelectedFile({
+                                            fileId,
+                                            fileName,
+                                            folder,
+                                        });
+                                        setIsDeleteModalOpen(true);
+                                    }}
+                                >
+                                    <FaTrashAlt size="20" />
                                 </button>
                             </div>
                         </div>
@@ -221,7 +238,7 @@ function Home() {
 
     const handleDeleteFile = async () => {
         if (!selectedFile) return;
-        
+
         // if the folder is annotated, delete the csv file, and the unnanotated pdf file
         if (selectedFile.folder === 'annotated') {
             try {
@@ -229,10 +246,10 @@ function Home() {
                 const csvPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.csv`; // Adjust extension as needed
                 // Construct the unannotated pdf file path
                 const pdfPath = `unannotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`; // Adjust extension as needed
-                
+
                 // Call Amplify remove function
-                await remove({ 
-                    path: csvPath, 
+                await remove({
+                    path: csvPath,
                 });
                 await remove({
                     path: pdfPath,
@@ -247,15 +264,14 @@ function Home() {
         try {
             // Construct the full file path
             const filePath = `${selectedFile.folder}/${userAttributes.sub}/${selectedFile.fileId}.pdf`; // Adjust extension as needed
-            
+
             // Call Amplify remove function
-            await remove({ 
-                path: filePath, 
+            await remove({
+                path: filePath,
             });
-    
+
             // trigger refresh
             setRefreshKey((prev) => prev + 1);
-    
         } catch (error) {
             console.error('Error deleting file:', error);
         } finally {
@@ -269,7 +285,10 @@ function Home() {
 
             <div className="bg-sky-200 grow overflow-y-hidden">
                 <div className="m-6 flex flex-row bg-white p-8 rounded-lg">
-                    <h1 className="text-4xl font-bold text-sky-950"> Gallery </h1>
+                    <h1 className="text-4xl font-bold text-sky-950">
+                        {' '}
+                        Gallery{' '}
+                    </h1>
 
                     <button
                         className="ml-auto bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 cursor-pointer"
@@ -281,14 +300,16 @@ function Home() {
                 </div>
                 <div className="ml-6 mr-6">
                     <div className="flex flex-row justify-between">
-                        <h2 className=" font-bold text-2xl text-sky-900">Annotated Files: </h2>
-                        <IoMdRefreshCircle 
+                        <h2 className=" font-bold text-2xl text-sky-900">
+                            Annotated Files:{' '}
+                        </h2>
+                        <IoMdRefreshCircle
                             className="text-sky-900 hover:cursor-pointer hover:text-sky-700"
                             onClick={() => setRefreshKey((prev) => prev + 1)}
-                            size = "30"
+                            size="30"
                         />
                     </div>
-                    
+
                     <FileList
                         key={`annotated-${refreshKey}`}
                         folder="annotated"
@@ -297,7 +318,9 @@ function Home() {
                     />
                 </div>
                 <div className="ml-6 mr-6">
-                    <h2 className="font-bold text-2xl text-sky-900">Unannotated Files: </h2>
+                    <h2 className="font-bold text-2xl text-sky-900">
+                        Unannotated Files:{' '}
+                    </h2>
                     <FileList
                         key={`unannotated-${refreshKey}`}
                         folder="unannotated"
@@ -312,10 +335,10 @@ function Home() {
                 onClose={() => handleCloseUploadModal()}
             />
 
-            <DeleteConfirmationModal 
-                isOpen={isDeleteModalOpen} 
-                onClose={() => setIsDeleteModalOpen(false)} 
-                onConfirm={handleDeleteFile} 
+            <DeleteConfirmationModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleDeleteFile}
                 fileName={selectedFile?.fileName}
             />
         </div>

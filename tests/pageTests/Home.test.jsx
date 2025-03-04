@@ -1,8 +1,22 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 
 import Home from '../../src/pages/Home';
+import { beforeAll } from 'vitest';
+import { useNavigate } from 'react-router';
 
 describe('Testing home page', () => {
+    beforeAll(() => {
+        vi.mock(import('react-router'), async (importOriginal) => {
+            const actual = await importOriginal();
+            return {
+                ...actual,
+                useNavigate: vi.fn().mockResolvedValue({
+                    navigate: vi.fn(),
+                }),
+            };
+        });
+    });
+
     test('Normal Load Home page', () => {
         render(<Home />);
     });
