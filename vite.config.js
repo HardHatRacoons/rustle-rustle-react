@@ -14,10 +14,16 @@ export default defineConfig({
         globals: true,
         css: true,
         coverage: {
-            reporter: ['text', 'html', 'lcov'],
+            reporter: ['text', 'html', 'lcov', 'json', 'json-summary'],
             reportsDirectory: './tests/coverage',
             include: ['src/**'],
             exclude: ['src/main.jsx'],
+            thresholds: {
+                lines: 60,
+                branches: 60,
+                functions: 60,
+                statements: 60,
+            },
         },
     },
 });
