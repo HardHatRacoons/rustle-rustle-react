@@ -35,7 +35,7 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                   name: coverage-${{ matrix.artifact }}
-                  path: tests/coverage/coverage-summary.json
+                  path: tests/coverage
 
     report-coverage:
         needs: test
