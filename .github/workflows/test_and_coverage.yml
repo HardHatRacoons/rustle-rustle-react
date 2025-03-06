@@ -61,6 +61,8 @@ jobs:
               with:
                   name: coverage-main
                   path: coverage-main
+            - name: Debug Directory
+              run: ls -la
             - name: 'Report Coverage'
               uses: davelosert/vitest-coverage-report-action@v2
               with:
