@@ -10,9 +10,9 @@ import App from './App';
 
 import './index.css';
 
-//const logger = new ConsoleLogger('Amplify', 'DEBUG');
+// const logger = new ConsoleLogger('Amplify', 'DEBUG');
 Amplify.configure(outputs);
-//logger.debug('Amplify debug logging enabled');
+// logger.debug('Amplify debug logging enabled');
 
 const ThemeContext = createContext('light');
 

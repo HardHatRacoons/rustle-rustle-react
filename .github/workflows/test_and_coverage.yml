@@ -13,10 +13,9 @@ jobs:
                       artifact: main
                     - branch: ${{ github.head_ref }}
                       artifact: pull-request
-
         permissions:
             contents: read
-
+            pull-requests: write
         steps:
             - uses: actions/checkout@v4
               with:
@@ -36,11 +35,22 @@ jobs:
               with:
                   name: coverage-${{ matrix.artifact }}
                   path: tests/coverage
+            - name: 'Upload vite config'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: vite-config-${{ matrix.artifact }}
+                  path: vite.config.js
 
     report-coverage:
         needs: test
+        permissions:
+            contents: write
+            pull-requests: write
         runs-on: ubuntu-latest
         steps:
+            - uses: actions/download-artifact@v4
+              with:
+                  name: vite-config-main
             - name: 'Download Coverage Artifacts'
               uses: actions/download-artifact@v4
               with:
@@ -50,6 +60,8 @@ jobs:
               with:
                   name: coverage-main
                   path: coverage-main
+            - name: Debug Directory
+              run: ls -la
             - name: 'Report Coverage'
               uses: davelosert/vitest-coverage-report-action@v2
               with:
