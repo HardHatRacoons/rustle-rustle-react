@@ -87,7 +87,7 @@ describe('Testing main setup and routing after auth', () => {
             const actual = await importOriginal();
             return {
                 ...actual,
-                getUrl: vi.fn().mockResolvedValue({
+                getUrl: vi.fn().mockRejectedValueOnce(new Error("Invalid file")).mockResolvedValue({
                     url: new URL('https://fake-pdf-endpoint/pdf.pdf'),
                 }),
             };
@@ -134,6 +134,31 @@ describe('Testing main setup and routing after auth', () => {
                 }),
             };
         });
+    });
+
+    test('error when accessing nonexistent file', async () => {
+        render(
+            <MemoryRouter initialEntries={['/file/12']}>
+                <UserProvider>
+                    <App />
+                </UserProvider>
+            </MemoryRouter>,
+        );
+
+        await act(async () => {
+            // wait for render to finish
+        });
+
+        expect(screen.getByText(/Error/)).toBeInTheDocument();
+
+        //go back home
+
+        fireEvent.click(screen.getByLabelText('back'));
+        await act(async () => {});
+
+        expect(screen.getByText(/Welcome/)).toBeInTheDocument();
+        expect(screen.getByText(/Gallery/)).toBeInTheDocument();
+        expect(screen.getByText(/Upload/)).toBeInTheDocument();
     });
 
     test('home page should be rendered first', async () => {

@@ -21,7 +21,7 @@ export const algorithmHandler = defineFunction(
                     local: {
                         tryBundle(outputDir: string) {
                             execSync(
-                                `python3 -m pip install -r "${path.join(functionDir, 'requirements.txt')}" -t "${path.join(outputDir)}" --platform manylinux2014_x86_64 --only-binary=:all:`,
+                                `python3 -m pip install -r "${path.join(functionDir, 'requirements.txt')}" -t "${path.join(outputDir)}" --platform manylinux2014_x86_64 --only-binary=:all: --no-user`,
                             );
                             execSync(
                                 `cp -r "${functionDir}/" "${path.join(

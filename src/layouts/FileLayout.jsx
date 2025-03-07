@@ -20,7 +20,7 @@ function FileLayout() {
     const [pdfURL, setPdfURL] = useState(null);
     const [docName, setDocName] = useState(null);
 
-    const [valid, setValid] = useState(false);
+    const [valid, setValid] = useState(null);
     const userAttributes = useUser();
 
     const { id } = useParams();
@@ -29,25 +29,26 @@ function FileLayout() {
         if (!userAttributes) return;
 
         const getFileFromAWS = async () => {
-            const linkToStorageFile = await getUrl({
+        let linkToStorageFile =  null;
+            try{
+             linkToStorageFile = await getUrl({
                 path: `annotated/${userAttributes.sub}/${id}.pdf`,
                 options: {
                     bucket: 'raccoonTeamDrive',
                     validateObjectExistence: true,
                     // url expiration time in seconds.
                     expiresIn: 900,
-                    // whether to use accelerate endpoint
-                    // useAccelerateEndpoint: true,
                 },
-                // Alternatively, path: ({identityId}) => `album/${identityId}/1.jpg`
-            });
+
+            })
+          } catch (error) {
+            setValid(false);
+            return;
+          }
 
             setPdfURL(linkToStorageFile.url.toString());
             setValid(true);
-            if (!linkToStorageFile || !linkToStorageFile.url) {
-                setValid(false);
-                return;
-            }
+
 
             console.log(linkToStorageFile);
             console.log(valid);
@@ -94,7 +95,7 @@ function FileLayout() {
                         aria-label="back"
                     />
                 </div>
-                <div>Loading...</div>
+                <div>{valid === null? "Loading...": "Error. Invalid file specified."}</div>
             </div>
         );
 
