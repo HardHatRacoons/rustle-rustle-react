@@ -87,9 +87,12 @@ describe('Testing main setup and routing after auth', () => {
             const actual = await importOriginal();
             return {
                 ...actual,
-                getUrl: vi.fn().mockRejectedValueOnce(new Error("Invalid file")).mockResolvedValue({
-                    url: new URL('https://fake-pdf-endpoint/pdf.pdf'),
-                }),
+                getUrl: vi
+                    .fn()
+                    .mockRejectedValueOnce(new Error('Invalid file'))
+                    .mockResolvedValue({
+                        url: new URL('https://fake-pdf-endpoint/pdf.pdf'),
+                    }),
             };
         });
 
