@@ -4,7 +4,7 @@ import * as pdfjs from 'pdfjs-dist/build/pdf';
 
 import Paginator from './Paginator';
 
-function PDFViewer({ pdfURL, className }) {
+function PDFViewer({ pdfURL }) {
     const containerRef = useRef(null);
 
     const resizeTimeoutRef = useRef(null); //debounce resizing
@@ -151,16 +151,10 @@ function PDFViewer({ pdfURL, className }) {
     }, []);
 
     return (
-        <div
-            aria-label="pdf viewer"
-            className={`flex flex-col h-full w-8/10 ${
-                className ? className : ''
-            }`}
-        >
-            {/*          w-8/10*/}
+        <div aria-label="pdf viewer" className="flex flex-col h-full w-[calc(100%-300px)]">
             <div
                 ref={containerRef}
-                className="grow w-full"
+                className="grow h-full"
                 style={{ flexGrow: 1 }}
             ></div>
             <Paginator
