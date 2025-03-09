@@ -1,50 +1,35 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { useOutletContext } from 'react-router';
+
+import * as d3 from 'd3';
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 function TableView() {
+    const pdfURL = useOutletContext();
+    //const csv = "/20250225_132329_BBBB_PK-8_School_Core.csv"
+
     // Row Data: The data to be displayed.
-    const [rowData, setRowData] = useState([
-        {
-            id: 1,
-            'beam/column': true,
-            type: '22x4',
-            description: 'idk',
-            notes: 'stinky beam',
-        },
-        {
-            id: 2,
-            'beam/column': true,
-            type: '21x3',
-            description: 'idk',
-            notes: 'hates cats',
-        },
-        {
-            id: 3,
-            'beam/column': false,
-            type: '22x4',
-            description: 'idk',
-            notes: 'only child',
-        },
-    ]);
+    const [rowData, setRowData] = useState([]);
 
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState([
-        { field: 'id', cellDataType: 'number', filter: true },
-        {
-            field: 'beam/column',
-            cellDataType: 'text',
-            filter: true,
-            valueFormatter: (p) => {
-                return p.value ? 'beam' : 'column';
-            },
-        },
-        { field: 'type', cellDataType: 'text', filter: true, sortable: true },
-        { field: 'description', cellDataType: 'text' },
-        { field: 'notes', cellDataType: 'text', sortable: false, flex: 1 },
+        { headerName: 'Page Number', field: 'PageNumber', cellDataType: 'number', filter: true, sortable: true },
+        { headerName:'Area Name', field: 'AreaName', cellDataType: 'text', filter: true, sortable: true, flex: 1 },
+        { field: 'Quantity', cellDataType: 'number', filter: true, sortable: true },
+        { field: 'Shape', cellDataType: 'text', filter: true, sortable: true },
+        { field: 'Size', cellDataType: 'text', filter: true, sortable: true },
+        { field: 'Length', cellDataType: 'number', filter: true, sortable: true,
+        valueFormatter: p => p.value.toFixed(2) },
+        { headerName:'Weight (FT)', field: 'WeightFT', cellDataType: 'number', filter: true, sortable: true,
+        valueFormatter: p => p.value.toFixed(2) },
+        { headerName:'Weight (EA)',field: 'WeightEA', cellDataType: 'number', filter: true, sortable: true,
+        valueFormatter: p => p.value.toFixed(2) },
+        { headerName:'Top Of Steel',field: 'TopOfSteel', cellDataType: 'number', filter: true, sortable: true },
+        { field: 'GUID', cellDataType: 'text', filter: true, sortable: true, minWidth: 250 },
     ]);
 
     const rowSelection = useMemo(() => {
@@ -55,20 +40,36 @@ function TableView() {
         };
     }, []);
 
-    // const gridOptions = {
-    //     autoSizeStrategy: {
-    //         type: 'fitGridWidth',
-    //         defaultMinWidth: 100,
-    //         columnLimits: [
-    //             {
-    //                 colId: 'country',
-    //                 minWidth: 900
-    //             }
-    //         ]
-    //     },
-    //
-    //     // other grid options ...
-    // }
+    const autoSizeStrategy =  {
+            type: 'fitCellContents',
+        }
+
+
+  useEffect(() => {
+    // Fetch the CSV file from the URL
+    const fetchCsvData = async () => {
+      try {
+        const response = await fetch('/20250225_132329_BBBB_PK-8_School_Core.csv');
+        if (!response.ok) {
+          throw new Error('Failed to fetch CSV file');
+        }
+
+        const csvData = await response.text(); // Read response as text
+
+        // Parse CSV using D3.js
+        const parsedData = d3.csvParse(csvData, d3.autoType);
+
+        // Set the parsed JSON data in state
+        setRowData(parsedData);
+      } catch (err) {
+        setError(err.message);  // Set error message if any
+      } finally {
+        //setLoading(false);  // Set loading to false after fetch is complete
+      }
+    };
+
+    fetchCsvData();  // Trigger the fetch operation
+  }, []);
 
     return (
         <div
@@ -79,7 +80,9 @@ function TableView() {
                 rowData={rowData}
                 columnDefs={colDefs}
                 pagination={true}
+                paginationAutoPageSize={true}
                 rowSelection={rowSelection}
+                autoSizeStrategy={autoSizeStrategy}
             />
         </div>
     );

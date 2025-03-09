@@ -13,9 +13,11 @@ function FileLayout() {
     const { hash, pathname, search } = location;
 
     const page = pathname.split('/').at(-1);
+    const t = tabs.findIndex((e) => e === page);
     const [activeTab, setActiveTab] = useState(
-        tabs.findIndex((e) => e === page),
+        t === -1? 0: t
     );
+    //console.log(activeTab)
     const navigate = useNavigate();
     const [pdfURL, setPdfURL] = useState(null);
     const [docName, setDocName] = useState(null);
@@ -49,8 +51,8 @@ function FileLayout() {
                 return;
             }
 
-            console.log(linkToStorageFile);
-            console.log(valid);
+            //console.log(linkToStorageFile);
+            //console.log(valid);
 
             try {
                 const result = await getProperties({
@@ -69,7 +71,6 @@ function FileLayout() {
     }, [userAttributes]);
 
     const change = (num) => {
-        setActiveTab(num);
         navigate(`/file/${id}/${tabs[num]}`);
     };
 
@@ -116,6 +117,7 @@ function FileLayout() {
                     onChange={change}
                     tabs={tabs}
                     activeTab={activeTab}
+                    setActiveTab={setActiveTab}
                     className="w-1/4"
                 />
             </div>

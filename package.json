@@ -10,7 +10,7 @@
         "preview": "vite preview",
         "test": "vitest",
         "coverage": "vitest run --coverage",
-        "test-bail" : "vitest --bail=1"
+        "test-bail": "vitest --bail=1"
     },
     "dependencies": {
         "@aws-amplify/ui-react": "^6.9.1",
@@ -19,6 +19,7 @@
         "@types/aws-lambda": "^8.10.147",
         "ag-grid-react": "^33.0.4",
         "aws-amplify": "^6.13.1",
+        "d3": "^7.9.0",
         "pdfjs-dist": "^4.10.38",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
