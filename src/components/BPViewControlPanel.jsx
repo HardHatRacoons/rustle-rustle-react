@@ -1,7 +1,7 @@
 function BPViewControlPanel({ pdfInfo }) {
     return (
         <div className="shadow-lg rounded-md border-2 border-slate-400 flex flex-col h-full w-[300px]">
-            Downloads:
+            <p className="text-lg text-sky-900">Downloads:</p>
             <div className="flex flex-row justify-between mb-1">
                 <a
                     href={pdfInfo.annotated_url}
