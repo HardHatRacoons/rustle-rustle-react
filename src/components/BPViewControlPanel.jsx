@@ -2,7 +2,7 @@ import { LuDownload } from 'react-icons/lu';
 import { BsFiletypePdf, BsFiletypeCsv } from 'react-icons/bs';
 
 function BPViewControlPanel({ pdfInfo }) {
-    const isMissingDownloadLinks = 
+    const isMissingDownloadLinks =
         !pdfInfo.annotated_url || !pdfInfo.annotated_csv;
 
     if (isMissingDownloadLinks) {
@@ -10,15 +10,11 @@ function BPViewControlPanel({ pdfInfo }) {
             <div className="shadow-lg rounded-md border-2 border-slate-400 flex flex-col h-full w-[300px] p-4">
                 <p className="text-lg text-sky-900">Downloads:</p>
                 <div className="grid grid-cols-2 gap-4 p-4 max-w-sm">
-                    <a
-                        className="border-2 border-slate-400 rounded-md p-4 flex flex-col items-center justify-center bg-gray-300 col-span-2"
-                    >
+                    <a className="border-2 border-slate-400 rounded-md p-4 flex flex-col items-center justify-center bg-gray-300 col-span-2">
                         <LuDownload className="text-3xl mb-1" />
                         <span>Annotations</span>
                     </a>
-                    <a
-                        className="border-2 border-slate-400 bg-gray-200 text-white-700 rounded-md p-4 flex flex-col items-center justify-center"
-                    >
+                    <a className="border-2 border-slate-400 bg-gray-200 text-white-700 rounded-md p-4 flex flex-col items-center justify-center">
                         <BsFiletypeCsv className="text-3xl mb-1" />
                         <span>Data</span>
                     </a>
@@ -31,7 +27,9 @@ function BPViewControlPanel({ pdfInfo }) {
                         <span>Original</span>
                     </a>
                 </div>
-                <p className="text-lg text-sky-900">Blueprint currently processing</p>
+                <p className="text-lg text-sky-900">
+                    Blueprint currently processing
+                </p>
             </div>
         );
     }

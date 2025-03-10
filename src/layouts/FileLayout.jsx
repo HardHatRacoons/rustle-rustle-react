@@ -30,23 +30,6 @@ function FileLayout() {
             let linkToStorageFile = null;
             try {
                 linkToStorageFile = await getUrl({
-                    path: `annotated/${userAttributes.sub}/${id}.pdf`,
-                    options: {
-                        bucket: 'raccoonTeamDrive',
-                        validateObjectExistence: true,
-                        // url expiration time in seconds.
-                        expiresIn: 900,
-                    },
-                });
-            } catch (error) {
-                setValid(false);
-                return;
-            }
-            pdf.annotated_url = linkToStorageFile.url.toString();
-            if (pdf.annotated_url) setValid(true);
-
-            try {
-                linkToStorageFile = await getUrl({
                     path: `unannotated/${userAttributes.sub}/${id}.pdf`,
                     options: {
                         bucket: 'raccoonTeamDrive',
@@ -55,7 +38,25 @@ function FileLayout() {
                         expiresIn: 900,
                     },
                 });
-                pdf.unannotated_url = linkToStorageFile.url.toString();
+            } catch (error) {
+                console.log(error);
+                setValid(false);
+                return;
+            }
+            pdf.unannotated_url = linkToStorageFile.url.toString();
+            if (pdf.unannotated_url) setValid(true);
+
+            try {
+                linkToStorageFile = await getUrl({
+                    path: `annotated/${userAttributes.sub}/${id}.pdf`,
+                    options: {
+                        bucket: 'raccoonTeamDrive',
+                        validateObjectExistence: true,
+                        // url expiration time in seconds.
+                        expiresIn: 900,
+                    },
+                });
+                pdf.annotated_url = linkToStorageFile.url.toString();
             } catch (error) {}
 
             try {
@@ -73,7 +74,7 @@ function FileLayout() {
 
             try {
                 const result = await getProperties({
-                    path: `annotated/${userAttributes.sub}/${id}.pdf`,
+                    path: `unannotated/${userAttributes.sub}/${id}.pdf`,
                 });
                 if (result.metadata && result.metadata.name) {
                     pdf.name = result.metadata.name;
