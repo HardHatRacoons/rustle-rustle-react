@@ -151,7 +151,10 @@ function PDFViewer({ pdfURL }) {
     }, []);
 
     return (
-        <div aria-label="pdf viewer" className="flex flex-col h-full w-[calc(100%-300px)]">
+        <div
+            aria-label="pdf viewer"
+            className="flex flex-col h-full w-[calc(100%-300px)]"
+        >
             <div
                 ref={containerRef}
                 className="grow h-full"

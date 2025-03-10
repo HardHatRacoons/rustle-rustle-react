@@ -1,4 +1,3 @@
-
 function BPViewControlPanel({ pdfInfo }) {
     return (
         <div className="shadow-lg rounded-md border-2 border-slate-400 flex flex-col h-full w-[300px]">

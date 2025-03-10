@@ -43,8 +43,7 @@ function FileLayout() {
                 return;
             }
             pdf.annotated_url = linkToStorageFile.url.toString();
-            if (pdf.annotated_url)
-                setValid(true);
+            if (pdf.annotated_url) setValid(true);
 
             try {
                 linkToStorageFile = await getUrl({
@@ -57,8 +56,7 @@ function FileLayout() {
                     },
                 });
                 pdf.unannotated_url = linkToStorageFile.url.toString();
-            } catch (error) {
-            }
+            } catch (error) {}
 
             try {
                 linkToStorageFile = await getUrl({
@@ -71,8 +69,7 @@ function FileLayout() {
                     },
                 });
                 pdf.annotated_csv = linkToStorageFile.url.toString();
-            } catch (error) {
-            }
+            } catch (error) {}
 
             try {
                 const result = await getProperties({
@@ -138,7 +135,9 @@ function FileLayout() {
                         className="align-self-center"
                         aria-label="back"
                     />
-                    <span className="text-2xl mx-2 my-auto">{pdfInfo.name}</span>
+                    <span className="text-2xl mx-2 my-auto">
+                        {pdfInfo.name}
+                    </span>
                 </div>
                 <Tabs
                     onChange={change}
