@@ -3,14 +3,7 @@ import { LuDownload } from 'react-icons/lu';
 import { BsFiletypePdf, BsFiletypeCsv } from 'react-icons/bs';
 
 function BPViewControlPanel({ pdfInfo }) {
-    const [isMissingDownloadLinks, setIsMissingDownloadLinks] = useState(false);
-
-    useEffect(() => {
-        if (setIsMissingDownloadLinks || !pdfInfo) return;
-        setIsMissingDownloadLinks(
-            !pdfInfo.url.annotated.pdf || !pdfInfo.url.annotated.csv,
-        );
-    }, [pdfInfo, pdfInfo.url.annotated.pdf, pdfInfo.url.annotated.csv]);
+    const isMissingDownloadLinks = !pdfInfo.url.annotated.pdf || !pdfInfo.url.annotated.csv;
 
     if (isMissingDownloadLinks) {
         return (
