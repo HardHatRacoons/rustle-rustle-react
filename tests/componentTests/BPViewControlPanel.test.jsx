@@ -17,7 +17,9 @@ describe('BPViewControlPanel', () => {
         expect(screen.getByText(/Annotations/)).toBeInTheDocument();
         expect(screen.getByText(/Data/)).toBeInTheDocument();
         expect(screen.getByText(/Original/)).toBeInTheDocument();
-        expect(screen.getByText(/Blueprint currently processing/)).toBeInTheDocument();
+        expect(
+            screen.getByText(/Blueprint currently processing/),
+        ).toBeInTheDocument();
     });
 
     test('renders with all download links available', () => {
@@ -34,6 +36,8 @@ describe('BPViewControlPanel', () => {
         expect(screen.getByText(/Annotations/)).toBeInTheDocument();
         expect(screen.getByText(/Data/)).toBeInTheDocument();
         expect(screen.getByText(/Original/)).toBeInTheDocument();
-        expect(screen.queryByText(/Blueprint currently processing/)).not.toBeInTheDocument();
+        expect(
+            screen.queryByText(/Blueprint currently processing/),
+        ).not.toBeInTheDocument();
     });
 });
