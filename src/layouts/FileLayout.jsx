@@ -17,18 +17,16 @@ function FileLayout() {
         tabs.findIndex((e) => e === page),
     );
     const navigate = useNavigate();
-    const [pdfURL, setPdfURL] = useState(null);
-    const [docName, setDocName] = useState(null);
-
+    const [pdfInfo, setPdfInfo] = useState(null);
     const [valid, setValid] = useState(null);
     const userAttributes = useUser();
 
     const { id } = useParams();
-
     useEffect(() => {
         if (!userAttributes) return;
 
         const getFileFromAWS = async () => {
+            let pdf = {};
             let linkToStorageFile = null;
             try {
                 linkToStorageFile = await getUrl({
@@ -44,29 +42,53 @@ function FileLayout() {
                 setValid(false);
                 return;
             }
+            pdf.annotated_url = linkToStorageFile.url.toString();
+            if (pdf.annotated_url) setValid(true);
 
-            setPdfURL(linkToStorageFile.url.toString());
-            setValid(true);
+            try {
+                linkToStorageFile = await getUrl({
+                    path: `unannotated/${userAttributes.sub}/${id}.pdf`,
+                    options: {
+                        bucket: 'raccoonTeamDrive',
+                        validateObjectExistence: true,
+                        // url expiration time in seconds.
+                        expiresIn: 900,
+                    },
+                });
+                pdf.unannotated_url = linkToStorageFile.url.toString();
+            } catch (error) {}
 
-            console.log(linkToStorageFile);
-            console.log(valid);
+            try {
+                linkToStorageFile = await getUrl({
+                    path: `annotated/${userAttributes.sub}/${id}.csv`,
+                    options: {
+                        bucket: 'raccoonTeamDrive',
+                        validateObjectExistence: true,
+                        // url expiration time in seconds.
+                        expiresIn: 900,
+                    },
+                });
+                pdf.annotated_csv = linkToStorageFile.url.toString();
+            } catch (error) {}
 
             try {
                 const result = await getProperties({
                     path: `annotated/${userAttributes.sub}/${id}.pdf`,
                 });
                 if (result.metadata && result.metadata.name) {
-                    setDocName(result.metadata.name);
+                    pdf.name = result.metadata.name;
                 } else {
-                    setDocName('Document');
+                    pdf.name = 'Document';
                 }
             } catch (error) {
                 console.log('Error ', error);
             }
+            setPdfInfo(pdf);
         };
         getFileFromAWS();
     }, [userAttributes]);
-
+    console.log(pdfInfo);
+    console.log(valid);
     const change = (num) => {
         setActiveTab(num);
         navigate(`/file/${id}/${tabs[num]}`);
@@ -80,7 +102,7 @@ function FileLayout() {
             navigate(`/file/${id}/${tabs[0]}`);
     }, [valid]);
 
-    if (!valid)
+    if (!valid || !pdfInfo)
         return (
             <div className="flex flex-col h-full">
                 <div className="flex flex-row justify-between px-3 pt-3">
@@ -113,7 +135,9 @@ function FileLayout() {
                         className="align-self-center"
                         aria-label="back"
                     />
-                    <span className="text-2xl mx-2 my-auto">{docName}</span>
+                    <span className="text-2xl mx-2 my-auto">
+                        {pdfInfo.name}
+                    </span>
                 </div>
                 <Tabs
                     onChange={change}
@@ -122,7 +146,7 @@ function FileLayout() {
                     className="w-1/4"
                 />
             </div>
-            <Outlet context={pdfURL} />
+            <Outlet context={pdfInfo} />
         </div>
     );
 }
