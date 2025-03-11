@@ -1,9 +1,14 @@
+import { useEffect, useState } from 'react';
 import { LuDownload } from 'react-icons/lu';
 import { BsFiletypePdf, BsFiletypeCsv } from 'react-icons/bs';
 
 function BPViewControlPanel({ pdfInfo }) {
-    const isMissingDownloadLinks =
-        !pdfInfo.annotated_url || !pdfInfo.annotated_csv;
+    const [isMissingDownloadLinks, setIsMissingDownloadLinks] = useState(false);
+
+    useEffect(() => {
+        if (setIsMissingDownloadLinks || !pdfInfo) return;
+        setIsMissingDownloadLinks(!pdfInfo.url.annotated.pdf || !pdfInfo.url.annotated.csv);
+    }, [pdfInfo, pdfInfo.url.annotated.pdf, pdfInfo.url.annotated.csv]);
 
     if (isMissingDownloadLinks) {
         return (
@@ -19,7 +24,7 @@ function BPViewControlPanel({ pdfInfo }) {
                         <span>Data</span>
                     </a>
                     <a
-                        href={pdfInfo.unannotated_url}
+                        href={pdfInfo.url.unannotated.pdf}
                         target="_blank"
                         className="border-2 border-slate-400 text-gray-700 rounded-md p-4 flex flex-col items-center justify-center hover:bg-slate-200"
                     >
@@ -39,7 +44,7 @@ function BPViewControlPanel({ pdfInfo }) {
             <p className="text-lg text-sky-900">Downloads:</p>
             <div className="grid grid-cols-2 gap-4 p-4 max-w-sm">
                 <a
-                    href={pdfInfo.annotated_url}
+                    href={pdfInfo.url.annotated.pdf}
                     target="_blank"
                     className="border-2 border-slate-400 rounded-md p-4 flex flex-col items-center justify-center bg-sky-300 hover:bg-sky-400 col-span-2"
                 >
@@ -47,7 +52,7 @@ function BPViewControlPanel({ pdfInfo }) {
                     <span>Annotations</span>
                 </a>
                 <a
-                    href={pdfInfo.annotated_csv}
+                    href={pdfInfo.url.annotated.csv}
                     target="_blank"
                     className="border-2 border-slate-400 bg-green-200 text-gray-700 rounded-md p-4 flex flex-col items-center justify-center hover:bg-green-300"
                 >
@@ -55,7 +60,7 @@ function BPViewControlPanel({ pdfInfo }) {
                     <span>Data</span>
                 </a>
                 <a
-                    href={pdfInfo.unannotated_url}
+                    href={pdfInfo.url.unannotated.pdf}
                     target="_blank"
                     className="border-2 border-slate-400 text-gray-700 rounded-md p-4 flex flex-col items-center justify-center hover:bg-slate-200"
                 >
