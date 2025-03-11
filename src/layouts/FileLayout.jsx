@@ -84,10 +84,12 @@ function FileLayout() {
             } catch (error) {
                 console.log('Error ', error);
             }
+
             setPdfInfo(pdf);
         };
+
         getFileFromAWS();
-    }, [userAttributes]);
+    }, [userAttributes, id]);
     console.log(pdfInfo);
     console.log(valid);
     const change = (num) => {
