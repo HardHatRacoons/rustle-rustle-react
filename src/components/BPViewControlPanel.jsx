@@ -7,7 +7,9 @@ function BPViewControlPanel({ pdfInfo }) {
 
     useEffect(() => {
         if (setIsMissingDownloadLinks || !pdfInfo) return;
-        setIsMissingDownloadLinks(!pdfInfo.url.annotated.pdf || !pdfInfo.url.annotated.csv);
+        setIsMissingDownloadLinks(
+            !pdfInfo.url.annotated.pdf || !pdfInfo.url.annotated.csv,
+        );
     }, [pdfInfo, pdfInfo.url.annotated.pdf, pdfInfo.url.annotated.csv]);
 
     if (isMissingDownloadLinks) {

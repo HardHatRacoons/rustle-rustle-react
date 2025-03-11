@@ -18,8 +18,14 @@ function FileLayout() {
     );
     const navigate = useNavigate();
     const [pdfInfo, setPdfInfo] = useState({
-        path: {annotated: {pdf: null, csv: null}, unannotated: {pdf: null}},
-        url: {annotated: {pdf: null, csv: null}, unannotated: {pdf: null}},
+        path: {
+            annotated: { pdf: null, csv: null },
+            unannotated: { pdf: null },
+        },
+        url: {
+            annotated: { pdf: null, csv: null },
+            unannotated: { pdf: null },
+        },
     });
     const [valid, setValid] = useState(null);
     const userAttributes = useUser();
@@ -30,8 +36,14 @@ function FileLayout() {
 
         const getFileFromAWS = async () => {
             let pdf = {
-                path: {annotated: {pdf: null, csv: null}, unannotated: {pdf: null}},
-                url: {annotated: {pdf: null, csv: null}, unannotated: {pdf: null}},
+                path: {
+                    annotated: { pdf: null, csv: null },
+                    unannotated: { pdf: null },
+                },
+                url: {
+                    annotated: { pdf: null, csv: null },
+                    unannotated: { pdf: null },
+                },
             };
             let linkToStorageFile = null;
             pdf.path.annotated.pdf = `annotated/${userAttributes.sub}/${id}.pdf`;
@@ -102,7 +114,6 @@ function FileLayout() {
         getFileFromAWS();
     }, [userAttributes, id]);
 
-    
     const change = (num) => {
         setActiveTab(num);
         navigate(`/file/${id}/${tabs[num]}`);
