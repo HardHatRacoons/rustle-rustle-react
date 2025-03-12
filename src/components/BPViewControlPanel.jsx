@@ -13,7 +13,8 @@ function BPViewControlPanel({ pdfInfo }) {
                 <a
                     href={pdfInfo.url.annotated.pdf}
                     target="_blank"
-                    className={`border-2 border-slate-400 rounded-md p-4 flex flex-col items-center justify-center col-span-2 ${isMissingDownloadLinks ? 'bg-gray-300' : 'bg-sky-300 hover:bg-sky-400'}`}
+                    className={`border-2 border-slate-400 rounded-md p-4 flex flex-col items-center justify-center col-span-2 
+                        ${isMissingDownloadLinks ? 'bg-gray-300' : 'bg-sky-300 hover:bg-sky-400'}`}
                 >
                     <LuDownload className="text-3xl mb-1" />
                     <span>Annotations</span>
@@ -21,7 +22,8 @@ function BPViewControlPanel({ pdfInfo }) {
                 <a
                     href={pdfInfo.url.annotated.csv}
                     target="_blank"
-                    className={`border-2 border-slate-400 rounded-md p-4 flex flex-col items-center justify-center ${isMissingDownloadLinks ? 'bg-gray-200 text-white-700' : 'bg-green-200 hover:bg-green-30 text-gray-700'}`}
+                    className={`border-2 border-slate-400 rounded-md p-4 flex flex-col items-center justify-center 
+                        ${isMissingDownloadLinks ? 'bg-gray-200 text-white-700' : 'bg-green-200 hover:bg-green-30 text-gray-700'}`}
                 >
                     <BsFiletypeCsv className="text-3xl mb-1" />
                     <span>Data</span>
@@ -29,7 +31,8 @@ function BPViewControlPanel({ pdfInfo }) {
                 <a
                     href={pdfInfo.url.unannotated.pdf}
                     target="_blank"
-                    className="border-2 border-slate-400 text-gray-700 rounded-md p-4 flex flex-col items-center justify-center hover:bg-slate-200"
+                    className="border-2 border-slate-400 text-gray-700 rounded-md p-4 flex flex-col items-center justify-center 
+                        hover:bg-slate-200"
                 >
                     <BsFiletypePdf className="text-3xl mb-1" />
                     <span>Original</span>
