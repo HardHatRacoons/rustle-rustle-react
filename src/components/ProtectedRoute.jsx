@@ -17,10 +17,6 @@ const ProtectedRoute = ({ children }) => {
         checkUser();
     }, []);
 
-    //     if (isAuthenticated === null) {
-    //         return <p>Loading...</p>; // Show a loading state while checking auth
-    //     }
-
     return isAuthenticated === null ? (
         <p>Loading...</p>
     ) : isAuthenticated ? (

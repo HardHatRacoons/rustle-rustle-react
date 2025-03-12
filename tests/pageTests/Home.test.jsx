@@ -2,7 +2,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 
 import Home from '../../src/pages/Home';
 import { beforeAll } from 'vitest';
-import { useNavigate } from 'react-router';
 
 describe('Testing home page', () => {
     beforeAll(() => {

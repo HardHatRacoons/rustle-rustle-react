@@ -19,56 +19,102 @@ function FileLayout() {
     );
     //console.log(activeTab)
     const navigate = useNavigate();
-    const [pdfURL, setPdfURL] = useState(null);
-    const [docName, setDocName] = useState(null);
-
-    const [valid, setValid] = useState(false);
+    const [pdfInfo, setPdfInfo] = useState({
+        path: {
+            annotated: { pdf: null, csv: null },
+            unannotated: { pdf: null },
+        },
+        url: {
+            annotated: { pdf: null, csv: null },
+            unannotated: { pdf: null },
+        },
+    });
+    const [valid, setValid] = useState(null);
     const userAttributes = useUser();
 
     const { id } = useParams();
-
     useEffect(() => {
         if (!userAttributes) return;
 
         const getFileFromAWS = async () => {
-            const linkToStorageFile = await getUrl({
-                path: `annotated/${userAttributes.sub}/${id}.pdf`,
-                options: {
-                    bucket: 'raccoonTeamDrive',
-                    validateObjectExistence: true,
-                    // url expiration time in seconds.
-                    expiresIn: 900,
-                    // whether to use accelerate endpoint
-                    // useAccelerateEndpoint: true,
+            let pdf = {
+                path: {
+                    annotated: { pdf: null, csv: null },
+                    unannotated: { pdf: null },
                 },
-                // Alternatively, path: ({identityId}) => `album/${identityId}/1.jpg`
-            });
-
-            setPdfURL(linkToStorageFile.url.toString());
-            setValid(true);
-            if (!linkToStorageFile || !linkToStorageFile.url) {
+                url: {
+                    annotated: { pdf: null, csv: null },
+                    unannotated: { pdf: null },
+                },
+            };
+            let linkToStorageFile = null;
+            pdf.path.annotated.pdf = `annotated/${userAttributes.sub}/${id}.pdf`;
+            pdf.path.annotated.csv = `annotated/${userAttributes.sub}/${id}.csv`;
+            pdf.path.unannotated.pdf = `unannotated/${userAttributes.sub}/${id}.pdf`;
+            try {
+                linkToStorageFile = await getUrl({
+                    path: pdf.path.unannotated.pdf,
+                    options: {
+                        bucket: 'raccoonTeamDrive',
+                        validateObjectExistence: true,
+                        // url expiration time in seconds.
+                        expiresIn: 900,
+                    },
+                });
+            } catch (error) {
+                console.log(error);
                 setValid(false);
                 return;
             }
+            pdf.url.unannotated.pdf = linkToStorageFile.url.toString();
+            if (pdf.url.unannotated.pdf) setValid(true);
 
-            //console.log(linkToStorageFile);
-            //console.log(valid);
+            try {
+                linkToStorageFile = await getUrl({
+                    path: pdf.path.annotated.pdf,
+                    options: {
+                        bucket: 'raccoonTeamDrive',
+                        validateObjectExistence: true,
+                        // url expiration time in seconds.
+                        expiresIn: 900,
+                    },
+                });
+                pdf.url.annotated.pdf = linkToStorageFile.url.toString();
+            } catch (error) {
+                console.log(error);
+            }
+
+            try {
+                linkToStorageFile = await getUrl({
+                    path: pdf.path.annotated.csv,
+                    options: {
+                        bucket: 'raccoonTeamDrive',
+                        validateObjectExistence: true,
+                        // url expiration time in seconds.
+                        expiresIn: 900,
+                    },
+                });
+                pdf.url.annotated.csv = linkToStorageFile.url.toString();
+            } catch (error) {}
 
             try {
                 const result = await getProperties({
-                    path: `annotated/${userAttributes.sub}/${id}.pdf`,
+                    path: `unannotated/${userAttributes.sub}/${id}.pdf`,
                 });
                 if (result.metadata && result.metadata.name) {
-                    setDocName(result.metadata.name);
+                    pdf.name = result.metadata.name;
                 } else {
-                    setDocName('Document');
+                    pdf.name = 'Document';
                 }
             } catch (error) {
                 console.log('Error ', error);
             }
+
+            setPdfInfo(pdf);
         };
+
         getFileFromAWS();
-    }, [userAttributes]);
+    }, [userAttributes, id]);
 
     const change = (num) => {
         navigate(`/file/${id}/${tabs[num]}`);
@@ -82,7 +128,7 @@ function FileLayout() {
             navigate(`/file/${id}/${tabs[0]}`);
     }, [valid]);
 
-    if (!valid)
+    if (!valid || !pdfInfo)
         return (
             <div className="flex flex-col h-full">
                 <div className="flex flex-row justify-between px-3 pt-3">
@@ -95,7 +141,11 @@ function FileLayout() {
                         aria-label="back"
                     />
                 </div>
-                <div>Loading...</div>
+                <div>
+                    {valid === null
+                        ? 'Loading...'
+                        : 'Error. Invalid file specified.'}
+                </div>
             </div>
         );
 
@@ -111,7 +161,9 @@ function FileLayout() {
                         className="align-self-center"
                         aria-label="back"
                     />
-                    <span className="text-2xl mx-2 my-auto">{docName}</span>
+                    <span className="text-2xl mx-2 my-auto">
+                        {pdfInfo.name}
+                    </span>
                 </div>
                 <Tabs
                     onChange={change}
@@ -121,7 +173,7 @@ function FileLayout() {
                     className="w-1/4"
                 />
             </div>
-            <Outlet context={pdfURL} />
+            <Outlet context={pdfInfo} />
         </div>
     );
 }
