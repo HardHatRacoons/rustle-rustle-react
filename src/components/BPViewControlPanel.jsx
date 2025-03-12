@@ -35,10 +35,11 @@ function BPViewControlPanel({ pdfInfo }) {
                     <span>Original</span>
                 </a>
             </div>
-            {isMissingDownloadLinks && (<p className="text-lg text-sky-900">
+            {isMissingDownloadLinks && (
+                <p className="text-lg text-sky-900">
                     Blueprint currently processing
-                </p>)
-            }
+                </p>
+            )}
         </div>
     );
 }
