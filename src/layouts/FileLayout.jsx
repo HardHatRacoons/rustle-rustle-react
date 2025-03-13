@@ -49,6 +49,7 @@ function FileLayout() {
             pdf.path.annotated.pdf = `annotated/${userAttributes.sub}/${id}.pdf`;
             pdf.path.annotated.csv = `annotated/${userAttributes.sub}/${id}.csv`;
             pdf.path.unannotated.pdf = `unannotated/${userAttributes.sub}/${id}.pdf`;
+
             try {
                 linkToStorageFile = await getUrl({
                     path: pdf.path.unannotated.pdf,

@@ -11,11 +11,8 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 function TableView() {
     const pdfInfo = useOutletContext();
-    const csvPath = pdfInfo.path.annotated.csv;
     const [csvURL, setCsvURL] = useState(pdfInfo.url.annotated.csv); //alrdy a download url
-    const [jsonPath, setJsonPath] = useState(
-        csvPath ? csvPath.split('.')[0] + '.json' : null,
-    );
+    const [jsonPath, setJsonPath] = useState(pdfInfo?.path.annotated.csv ? pdfInfo.path.annotated.csv.split('.')[0] + '.json' : null);
 
     const [rowData, setRowData] = useState([]);
 
@@ -159,7 +156,13 @@ function TableView() {
         };
 
         fetchJSONData();
-    }, []);
+    }, [jsonPath]);
+
+    useEffect(() => {
+        const json = pdfInfo?.path.annotated.csv ? pdfInfo.path.annotated.csv.split('.')[0] + '.json' : null;
+        setJsonPath(json);
+        setCsvURL(pdfInfo?.url.annotated.csv);
+    }, [pdfInfo])
 
     return (
         <div

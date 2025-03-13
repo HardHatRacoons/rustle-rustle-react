@@ -66,6 +66,9 @@ function PDFViewer({ pdfURL }) {
             //console.log(page)
 
             const canvasContainer = containerRef.current;
+            if(canvasContainer === null)
+                return;
+
             canvasContainer.innerHTML = '';
 
             const canvas = document.createElement('canvas');
