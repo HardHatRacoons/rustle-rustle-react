@@ -40,7 +40,6 @@ describe('Testing home page', () => {
     });
 });
 
-
 vi.mock('../../src/components/UserContext', () => ({
     useUser: vi.fn(),
 }));
@@ -61,8 +60,12 @@ describe('FileList', () => {
 
         render(
             <MemoryRouter>
-                <FileList folder="annotated" setSelectedFile={vi.fn()} setIsDeleteModalOpen={vi.fn()} />
-            </MemoryRouter>
+                <FileList
+                    folder="annotated"
+                    setSelectedFile={vi.fn()}
+                    setIsDeleteModalOpen={vi.fn()}
+                />
+            </MemoryRouter>,
         );
 
         expect(screen.getByText('Loading files...')).toBeInTheDocument();
@@ -74,8 +77,12 @@ describe('FileList', () => {
 
         render(
             <MemoryRouter>
-                <FileList folder="annotated" setSelectedFile={vi.fn()} setIsDeleteModalOpen={vi.fn()} />
-            </MemoryRouter>
+                <FileList
+                    folder="annotated"
+                    setSelectedFile={vi.fn()}
+                    setIsDeleteModalOpen={vi.fn()}
+                />
+            </MemoryRouter>,
         );
 
         await act(async () => {
@@ -102,8 +109,12 @@ describe('FileList', () => {
 
         render(
             <MemoryRouter>
-                <FileList folder="annotated" setSelectedFile={vi.fn()} setIsDeleteModalOpen={vi.fn()} />
-            </MemoryRouter>
+                <FileList
+                    folder="annotated"
+                    setSelectedFile={vi.fn()}
+                    setIsDeleteModalOpen={vi.fn()}
+                />
+            </MemoryRouter>,
         );
 
         await act(async () => {
@@ -116,9 +127,7 @@ describe('FileList', () => {
     test('renders file as document when name is unavailable', async () => {
         useUser.mockReturnValue({ sub: 'testuser' });
         list.mockResolvedValue({
-            items: [
-                { path: 'annotated/testuser/file1.pdf' },
-            ],
+            items: [{ path: 'annotated/testuser/file1.pdf' }],
         });
         getProperties.mockResolvedValue({
             metadata: {},
@@ -126,8 +135,12 @@ describe('FileList', () => {
 
         render(
             <MemoryRouter>
-                <FileList folder="annotated" setSelectedFile={vi.fn()} setIsDeleteModalOpen={vi.fn()} />
-            </MemoryRouter>
+                <FileList
+                    folder="annotated"
+                    setSelectedFile={vi.fn()}
+                    setIsDeleteModalOpen={vi.fn()}
+                />
+            </MemoryRouter>,
         );
 
         await act(async () => {
@@ -139,15 +152,17 @@ describe('FileList', () => {
     test('renders error message when fetching files fails', async () => {
         useUser.mockReturnValue({ sub: 'testuser' });
         list.mockResolvedValue({
-            items: [
-                { path: 'annotated/testuser/file1.pdf' },
-            ],
+            items: [{ path: 'annotated/testuser/file1.pdf' }],
         });
         getProperties.mockRejectedValue(new Error('Failed getting property'));
         render(
             <MemoryRouter>
-                <FileList folder="annotated" setSelectedFile={vi.fn()} setIsDeleteModalOpen={vi.fn()} />
-            </MemoryRouter>
+                <FileList
+                    folder="annotated"
+                    setSelectedFile={vi.fn()}
+                    setIsDeleteModalOpen={vi.fn()}
+                />
+            </MemoryRouter>,
         );
 
         await act(async () => {
