@@ -14,9 +14,7 @@ function FileLayout() {
 
     const page = pathname.split('/').at(-1);
     const t = tabs.findIndex((e) => e === page);
-    const [activeTab, setActiveTab] = useState(
-        t === -1? 0: t
-    );
+    const [activeTab, setActiveTab] = useState(t === -1 ? 0 : t);
     //console.log(activeTab)
     const navigate = useNavigate();
     const [pdfInfo, setPdfInfo] = useState({

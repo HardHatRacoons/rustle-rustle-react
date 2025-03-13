@@ -22,12 +22,19 @@ describe('Testing tabs component', () => {
         let activeT = 0;
         const setActiveT = (num) => {
             activeT = num;
-        }
+        };
         const change = (num) => {
             t = num;
         };
 
-        render(<Tabs onChange={change} tabs={tabs} activeTab={activeT} setActiveTab={setActiveT} />);
+        render(
+            <Tabs
+                onChange={change}
+                tabs={tabs}
+                activeTab={activeT}
+                setActiveTab={setActiveT}
+            />,
+        );
         //both tabs show up
         expect(screen.getByText(/1/)).toBeInTheDocument();
         expect(screen.getByText(/2/)).toBeInTheDocument();

@@ -137,23 +137,27 @@ function FileList({ folder, setSelectedFile, setIsDeleteModalOpen }) {
 
                 const fileData = {}; // Stores fileID -> metadata name mapping
                 for (const file of result.items) {
-                    const fileID = file.path.split('/').pop().slice(0, -4); // Extract fileID
+                    const fileParts = file.path.split('/');
+                    const fileType = fileParts.at(-1).split('.').at(-1);
+                    const fileID = fileParts.at(-1).slice(0, -4); // Extract fileID
 
-                    try {
-                        const metadataResult = await getProperties({
-                            path: file.path, // Use the file path to get metadata
-                        });
+                    if (fileType === 'pdf') {
+                        try {
+                            const metadataResult = await getProperties({
+                                path: file.path, // Use the file path to get metadata
+                            });
 
-                        const docName =
-                            metadataResult.metadata &&
-                            metadataResult.metadata.name
-                                ? metadataResult.metadata.name
-                                : 'Document'; // Default name if no metadata found
+                            const docName =
+                                metadataResult.metadata &&
+                                metadataResult.metadata.name
+                                    ? metadataResult.metadata.name
+                                    : 'Document'; // Default name if no metadata found
 
-                        fileData[fileID] = docName; // Store fileID -> metadata name
-                    } catch (error) {
-                        console.error('Error fetching metadata:', error);
-                        fileData[fileID] = 'Document'; // Fallback to default name
+                            fileData[fileID] = docName; // Store fileID -> metadata name
+                        } catch (error) {
+                            console.error('Error fetching metadata:', error);
+                            fileData[fileID] = 'Document'; // Fallback to default name
+                        }
                     }
                 }
 
@@ -246,13 +250,16 @@ function Home() {
                 const csvPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.csv`; // Adjust extension as needed
                 // Construct the unannotated pdf file path
                 const pdfPath = `unannotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`; // Adjust extension as needed
-
+                const jsonPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.json`;
                 // Call Amplify remove function
                 await remove({
                     path: csvPath,
                 });
                 await remove({
                     path: pdfPath,
+                });
+                await remove({
+                    path: jsonPath,
                 });
             } catch (error) {
                 console.error('Error deleting file:', error);
@@ -283,7 +290,7 @@ function Home() {
         <div className="h-full bg-sky-300 flex flex-col">
             <LoginNavbar />
 
-            <div className="bg-sky-200 grow overflow-y-hidden">
+            <div className="bg-sky-200 grow overflow-y-auto">
                 <div className="m-6 flex flex-row bg-white p-8 rounded-lg">
                     <h1 className="text-4xl font-bold text-sky-950">
                         {' '}
