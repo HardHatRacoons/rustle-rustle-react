@@ -28,9 +28,9 @@ describe('ProtectedRoute', () => {
                         }
                     />
                 </Routes>
-            </MemoryRouter>
+            </MemoryRouter>,
         );
-        
+
         await act(async () => {
             // wait for render to finish
         });
@@ -54,7 +54,7 @@ describe('ProtectedRoute', () => {
                     />
                     <Route path="/login" element={<div>Login Page</div>} />
                 </Routes>
-            </MemoryRouter>
+            </MemoryRouter>,
         );
 
         await act(async () => {
