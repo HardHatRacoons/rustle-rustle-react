@@ -324,17 +324,6 @@ function Home() {
                         setIsDeleteModalOpen={setIsDeleteModalOpen}
                     />
                 </div>
-                <div className="ml-6 mr-6">
-                    <h2 className="font-bold text-2xl text-sky-900">
-                        Unannotated Files:{' '}
-                    </h2>
-                    <FileList
-                        key={`unannotated-${refreshKey}`}
-                        folder="unannotated"
-                        setSelectedFile={setSelectedFile}
-                        setIsDeleteModalOpen={setIsDeleteModalOpen}
-                    />
-                </div>
             </div>
 
             <UploadModal
