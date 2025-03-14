@@ -66,8 +66,9 @@ function PDFViewer({ pdfURL }) {
             //console.log(page)
 
             const canvasContainer = containerRef.current;
-            if(canvasContainer === null)
-                return;
+            //some weird issue when toggling between pages sometime -> look into later?
+            //             if(canvasContainer === null)
+            //                 return;
 
             canvasContainer.innerHTML = '';
 
