@@ -1,50 +1,87 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { useOutletContext } from 'react-router';
+import { uploadData, getUrl } from 'aws-amplify/storage';
+
+import * as d3 from 'd3';
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 function TableView() {
-    // Row Data: The data to be displayed.
-    const [rowData, setRowData] = useState([
-        {
-            id: 1,
-            'beam/column': true,
-            type: '22x4',
-            description: 'idk',
-            notes: 'stinky beam',
-        },
-        {
-            id: 2,
-            'beam/column': true,
-            type: '21x3',
-            description: 'idk',
-            notes: 'hates cats',
-        },
-        {
-            id: 3,
-            'beam/column': false,
-            type: '22x4',
-            description: 'idk',
-            notes: 'only child',
-        },
-    ]);
+    const pdfInfo = useOutletContext();
+    const [csvURL, setCsvURL] = useState(pdfInfo.url.annotated.csv); //alrdy a download url
+    const [jsonPath, setJsonPath] = useState(
+        pdfInfo?.path.annotated.csv
+            ? pdfInfo.path.annotated.csv.split('.')[0] + '.json'
+            : null,
+    );
+
+    const [rowData, setRowData] = useState([]);
 
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState([
-        { field: 'id', cellDataType: 'number', filter: true },
         {
-            field: 'beam/column',
+            headerName: 'Page Number',
+            field: 'PageNumber',
+            cellDataType: 'number',
+            filter: true,
+            sortable: true,
+        },
+        {
+            headerName: 'Area Name',
+            field: 'AreaName',
             cellDataType: 'text',
             filter: true,
-            valueFormatter: (p) => {
-                return p.value ? 'beam' : 'column';
-            },
+            sortable: true,
+            flex: 1,
         },
-        { field: 'type', cellDataType: 'text', filter: true, sortable: true },
-        { field: 'description', cellDataType: 'text' },
-        { field: 'notes', cellDataType: 'text', sortable: false, flex: 1 },
+        {
+            field: 'Quantity',
+            cellDataType: 'number',
+            filter: true,
+            sortable: true,
+        },
+        { field: 'Shape', cellDataType: 'text', filter: true, sortable: true },
+        { field: 'Size', cellDataType: 'text', filter: true, sortable: true },
+        {
+            field: 'Length',
+            cellDataType: 'number',
+            filter: true,
+            sortable: true,
+            valueFormatter: (p) => p.value?.toFixed(2),
+        },
+        {
+            headerName: 'Weight (FT)',
+            field: 'WeightFT',
+            cellDataType: 'number',
+            filter: true,
+            sortable: true,
+            valueFormatter: (p) => p.value?.toFixed(2),
+        },
+        {
+            headerName: 'Weight (EA)',
+            field: 'WeightEA',
+            cellDataType: 'number',
+            filter: true,
+            sortable: true,
+            valueFormatter: (p) => p.value?.toFixed(2),
+        },
+        {
+            headerName: 'Top Of Steel',
+            field: 'TopOfSteel',
+            cellDataType: 'number',
+            filter: true,
+            sortable: true,
+        },
+        {
+            field: 'GUID',
+            cellDataType: 'text',
+            filter: true,
+            sortable: true,
+            minWidth: 250,
+        },
     ]);
 
     const rowSelection = useMemo(() => {
@@ -55,21 +92,81 @@ function TableView() {
         };
     }, []);
 
-    // const gridOptions = {
-    //     autoSizeStrategy: {
-    //         type: 'fitGridWidth',
-    //         defaultMinWidth: 100,
-    //         columnLimits: [
-    //             {
-    //                 colId: 'country',
-    //                 minWidth: 900
-    //             }
-    //         ]
-    //     },
-    //
-    //     // other grid options ...
-    // }
+    const autoSizeStrategy = {
+        type: 'fitCellContents',
+    };
 
+    useEffect(() => {
+        const fetchCsvData = async () => {
+            try {
+                const response = await fetch(csvURL);
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch CSV file');
+                }
+
+                const csvData = await response.text(); // Read response as text
+
+                // Parse CSV using D3.js
+                const parsedData = d3.csvParse(csvData, d3.autoType);
+
+                setRowData(parsedData);
+
+                //create new file
+                uploadData({
+                    path: jsonPath,
+                    data: JSON.stringify(parsedData),
+                });
+            } catch (error) {
+                console.error('Unexpected CSV error: ' + error);
+            }
+        };
+
+        const fetchJSONData = async () => {
+            if (!csvURL || !jsonPath) return;
+            try {
+                let linkToStorageFile = await getUrl({
+                    path: jsonPath,
+                    options: {
+                        bucket: 'raccoonTeamDrive',
+                        validateObjectExistence: true,
+                        // url expiration time in seconds.
+                        expiresIn: 900,
+                    },
+                });
+
+                if (!linkToStorageFile) {
+                    throw new Error('Failed to fetch JSON URL');
+                }
+
+                const response = await fetch(linkToStorageFile.url.toString());
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch JSON file');
+                }
+                //console.log('found file')
+                const jsonData = await response.json(); // Read response as text
+                //console.log(jsonData)
+
+                // Set the parsed JSON data in state
+                setRowData(jsonData);
+            } catch (error) {
+                //if cant find file
+                if (error.message === 'NotFound') fetchCsvData();
+                else console.error('Unexpected JSON error: ' + error.message);
+            }
+        };
+
+        fetchJSONData();
+    }, [jsonPath]);
+
+    useEffect(() => {
+        const json = pdfInfo?.path.annotated.csv
+            ? pdfInfo.path.annotated.csv.split('.')[0] + '.json'
+            : null;
+        setJsonPath(json);
+        setCsvURL(pdfInfo?.url.annotated.csv);
+    }, [pdfInfo]);
     return (
         <div
             className="select-none h-full rounded-md border-solid border-2 border-sky-500 mx-2 mb-2 p-2 bg-white"
@@ -79,7 +176,9 @@ function TableView() {
                 rowData={rowData}
                 columnDefs={colDefs}
                 pagination={true}
+                paginationAutoPageSize={true}
                 rowSelection={rowSelection}
+                autoSizeStrategy={autoSizeStrategy}
             />
         </div>
     );

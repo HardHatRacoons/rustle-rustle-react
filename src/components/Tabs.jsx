@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
-function Tabs({ onChange, tabs, className }) {
-    const [activeTab, setActiveTab] = useState(0);
+function Tabs({ onChange, tabs, activeTab, setActiveTab, className }) {
     const longestWord = tabs?.reduce(
         (savedText, text) =>
             text.length > savedText.length ? text : savedText,

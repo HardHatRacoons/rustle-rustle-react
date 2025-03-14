@@ -13,9 +13,9 @@ function FileLayout() {
     const { hash, pathname, search } = location;
 
     const page = pathname.split('/').at(-1);
-    const [activeTab, setActiveTab] = useState(
-        tabs.findIndex((e) => e === page),
-    );
+    const t = tabs.findIndex((e) => e === page);
+    const [activeTab, setActiveTab] = useState(t === -1 ? 0 : t);
+    //console.log(activeTab)
     const navigate = useNavigate();
     const [pdfInfo, setPdfInfo] = useState({
         path: {
@@ -49,6 +49,7 @@ function FileLayout() {
             pdf.path.annotated.pdf = `annotated/${userAttributes.sub}/${id}.pdf`;
             pdf.path.annotated.csv = `annotated/${userAttributes.sub}/${id}.csv`;
             pdf.path.unannotated.pdf = `unannotated/${userAttributes.sub}/${id}.pdf`;
+
             try {
                 linkToStorageFile = await getUrl({
                     path: pdf.path.unannotated.pdf,
@@ -115,7 +116,6 @@ function FileLayout() {
     }, [userAttributes, id]);
 
     const change = (num) => {
-        setActiveTab(num);
         navigate(`/file/${id}/${tabs[num]}`);
     };
 
@@ -168,6 +168,7 @@ function FileLayout() {
                     onChange={change}
                     tabs={tabs}
                     activeTab={activeTab}
+                    setActiveTab={setActiveTab}
                     className="w-1/4"
                 />
             </div>
