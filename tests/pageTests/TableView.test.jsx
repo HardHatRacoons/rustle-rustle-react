@@ -1,6 +1,7 @@
 import { prettyDOM, render, screen } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { getUrl } from 'aws-amplify/storage';
 import TableView from '../../src/pages/TableView';
 import { useOutletContext } from 'react-router';
 
@@ -120,22 +121,97 @@ describe('TableView', () => {
             screen.getAllByRole('row')[0],
         ).toBeInTheDocument();
     });
+});
 
-    test('fetch CSV data if url leads to nothing', async () => {
-        global.fetch = vi.fn();
-        global.fetch.mockRejectedValueOnce(new Error('NotFound'));
+import { fetchJSONData } from '../../src/pages/TableView';
 
-        render(
-            <MemoryRouter initialEntries={['/tableview']}>
-                <Routes>
-                    <Route path="/tableview" element={<TableView />} />
-                </Routes>
-            </MemoryRouter>,
-        );
+describe('fetchJSONData', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
 
-        await act(async () => {});
-        expect(
-            screen.getAllByRole('row')[0],
-        ).toBeInTheDocument();
+    test('fetches and sets JSON data successfully', async () => {
+        const jsonData = [
+            {
+                PageNumber: 15,
+                AreaName: 'BLDG 1 - Partial Roof Framing Plan - Area A',
+                Quantity: 1,
+                Shape: 'W',
+                Size: 'W27X84',
+                Length: 38,
+                WeightFT: 84,
+                WeightEA: 3192,
+                TopOfSteel: 1,
+                GUID: 'b_1HKsX5Bt9EXeENMZEuCz_F',
+            },
+        ];
+
+        getUrl.mockResolvedValueOnce({
+            url: {
+                toString: () => 'https://example.com/test.json',
+            },
+        });
+
+        global.fetch = vi.fn().mockResolvedValueOnce({
+            ok: true,
+            json: async () => jsonData,
+        });
+
+        const setRowData = vi.fn();
+
+        await fetchJSONData('https://example.com/test.csv', 'path/to/test.json', setRowData);
+
+        expect(getUrl).toHaveBeenCalledWith({
+            path: 'path/to/test.json',
+            options: {
+                bucket: 'raccoonTeamDrive',
+                validateObjectExistence: true,
+                expiresIn: 900,
+            },
+        });
+        expect(global.fetch).toHaveBeenCalledWith('https://example.com/test.json');
+        expect(setRowData).toHaveBeenCalledWith(jsonData);
+    });
+
+    test('throws an error when fetching CSV data fails', async () => {
+        getUrl.mockResolvedValueOnce({
+            url: {
+                toString: () => 'https://example.com/test.json',
+            },
+        });
+
+        global.fetch = vi.fn().mockResolvedValueOnce({
+            ok: false,
+        });
+
+        const setRowData = vi.fn();
+
+        await expect(() => fetchJSONData('https://example.com/test.csv', 'path/to/test.json', setRowData))
+            .toThrowError('Unexpected error: Failed to fetch CSV file');
+        expect(getUrl).toHaveBeenCalledWith({
+            path: 'path/to/test.json',
+            options: {
+                bucket: 'raccoonTeamDrive',
+                validateObjectExistence: true,
+                expiresIn: 900,
+            },
+        });
+        expect(global.fetch).toHaveBeenCalledWith('https://example.com/test.json');
+    });
+
+    test('throws an error when getUrl fails', async () => {
+        getUrl.mockResolvedValueOnce(false);
+
+        const setRowData = vi.fn();
+
+        await expect(fetchJSONData('https://example.com/test.csv', 'path/to/test.json', setRowData)).rejects.toThrow('Failed to fetch JSON file');
+        expect(getUrl).toHaveBeenCalledWith({
+            path: 'path/to/test.json',
+            options: {
+                bucket: 'raccoonTeamDrive',
+                validateObjectExistence: true,
+                expiresIn: 900,
+            },
+        });
     });
 });

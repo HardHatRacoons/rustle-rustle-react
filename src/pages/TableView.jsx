@@ -9,6 +9,71 @@ import * as d3 from 'd3';
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
+// Fetch the CSV file from the URL
+const fetchCsvData = async (csvURL, setRowData) => {
+    try {
+        const response = await fetch(csvURL);
+        if (!response.ok) {
+            throw new Error('Failed to fetch CSV file');
+        }
+
+        const csvData = await response.text(); // Read response as text
+
+        // Parse CSV using D3.js
+        const parsedData = d3.csvParse(csvData, d3.autoType);
+
+        setRowData(parsedData);
+
+        //create new file
+        uploadData({
+            path: jsonPath,
+            data: JSON.stringify(parsedData),
+        });
+    } catch (error) {
+        //setError(err.message);  // Set error message if any
+        console.log(error);
+    } finally {
+        //setLoading(false);  // Set loading to false after fetch is complete
+    }
+};
+
+export async function fetchJSONData(csvURL, jsonPath, setRowData) {
+    console.log(csvURL);
+    console.log(jsonPath);
+    if (!csvURL || !jsonPath) return;
+    console.log('b');
+    try {
+        let linkToStorageFile = await getUrl({
+            path: jsonPath,
+            options: {
+                bucket: 'raccoonTeamDrive',
+                validateObjectExistence: true,
+                // url expiration time in seconds.
+                expiresIn: 900,
+            },
+        });
+        console.log(linkToStorageFile)
+        if (!linkToStorageFile) {
+            throw new Error('Failed to fetch JSON file');
+        }
+
+        const response = await fetch(linkToStorageFile.url.toString());
+        if (!response.ok) {
+            throw new Error('Failed to fetch CSV file');
+        }
+        //console.log('found file')
+        const jsonData = await response.json(); // Read response as text
+        //console.log(jsonData)
+
+        // Set the parsed JSON data in state
+        setRowData(jsonData);
+    } catch (error) {
+        //if cant find file
+        if (error.message === 'NotFound') fetchCsvData();
+        else console.error('Unexpected error: ' + error.message);
+    }
+};
+
 function TableView() {
     const pdfInfo = useOutletContext();
     const [csvURL, setCsvURL] = useState(pdfInfo.url.annotated.csv); //alrdy a download url
@@ -93,69 +158,7 @@ function TableView() {
     };
 
     useEffect(() => {
-        // Fetch the CSV file from the URL
-        const fetchCsvData = async () => {
-            try {
-                const response = await fetch(csvURL);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch CSV file');
-                }
-
-                const csvData = await response.text(); // Read response as text
-
-                // Parse CSV using D3.js
-                const parsedData = d3.csvParse(csvData, d3.autoType);
-
-                setRowData(parsedData);
-
-                //create new file
-                uploadData({
-                    path: jsonPath,
-                    data: JSON.stringify(parsedData),
-                });
-            } catch (error) {
-                //setError(err.message);  // Set error message if any
-                console.log(error);
-            } finally {
-                //setLoading(false);  // Set loading to false after fetch is complete
-            }
-        };
-
-        const fetchJSONData = async () => {
-            if (!csvURL || !jsonPath) return;
-            try {
-                let linkToStorageFile = await getUrl({
-                    path: jsonPath,
-                    options: {
-                        bucket: 'raccoonTeamDrive',
-                        validateObjectExistence: true,
-                        // url expiration time in seconds.
-                        expiresIn: 900,
-                    },
-                });
-
-                if (!linkToStorageFile) {
-                    throw new Error('Failed to fetch JSON file');
-                }
-
-                const response = await fetch(linkToStorageFile.url.toString());
-                if (!response.ok) {
-                    throw new Error('Failed to fetch CSV file');
-                }
-                //console.log('found file')
-                const jsonData = await response.json(); // Read response as text
-                //console.log(jsonData)
-
-                // Set the parsed JSON data in state
-                setRowData(jsonData);
-            } catch (error) {
-                //if cant find file
-                if (error.message === 'NotFound') fetchCsvData();
-                else console.error('Unexpected error: ' + error.message);
-            }
-        };
-
-        fetchJSONData();
+        fetchJSONData(csvURL, jsonPath, setRowData);
     }, [jsonPath]);
 
     useEffect(() => {
@@ -163,7 +166,6 @@ function TableView() {
         setJsonPath(json);
         setCsvURL(pdfInfo?.url.annotated.csv);
     }, [pdfInfo])
-
     return (
         <div
             className="select-none h-full rounded-md border-solid border-2 border-sky-500 mx-2 mb-2 p-2 bg-white"
