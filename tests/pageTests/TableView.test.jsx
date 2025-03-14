@@ -35,7 +35,11 @@ vi.mock('aws-amplify/storage', async () => {
     return {
         ...actual,
         uploadData: vi.fn(),
-        getUrl: vi.fn(),
+        getUrl: vi.fn().mockResolvedValue({
+            url: {
+                toString: () => 'https://example.com',
+            }
+        }),
     };
 });
 
@@ -65,15 +69,15 @@ describe('TableView', () => {
             </MemoryRouter>,
         );
         await act(async () => {
-            return new Promise((resolve) => setTimeout(resolve, 1500));
+            return new Promise((resolve) => setTimeout(resolve, 500));
         });
         expect(screen.getByText('Page Number')).toBeInTheDocument();
     });
 
     test('renders table with correct data', async () => {
         global.fetch = vi.fn();
-        global.fetch.mockResolvedValueOnce(() => Promise.resolve({
-            json: [{
+        global.fetch.mockResolvedValueOnce({
+            json: () => [{
                 "PageNumber": 15,
                 "AreaName": "BLDG 1 - Partial Roof Framing Plan - Area A",
                 "Quantity": 1,
@@ -84,8 +88,21 @@ describe('TableView', () => {
                 "WeightEA": 3192,
                 "TopOfSteel": 1,
                 "GUID": "b_1HKsX5Bt9EXeENMZEuCz_F"
-            }]
-        }));
+            }, 
+            {
+                "PageNumber": 15,
+                "AreaName": "BLDG 1 - Partial Roof Framing Plan - Area A",
+                "Quantity": 1,
+                "Shape": "W",
+                "Size": "W27X84",
+                "Length": 38,
+                "WeightFT": 84,
+                "WeightEA": 3192,
+                "TopOfSteel": 1,
+                "GUID": "b_1HKsX5Bt9EXeENMZEuCz_F"
+            }],
+            ok: true,
+        });
 
         render(
             <MemoryRouter initialEntries={['/tableview']}>
@@ -95,7 +112,9 @@ describe('TableView', () => {
             </MemoryRouter>,
         );
 
-        await act(async () => {});
+        await act(async () => {
+            return new Promise((resolve) => setTimeout(resolve, 4000));
+        });
         global.dump(document.body, 'TableView1');
         expect(
             screen.getAllByRole('row')[0],
@@ -115,7 +134,6 @@ describe('TableView', () => {
         );
 
         await act(async () => {});
-        global.dump(document.body, 'TableView1');
         expect(
             screen.getAllByRole('row')[0],
         ).toBeInTheDocument();
