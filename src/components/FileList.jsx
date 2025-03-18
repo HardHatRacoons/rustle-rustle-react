@@ -3,7 +3,12 @@ import { FaTrashAlt } from 'react-icons/fa';
 import { list, getProperties } from 'aws-amplify/storage';
 import { useNavigate } from 'react-router';
 
-function FileList({ userAttributes, folder, setSelectedFile, setIsDeleteModalOpen }) {
+function FileList({
+    userAttributes,
+    folder,
+    setSelectedFile,
+    setIsDeleteModalOpen,
+}) {
     const [files, setFiles] = useState({}); // file contains {fileID: docName} pairs
     const [loading, setLoading] = useState(true);
 

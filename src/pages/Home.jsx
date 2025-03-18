@@ -23,7 +23,7 @@ function Home() {
     };
 
     const handleDeleteFile = async () => {
-//        if (!selectedFile) return; //this is rlly hard to test bc i dont think this is possible without trying to open stuff somehow
+        //        if (!selectedFile) return; //this is rlly hard to test bc i dont think this is possible without trying to open stuff somehow
 
         // if the folder is annotated, delete the csv file, and the unnanotated pdf file
         if (selectedFile.folder === 'annotated') {
