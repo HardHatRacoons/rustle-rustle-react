@@ -1,231 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { MdClose } from 'react-icons/md';
-import { FaTrashAlt } from 'react-icons/fa';
-import { HiMiniSparkles } from 'react-icons/hi2';
 import { IoMdRefreshCircle } from 'react-icons/io';
-import { FileUploader } from '@aws-amplify/ui-react-storage';
-import '@aws-amplify/ui-react/styles.css';
-import GoogleSignOut from '../components/GoogleSignOut';
-import { useUser } from '../components/UserContext';
-import { list, getProperties, remove } from 'aws-amplify/storage';
+import { remove } from 'aws-amplify/storage';
 import { useNavigate } from 'react-router';
+import { useUser } from '../components/UserContext';
 
-function LoginNavbar() {
-    const userAttributes = useUser();
-
-    return (
-        <div className="w-full h-20 flex text-white align-items-center p-5">
-            <div className="flex flex-row gap-2 text-4xl grow-10 text-nowrap mx-2">
-                <HiMiniSparkles />
-                {userAttributes
-                    ? `Welcome, ${userAttributes.given_name}`
-                    : 'Loading...'}
-            </div>
-            <GoogleSignOut />
-        </div>
-    );
-}
-
-const processFile = async ({ file }) => {
-    const fileExtension = file.name.split('.').pop();
-
-    return file
-        .arrayBuffer()
-        .then((filebuffer) => window.crypto.subtle.digest('SHA-1', filebuffer))
-        .then((hashBuffer) => {
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray
-                .map((a) => a.toString(16).padStart(2, '0'))
-                .join('');
-            return {
-                file,
-                key: `${hashHex}.${fileExtension}`,
-                metadata: {
-                    name: file.name.split('.')[0],
-                },
-            };
-        });
-};
-
-function UploadModal({ isOpen, onClose }) {
-    if (!isOpen) return null;
-
-    const userAttributes = useUser();
-    const filepath = userAttributes
-        ? `unannotated/${userAttributes.sub}/`
-        : 'unannotated/';
-
-    return (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
-            <div className="bg-white w-2/5 max-w-3xl p-6 rounded-lg shadow-lg">
-                <div className=" flex flex-row mb-6">
-                    <h2 className="text-2xl font-bold">Upload File</h2>
-                    <button
-                        className=" ml-auto text-black hover:text-red-500"
-                        onClick={onClose}
-                        aria-label="close-upload-button"
-                    >
-                        <MdClose size="30" />
-                    </button>
-                </div>
-                <FileUploader
-                    acceptedFileTypes={['.pdf']}
-                    path={filepath}
-                    maxFileCount={1}
-                    isResumable={true}
-                    autoUpload={false}
-                    processFile={processFile}
-                />
-            </div>
-        </div>
-    );
-}
-
-function DeleteConfirmationModal({ isOpen, onClose, onConfirm, fileName }) {
-    if (!isOpen) return null;
-    return (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-                <div className=" flex flex-row mb-6">
-                    <h2 className="text-2xl font-bold">Delete File</h2>
-                </div>
-                <p className="text-lg font-bold text-sky-900">
-                    Are you sure you want to delete "{fileName}"? <br />
-                    <strong>This action is not reversible!</strong>
-                </p>
-
-                <div className="flex flex-row justify-end mt-6 gap-4">
-                    <button
-                        onClick={onClose}
-                        className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        onClick={onConfirm}
-                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-                    >
-                        Delete
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function FileList({ folder, setSelectedFile, setIsDeleteModalOpen }) {
-    const userAttributes = useUser();
-    const [files, setFiles] = useState({}); // file contains {fileID: docName} pairs
-    const [loading, setLoading] = useState(true);
-
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        // Wait until userAttributes is available
-        if (!userAttributes) return;
-
-        const filepath = `${folder}/${userAttributes.sub}/`;
-
-        const fetchFiles = async () => {
-            setLoading(true); // Start loading
-            // get the file name
-            try {
-                const result = await list({
-                    path: filepath,
-                    options: { listAll: true },
-                });
-
-                const fileData = {}; // Stores fileID -> metadata name mapping
-                for (const file of result.items) {
-                    const fileParts = file.path.split('/');
-                    const fileType = fileParts.at(-1).split('.').at(-1);
-                    const fileID = fileParts.at(-1).slice(0, -4); // Extract fileID
-
-                    if (fileType === 'pdf') {
-                        try {
-                            const metadataResult = await getProperties({
-                                path: file.path, // Use the file path to get metadata
-                            });
-
-                            const docName =
-                                metadataResult.metadata &&
-                                metadataResult.metadata.name
-                                    ? metadataResult.metadata.name
-                                    : 'Document'; // Default name if no metadata found
-
-                            fileData[fileID] = docName; // Store fileID -> metadata name
-                        } catch (error) {
-                            console.error('Error fetching metadata:', error);
-                            fileData[fileID] = 'Document'; // Fallback to default name
-                        }
-                    }
-                }
-
-                setFiles(fileData);
-            } catch (error) {
-                console.error('Error listing files:', error);
-            } finally {
-                setLoading(false); // Stop loading after fetching files
-            }
-        };
-
-        fetchFiles();
-    }, [userAttributes]); // Ensure effect runs only when userAttributes is available
-
-    // Show a loading message until both userAttributes and files are fetched
-    if (!userAttributes || loading) {
-        return (
-            <div className="bg-white p-6 rounded-lg text-lg font-bold text-sky-900">
-                Loading files...
-            </div>
-        );
-    }
-
-    return (
-        <div className="mt-3 mb-6 bg-white p-6 rounded-lg bg-opacity-50 overflow-y-auto">
-            {Object.keys(files).length === 0 ? (
-                <p className="text-lg font-bold text-sky-900">
-                    No files found.
-                </p>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    {Object.entries(files).map(([fileId, fileName]) => (
-                        <div
-                            key={fileId}
-                            className="cursor-pointer bg-sky-100 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102 hover:shadow-xl"
-                            onClick={() => navigate(`/file/${fileId}`)}
-                        >
-                            <img
-                                src={`https://placehold.co/600x400/ECECEC/CACACA?text=placeholder`}
-                                alt={fileName}
-                                className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg"
-                            />
-                            <div className="flex flex-row py-2 content-center">
-                                <p className="text-lg font-bold text-sky-900">
-                                    {fileName}
-                                </p>
-                                <button
-                                    className="ml-auto hover:text-red-500 hover:cursor-pointer"
-                                    onClick={(event) => {
-                                        event.stopPropagation(); // Prevent card click event
-                                        setSelectedFile({
-                                            fileId,
-                                            fileName,
-                                            folder,
-                                        });
-                                        setIsDeleteModalOpen(true);
-                                    }}
-                                >
-                                    <FaTrashAlt size="20" />
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
-}
+import LoginNavbar from '../components/LoginNavbar';
+import FileList from '../components/FileList';
+import DeleteConfirmationModal from '../components/modals/DeleteConfirmationModal';
+import UploadModal from '../components/modals/UploadModal';
 
 function Home() {
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -241,7 +23,7 @@ function Home() {
     };
 
     const handleDeleteFile = async () => {
-        if (!selectedFile) return;
+//        if (!selectedFile) return; //this is rlly hard to test bc i dont think this is possible without trying to open stuff somehow
 
         // if the folder is annotated, delete the csv file, and the unnanotated pdf file
         if (selectedFile.folder === 'annotated') {
@@ -288,7 +70,7 @@ function Home() {
 
     return (
         <div className="h-full bg-sky-300 flex flex-col">
-            <LoginNavbar />
+            <LoginNavbar userAttributes={userAttributes} />
 
             <div className="bg-sky-200 grow overflow-y-auto">
                 <div className="m-6 flex flex-row bg-white p-8 rounded-lg">
@@ -314,10 +96,12 @@ function Home() {
                             className="text-sky-900 hover:cursor-pointer hover:text-sky-700"
                             onClick={() => setRefreshKey((prev) => prev + 1)}
                             size="30"
+                            aria-label="refresh-button"
                         />
                     </div>
 
                     <FileList
+                        userAttributes={userAttributes}
                         key={`annotated-${refreshKey}`}
                         folder="annotated"
                         setSelectedFile={setSelectedFile}
@@ -327,6 +111,7 @@ function Home() {
             </div>
 
             <UploadModal
+                userAttributes={userAttributes}
                 isOpen={isUploadModalOpen}
                 onClose={() => handleCloseUploadModal()}
             />
