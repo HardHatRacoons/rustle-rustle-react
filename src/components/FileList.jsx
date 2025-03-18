@@ -69,7 +69,7 @@ function FileList({
     // Show a loading message until both userAttributes and files are fetched
     if (!userAttributes || loading) {
         return (
-            <div className="bg-white p-6 rounded-lg text-lg font-bold text-sky-900">
+            <div className="bg-white p-6 rounded-lg text-lg font-bold text-sky-900 mt-3 mb-6 bg-white p-6 rounded-lg bg-opacity-50 overflow-y-auto">
                 Loading files...
             </div>
         );
