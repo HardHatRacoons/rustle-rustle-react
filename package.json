@@ -10,6 +10,7 @@
         "preview": "vite preview",
         "test": "vitest",
         "coverage": "vitest run --coverage",
+        "cov": "vitest run --coverage",
         "test-bail": "vitest --bail=1"
     },
     "dependencies": {

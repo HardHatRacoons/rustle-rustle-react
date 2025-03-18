@@ -24,8 +24,20 @@ describe('Testing main setup and routing after auth', () => {
                 getUrl: vi
                     .fn()
                     .mockRejectedValueOnce(new Error('Invalid file'))
+                    //                     .mockResolvedValueOnce({
+                    //                                                                                                                     url: new URL('https://fake-pdf-endpoint/pdf.pdf'),
+                    //                                                                                                                 })
+                    //                                                                                                                 .mockRejectedValueOnce(new Error('Invalid file'))
                     .mockResolvedValue({
                         url: new URL('https://fake-pdf-endpoint/pdf.pdf'),
+                    }),
+                getProperties: vi
+                    .fn()
+                    //.mockResolvedValueOnce({metadata: {}}).mockRejectedValueOnce(new Error("file not found"))
+                    .mockImplementation(async (path) => {
+                        return {
+                            metadata: { name: path.path.split('/').at(-1) },
+                        };
                     }),
             };
         });
