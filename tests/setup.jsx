@@ -5,6 +5,8 @@ import '@testing-library/jest-dom';
 import fs from 'node:fs';
 import { prettyDOM } from '@testing-library/react';
 
+// use by global.dump(document.body, 'file name');
+// or global.dump(specific html element (what screen.getBy... returns), 'file name');
 global.dump = (element, fileName) => {
     fs.mkdirSync('dump', { recursive: true });
     fs.writeFileSync(
