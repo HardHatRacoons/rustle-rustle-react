@@ -8,7 +8,7 @@ import { getUrl, getProperties } from 'aws-amplify/storage';
 vi.mock('../../src/components/UserContext', () => {
     const useUser = vi.fn();
     return { useUser };
-})
+});
 
 vi.mock('aws-amplify/storage', async (importOriginal) => {
     const actual = await importOriginal();
@@ -17,8 +17,7 @@ vi.mock('aws-amplify/storage', async (importOriginal) => {
         getUrl: vi.fn(),
         getProperties: vi.fn(),
     };
-})
-
+});
 
 describe('FileLayout Component', () => {
     afterEach(() => {
@@ -65,7 +64,7 @@ describe('FileLayout Component', () => {
 
     it('displays error if annotated does not exist', async () => {
         useUser.mockReturnValueOnce({ sub: 'testuser' });
-        getUrl.mockReturnValueOnce({url: {toString: () => 'testurl'}});
+        getUrl.mockReturnValueOnce({ url: { toString: () => 'testurl' } });
         getUrl.mockRejectedValueOnce(new Error('file not found'));
 
         render(
@@ -87,8 +86,8 @@ describe('FileLayout Component', () => {
 
     it('displays error if annotated csv data does not exist', async () => {
         useUser.mockReturnValueOnce({ sub: 'testuser' });
-        getUrl.mockReturnValueOnce({url: {toString: () => 'testurl'}});
-        getUrl.mockReturnValueOnce({url: {toString: () => 'testurl'}});
+        getUrl.mockReturnValueOnce({ url: { toString: () => 'testurl' } });
+        getUrl.mockReturnValueOnce({ url: { toString: () => 'testurl' } });
         getUrl.mockRejectedValueOnce(new Error('file not found'));
 
         render(
@@ -110,10 +109,10 @@ describe('FileLayout Component', () => {
 
     it('displays Document as a file name if the file metadata is empty', async () => {
         useUser.mockReturnValueOnce({ sub: 'testuser' });
-        getUrl.mockReturnValueOnce({url: {toString: () => 'testurl'}});
-        getUrl.mockReturnValueOnce({url: {toString: () => 'testurl'}});
-        getUrl.mockReturnValueOnce({url: {toString: () => 'testurl'}});
-        getProperties.mockResolvedValueOnce({ metadata: {} });        
+        getUrl.mockReturnValueOnce({ url: { toString: () => 'testurl' } });
+        getUrl.mockReturnValueOnce({ url: { toString: () => 'testurl' } });
+        getUrl.mockReturnValueOnce({ url: { toString: () => 'testurl' } });
+        getProperties.mockResolvedValueOnce({ metadata: {} });
 
         render(
             <MemoryRouter initialEntries={['/child']}>
@@ -134,10 +133,10 @@ describe('FileLayout Component', () => {
 
     it('displays Document as a file name if the file does not exist yet', async () => {
         useUser.mockReturnValueOnce({ sub: 'testuser' });
-        getUrl.mockReturnValueOnce({url: {toString: () => 'testurl'}});
-        getUrl.mockReturnValueOnce({url: {toString: () => 'testurl'}});
-        getUrl.mockReturnValueOnce({url: {toString: () => 'testurl'}});
-        getProperties.mockRejectedValueOnce(new Error('file not found'));        
+        getUrl.mockReturnValueOnce({ url: { toString: () => 'testurl' } });
+        getUrl.mockReturnValueOnce({ url: { toString: () => 'testurl' } });
+        getUrl.mockReturnValueOnce({ url: { toString: () => 'testurl' } });
+        getProperties.mockRejectedValueOnce(new Error('file not found'));
 
         render(
             <MemoryRouter initialEntries={['/child']}>
