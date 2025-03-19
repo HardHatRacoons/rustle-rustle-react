@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MdClose } from 'react-icons/md';
 import { FaTrashAlt } from 'react-icons/fa';
-import { FaSearch } from "react-icons/fa";
+import { FaSearch } from 'react-icons/fa';
 import { HiMiniSparkles } from 'react-icons/hi2';
 import { IoMdRefreshCircle } from 'react-icons/io';
 import { remove } from 'aws-amplify/storage';
@@ -94,12 +94,12 @@ function Home() {
                 </div>
                 <div className="ml-6 mr-6">
                     <div className="flex flex-row justify-between items-center gap-4">
-                        <div className='w-full flex flex-row gap-2 items-center'>
+                        <div className="w-full flex flex-row gap-2 items-center">
                             <p className="font-bold text-sky-900 flex flex-row gap-1 items-center">
                                 <FaSearch />
                                 Search:
                             </p>
-                            
+
                             <input
                                 type="text"
                                 placeholder="File name"

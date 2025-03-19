@@ -214,7 +214,7 @@ describe('Testing home page', () => {
         render(
             <MemoryRouter>
                 <Home />
-            </MemoryRouter>
+            </MemoryRouter>,
         );
 
         // Simulate entering a search query

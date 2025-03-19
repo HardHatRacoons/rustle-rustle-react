@@ -68,7 +68,7 @@ function FileList({
     }, [userAttributes]); // Ensure effect runs only when userAttributes is available
 
     const filteredFiles = Object.entries(files).filter(([fileId, fileName]) =>
-        fileName.toLowerCase().includes(searchQuery.toLowerCase())
+        fileName.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
     // Show a loading message until both userAttributes and files are fetched
