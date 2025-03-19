@@ -209,4 +209,29 @@ describe('Testing home page', () => {
             expect.stringMatching('/file/file1'),
         );
     });
+
+    test('filters files based on search input', async () => {
+        render(
+            <MemoryRouter>
+                <Home />
+            </MemoryRouter>
+        );
+
+        // Simulate entering a search query
+        const searchInput = screen.getByPlaceholderText('File name');
+        fireEvent.change(searchInput, { target: { value: 'file1' } });
+        await act(async () => {});
+        // Assert that only matching files are displayed
+        global.dump(document.body, 'search');
+        expect(screen.getByText(/file1/)).toBeInTheDocument();
+        expect(screen.queryByText(/file2/)).not.toBeInTheDocument();
+
+        // Clear the search query
+        fireEvent.change(searchInput, { target: { value: '' } });
+        global.dump(document.body, 'search2');
+        await act(async () => {});
+        // Assert that all files are displayed again
+        expect(screen.getByText(/file1/)).toBeInTheDocument();
+        expect(screen.getByText(/file2/)).toBeInTheDocument();
+    });
 });
