@@ -34,7 +34,7 @@ function Home() {
                 const pdfPath = `unannotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`; // Adjust extension as needed
                 const jsonPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.json`;
                 const pngPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.png`;
-                
+
                 // Call Amplify remove function
                 await remove({
                     path: csvPath,
@@ -47,7 +47,7 @@ function Home() {
                 });
                 await remove({
                     path: pngPath,
-                })
+                });
             } catch (error) {
                 console.error('Error deleting file:', error);
             } finally {

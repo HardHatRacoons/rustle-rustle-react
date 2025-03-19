@@ -2,8 +2,8 @@ import { MdClose } from 'react-icons/md';
 import { FileUploader} from '@aws-amplify/ui-react-storage';
 import { uploadData } from 'aws-amplify/storage';
 import '@aws-amplify/ui-react/styles.css';
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
-import workerSrc from "pdfjs-dist/legacy/build/pdf.worker?url";
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
+import workerSrc from 'pdfjs-dist/legacy/build/pdf.worker?url';
 
 // Set worker source explicitly
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
