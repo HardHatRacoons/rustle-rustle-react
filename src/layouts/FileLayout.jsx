@@ -61,7 +61,6 @@ function FileLayout() {
                     },
                 });
             } catch (error) {
-                console.log(error);
                 setValid(false);
                 return;
             }
@@ -80,7 +79,8 @@ function FileLayout() {
                 });
                 pdf.url.annotated.pdf = linkToStorageFile.url.toString();
             } catch (error) {
-                console.log(error);
+                setValid(false);
+                return;
             }
 
             try {
@@ -94,7 +94,10 @@ function FileLayout() {
                     },
                 });
                 pdf.url.annotated.csv = linkToStorageFile.url.toString();
-            } catch (error) {}
+            } catch (error) {
+                setValid(false);
+                return;
+            }
 
             try {
                 const result = await getProperties({
@@ -106,7 +109,7 @@ function FileLayout() {
                     pdf.name = 'Document';
                 }
             } catch (error) {
-                console.log('Error ', error);
+                pdf.name = 'Document';
             }
 
             setPdfInfo(pdf);
