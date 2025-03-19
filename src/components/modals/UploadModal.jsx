@@ -1,5 +1,5 @@
 import { MdClose } from 'react-icons/md';
-import { FileUploader} from '@aws-amplify/ui-react-storage';
+import { FileUploader } from '@aws-amplify/ui-react-storage';
 import { uploadData } from 'aws-amplify/storage';
 import '@aws-amplify/ui-react/styles.css';
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
@@ -56,9 +56,9 @@ function processFile(userAttributes) {
                         path: imageFilename,
                         data: imageBlob,
                     });
-                    console.log("Uploaded image to S3:", result);
+                    console.log('Uploaded image to S3:', result);
                 } catch (error) {
-                    console.error("Error uploading image:", error);
+                    console.error('Error uploading image:', error);
                 }
 
                 return {

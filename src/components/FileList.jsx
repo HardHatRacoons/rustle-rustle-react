@@ -35,16 +35,13 @@ function FileList({
                     const fileType = fileParts.at(-1).split('.').at(-1);
                     const fileID = fileParts.at(-1).slice(0, -4); // Extract fileID
 
-                    // initialize fileData for the file if it is not yet initialized
-                    if (fileData[fileID] === undefined)
-                        fileData[fileID] = {};
-
                     if (fileType === 'pdf') {
+                        // initialize fileData for the file if it is not yet initialized
+                        if (fileData[fileID] === undefined) fileData[fileID] = {};
                         try {
                             const metadataResult = await getProperties({
                                 path: file.path, // Use the file path to get metadata
                             });
-
                             const docName =
                                 metadataResult.metadata &&
                                 metadataResult.metadata.name
@@ -57,6 +54,8 @@ function FileList({
                             fileData[fileID]['name'] = 'Document'; // Fallback to default name
                         }
                     } else if (fileType === 'png') {
+                        // initialize fileData for the file if it is not yet initialized
+                        if (fileData[fileID] === undefined) fileData[fileID] = {};
                         try {
                             let linkToStorageFile = null;
                             linkToStorageFile = await getUrl({
@@ -103,7 +102,7 @@ function FileList({
                 </p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    {Object.entries(files).map(([fileId, file]) => (
+                    {Object.entries(files).map(([fileId, file], idx) => (
                         <div
                             key={fileId}
                             className="cursor-pointer bg-sky-100 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102 hover:shadow-xl"
