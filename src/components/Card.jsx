@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react';
 import { TbPinFilled, TbPin } from 'react-icons/tb';
 
-function Card({ children, idx, onChange }) {
-    const [pin, setPin] = useState(false);
+function Card({ children, idx, pin, onChange }) {
     const onPin = () => {
-        const tempPin = !pin;
-        setPin(tempPin);
-        onChange(tempPin, idx);
+        onChange(idx);
     };
 
     return (

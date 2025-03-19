@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { useOutletContext } from 'react-router';
-import { uploadData, getUrl } from 'aws-amplify/storage';
+import fetchJSONData from '../components/JsonFetch';
 
 import * as d3 from 'd3';
 
@@ -97,67 +97,7 @@ function TableView() {
     };
 
     useEffect(() => {
-        const fetchCsvData = async () => {
-            try {
-                const response = await fetch(csvURL);
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch CSV file');
-                }
-
-                const csvData = await response.text(); // Read response as text
-
-                // Parse CSV using D3.js
-                const parsedData = d3.csvParse(csvData, d3.autoType);
-
-                setRowData(parsedData);
-
-                //create new file
-                uploadData({
-                    path: jsonPath,
-                    data: JSON.stringify(parsedData),
-                });
-            } catch (error) {
-                console.error('Unexpected CSV error: ' + error);
-            }
-        };
-
-        const fetchJSONData = async () => {
-            if (!csvURL || !jsonPath) return;
-            try {
-                let linkToStorageFile = await getUrl({
-                    path: jsonPath,
-                    options: {
-                        bucket: 'raccoonTeamDrive',
-                        validateObjectExistence: true,
-                        // url expiration time in seconds.
-                        expiresIn: 900,
-                    },
-                });
-
-                if (!linkToStorageFile) {
-                    throw new Error('Failed to fetch JSON URL');
-                }
-
-                const response = await fetch(linkToStorageFile.url.toString());
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch JSON file');
-                }
-                //console.log('found file')
-                const jsonData = await response.json(); // Read response as text
-                //console.log(jsonData)
-
-                // Set the parsed JSON data in state
-                setRowData(jsonData);
-            } catch (error) {
-                //if cant find file
-                if (error.message === 'NotFound') fetchCsvData();
-                else console.error('Unexpected JSON error: ' + error.message);
-            }
-        };
-
-        fetchJSONData();
+        fetchJSONData(csvURL, jsonPath, setRowData);
     }, [jsonPath]);
 
     useEffect(() => {
@@ -167,6 +107,7 @@ function TableView() {
         setJsonPath(json);
         setCsvURL(pdfInfo?.url.annotated.csv);
     }, [pdfInfo]);
+
     return (
         <div
             className="select-none h-full rounded-md border-solid border-2 border-sky-500 mx-2 mb-2 p-2 bg-white"
