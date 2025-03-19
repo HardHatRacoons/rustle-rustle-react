@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router';
 function FileList({
     userAttributes,
     folder,
+    searchQuery,
     setSelectedFile,
     setIsDeleteModalOpen,
 }) {
@@ -66,10 +67,14 @@ function FileList({
         fetchFiles();
     }, [userAttributes]); // Ensure effect runs only when userAttributes is available
 
+    const filteredFiles = Object.entries(files).filter(([fileId, fileName]) =>
+        fileName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     // Show a loading message until both userAttributes and files are fetched
     if (!userAttributes || loading) {
         return (
-            <div className="bg-white p-6 rounded-lg text-lg font-bold text-sky-900 mt-3 mb-6 bg-white p-6 rounded-lg bg-opacity-50 overflow-y-auto">
+            <div className="bg-white text-lg font-bold text-sky-900 mt-3 mb-6 bg-white p-6 rounded-lg bg-opacity-50 overflow-y-auto">
                 Loading files...
             </div>
         );
@@ -77,13 +82,13 @@ function FileList({
 
     return (
         <div className="mt-3 mb-6 bg-white p-6 rounded-lg bg-opacity-50 overflow-y-auto">
-            {Object.keys(files).length === 0 ? (
+            {filteredFiles.length === 0 ? (
                 <p className="text-lg font-bold text-sky-900">
                     No files found.
                 </p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    {Object.entries(files).map(([fileId, fileName], idx) => (
+                    {filteredFiles.map(([fileId, fileName], idx) => (
                         <div
                             key={fileId}
                             className="cursor-pointer bg-sky-100 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102 hover:shadow-xl"
