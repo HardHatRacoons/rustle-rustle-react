@@ -37,7 +37,8 @@ function FileList({
 
                     if (fileType === 'pdf') {
                         // initialize fileData for the file if it is not yet initialized
-                        if (fileData[fileID] === undefined) fileData[fileID] = {};
+                        if (fileData[fileID] === undefined)
+                            fileData[fileID] = {};
                         try {
                             const metadataResult = await getProperties({
                                 path: file.path, // Use the file path to get metadata
@@ -55,7 +56,8 @@ function FileList({
                         }
                     } else if (fileType === 'png') {
                         // initialize fileData for the file if it is not yet initialized
-                        if (fileData[fileID] === undefined) fileData[fileID] = {};
+                        if (fileData[fileID] === undefined)
+                            fileData[fileID] = {};
                         try {
                             let linkToStorageFile = null;
                             linkToStorageFile = await getUrl({
