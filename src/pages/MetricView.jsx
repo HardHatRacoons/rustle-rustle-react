@@ -13,23 +13,30 @@ function MetricView() {
             : null,
     );
 
-    const defaultGraphTypes = ["bar", "bar", "text", "histogram", "pie"]
-    const defaultOptions = [{1: "Shape"}, {1: "Size", 2: true}, {1: "Sum", 2: "WeightFT"}, {1: "Length"}, {1: "Size", 2: true}]
+    const defaultGraphTypes = ['bar', 'bar', 'text', 'histogram', 'pie'];
+    const defaultOptions = [
+        { 1: 'Shape' },
+        { 1: 'Size', 2: true },
+        { 1: 'Sum', 2: 'WeightFT' },
+        { 1: 'Length' },
+        { 1: 'Size' },
+    ];
     const [defaultMetricLength, setDefaultMetricLength] = useState(5); //default 4 overview graphs
 
     const [pinned, setPinned] = useState(null);
     const [data, setData] = useState([]);
 
     const generateGraphs = () => {
-
-        for (let idx = 0; idx < defaultMetricLength; idx++) {
-            const container = document.getElementById(`graph-container-${idx}`);
+        for (let idx = 0; idx < graphData.length; idx++) {
+            const container = document.getElementById(
+                graphData[idx].containerId,
+            );
             graph(container, data, defaultGraphTypes[idx], defaultOptions[idx]);
         }
-    }
+    };
 
     const onPin = (key) => {
-        let set = {...pinned};
+        let set = { ...pinned };
         if (!set[key]) {
             set[key] = true;
         } else {
@@ -37,22 +44,18 @@ function MetricView() {
         }
 
         setPinned(set);
-        localStorage.setItem("pinned", JSON.stringify(set));
+        localStorage.setItem('pinned', JSON.stringify(set));
     };
 
     const grid = () => {
-
         let ordered = [];
         let map = {};
 
-        if(pinned)
-        {
-            Object.keys(pinned).forEach((key) =>
-                {
-                ordered.push({ idx: key })
+        if (pinned) {
+            Object.keys(pinned).forEach((key) => {
+                ordered.push({ idx: key });
                 map[key] = true;
-                }
-            );
+            });
         }
         for (let idx = 0; idx < defaultMetricLength; idx++) {
             if (!map[idx]) ordered.push({ idx: idx });
@@ -61,35 +64,44 @@ function MetricView() {
         return ordered;
     };
 
-        useEffect(() => {
-                        fetchJSONData(csvURL, jsonPath, setData);
+    useEffect(() => {
+        fetchJSONData(csvURL, jsonPath, setData);
+    }, [jsonPath]);
 
-        }, [jsonPath]);
+    useEffect(() => {
+        generateGraphs();
+    }, [data]);
 
-        useEffect(() => {
-                               generateGraphs();
+    useEffect(() => {
+        const json = pdfInfo?.path.annotated.csv
+            ? pdfInfo.path.annotated.csv.split('.')[0] + '.json'
+            : null;
+        setJsonPath(json);
+        setCsvURL(pdfInfo?.url.annotated.csv);
+    }, [pdfInfo]);
 
-                }, [data]);
-
-        useEffect(() => {
-            const json = pdfInfo?.path.annotated.csv
-                ? pdfInfo.path.annotated.csv.split('.')[0] + '.json'
-                : null;
-            setJsonPath(json);
-            setCsvURL(pdfInfo?.url.annotated.csv);
-        }, [pdfInfo]);
-
-        useEffect(() => {
-            const pins = localStorage.getItem("pinned");
-            setPinned(JSON.parse(pins));
-        }, []);
+    useEffect(() => {
+        const pins = localStorage.getItem('pinned');
+        setPinned(JSON.parse(pins));
+    }, []);
 
     return (
         <div className="select-none rounded-md border-solid border-2 border-sky-500 mx-2 mb-2 p-2 h-full bg-white">
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] p-5 gap-4" aria-label="metrics">
+            <div
+                className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] p-5 gap-4"
+                aria-label="metrics"
+            >
                 {grid().map((tile) => (
-                    <Card onChange={onPin} key={tile.idx} idx={tile.idx} pin={pinned? pinned[tile.idx] : false}>
-                        <div className="relative" id={`graph-container-${tile.idx}`}></div>
+                    <Card
+                        onChange={onPin}
+                        key={tile.idx}
+                        idx={tile.idx}
+                        pin={pinned ? pinned[tile.idx] : false}
+                    >
+                        <div
+                            className="relative"
+                            id={`graph-container-${tile.idx}`}
+                        ></div>
                     </Card>
                 ))}
             </div>

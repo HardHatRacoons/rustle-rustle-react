@@ -26,13 +26,13 @@ describe('Testing card component', () => {
         expect(i).to.equal(0);
     });
 
-        test('check pin state', async () => {
-            render(
-                <Card idx={0} pin={true}>
-                    Hello Hello
-                </Card>,
-            );
+    test('check pin state', async () => {
+        render(
+            <Card idx={0} pin={true}>
+                Hello Hello
+            </Card>,
+        );
 
-            await act(() => {});
-        });
+        await act(() => {});
+    });
 });
