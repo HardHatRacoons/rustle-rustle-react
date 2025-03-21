@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { MdClose } from 'react-icons/md';
+import { FaTrashAlt } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
+import { HiMiniSparkles } from 'react-icons/hi2';
 import { IoMdRefreshCircle } from 'react-icons/io';
 import { remove } from 'aws-amplify/storage';
 import { useNavigate } from 'react-router';
@@ -14,6 +18,7 @@ function Home() {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [refreshKey, setRefreshKey] = useState(0); // Single state for refreshing
+    const [searchQuery, setSearchQuery] = useState(''); // State for search query
 
     const userAttributes = useUser();
 
@@ -93,10 +98,21 @@ function Home() {
                     </button>
                 </div>
                 <div className="ml-6 mr-6">
-                    <div className="flex flex-row justify-between">
-                        <h2 className=" font-bold text-2xl text-sky-900">
-                            Annotated Files:{' '}
-                        </h2>
+                    <div className="flex flex-row justify-between items-center gap-4">
+                        <div className="w-full flex flex-row gap-2 items-center">
+                            <p className="font-bold text-sky-900 flex flex-row gap-1 items-center">
+                                <FaSearch />
+                                Search:
+                            </p>
+
+                            <input
+                                type="text"
+                                placeholder="File name"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="p-2 border border-gray-300 rounded w-full bg-white"
+                            />
+                        </div>
                         <IoMdRefreshCircle
                             className="text-sky-900 hover:cursor-pointer hover:text-sky-700"
                             onClick={() => setRefreshKey((prev) => prev + 1)}
@@ -109,6 +125,7 @@ function Home() {
                         userAttributes={userAttributes}
                         key={`annotated-${refreshKey}`}
                         folder="annotated"
+                        searchQuery={searchQuery}
                         setSelectedFile={setSelectedFile}
                         setIsDeleteModalOpen={setIsDeleteModalOpen}
                     />
