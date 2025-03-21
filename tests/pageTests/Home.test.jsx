@@ -91,6 +91,87 @@ describe('Testing home page', () => {
                     }),
             };
         });
+
+        vi.mock(import('pdfjs-dist'), async (importOriginal) => {
+            const actual = await importOriginal();
+            const standardA4Width = 595;
+            const standardA4Height = 842;
+
+            // Create a custom mock for getDocument
+            const getDocumentMock = vi.fn().mockImplementation((url) => {
+                //if (url === 'https://fake-pdf-endpoint/pdf.pdf') {
+                return {
+                    promise: {
+                        numPages: 1, // Simulate a PDF with 2 pages for more complex testing
+                        getPage: vi.fn().mockImplementation(async (pageNum) => {
+                            // Simulate different pages based on pageNum
+                            if (pageNum === 1) {
+                                return Promise.resolve({
+                                    pageNumber: 1,
+                                    rotate: 0, // The page rotation in degrees
+                                    width: standardA4Width, // Page width in PDF units (1/72 inch)
+                                    height: standardA4Height, // Page height in PDF units (1/72 inch)
+
+                                    getViewport: vi
+                                        .fn()
+                                        .mockImplementation((options) => {
+                                            // Scale the width and height based on the provided scale factor
+                                            const scale = options.scale || 1;
+                                            const width =
+                                                standardA4Width * scale;
+                                            const height =
+                                                standardA4Height * scale;
+
+                                            // Return the viewport object that includes the scaled dimensions
+                                            return {
+                                                width,
+                                                height,
+                                                scale,
+                                            };
+                                        }),
+                                    render: vi
+                                        .fn()
+                                        .mockImplementation(async(renderContext) => {
+                                            const ctx =
+                                                renderContext.canvasContext;
+                                            console.log(ctx);
+                                            ctx.fillText(
+                                                'Page 1 content',
+                                                0,
+                                                0,
+                                            );
+                                            return true;
+                                        }),
+                                });
+                            }
+                        }),
+                    },
+                };
+                //} else return Promise.reject(new Error('File not found'));
+            });
+
+            return {
+                ...actual,
+                getDocument: getDocumentMock, // Mock the original getDocument method
+            };
+        });
+
+        // vi.stubGlobal('URL', {
+        //     createObjectURL: vi.fn(() => 'mocked-url'),
+        // });
+
+        global.URL = class {
+            constructor(url) {
+                this.url = url;
+            }
+            toString() {
+                return this.url;
+            }
+        };
+
+        global.URL.createObjectURL = function (file) {
+            return 'mocked-url';
+        };
     });
 
     test('listing file error', async () => {
@@ -167,6 +248,11 @@ describe('Testing home page', () => {
     });
 
     test('file input and deletion testing', async () => {
+        const fillTextSpy = vi.fn();
+        HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
+            fillText: fillTextSpy,
+        }));
+
         const consoleSpy = vi.spyOn(console, 'log');
         render(<Home />);
         fireEvent.click(screen.getByLabelText('open-upload-button'));

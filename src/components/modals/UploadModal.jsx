@@ -2,11 +2,7 @@ import { MdClose } from 'react-icons/md';
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import { uploadData } from 'aws-amplify/storage';
 import '@aws-amplify/ui-react/styles.css';
-import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
-import workerSrc from 'pdfjs-dist/legacy/build/pdf.worker?url';
-
-// Set worker source explicitly
-pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+import * as pdfjsLib from 'pdfjs-dist/build/pdf';
 
 // Convert first page of PDF to an image
 const convertPdfToImage = async (file) => {
@@ -47,6 +43,11 @@ function processFile(userAttributes) {
                     .join('');
 
                 // Convert PDF to image
+                // Set worker source explicitly
+                pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+                    'pdfjs-dist/build/pdf.worker.min.mjs',
+                    import.meta.url,
+                ).toString();
                 const imageBlob = await convertPdfToImage(file);
                 const imageFilename = `${filepath}${hashHex}.png`;
 
