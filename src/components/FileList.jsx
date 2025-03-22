@@ -29,7 +29,6 @@ function FileList({
                     path: filepath,
                     options: { listAll: true },
                 });
-
                 const fileData = {}; // Stores fileID -> metadata name mapping
                 for (const file of result.items) {
                     const fileParts = file.path.split('/');
@@ -89,7 +88,7 @@ function FileList({
     }, [userAttributes]); // Ensure effect runs only when userAttributes is available
 
     const filteredFiles = Object.entries(files).filter(([fileId, file]) =>
-        file.name.toLowerCase().includes(searchQuery.toLowerCase()),
+        file.name && file.name.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
     // Show a loading message until both userAttributes and files are fetched
@@ -120,7 +119,7 @@ function FileList({
                                 src={
                                     file.image
                                         ? file.image
-                                        : `https://placehold.co/600x400/ECECEC/CACACA?text=placeholder`
+                                        : `https://placehold.co/600x400/ECECEC/CACACA?text=Loading`
                                 }
                                 alt={file.name}
                                 className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg"
