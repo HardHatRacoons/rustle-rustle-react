@@ -185,13 +185,25 @@ describe('Testing home page', () => {
         );
     });
 
+    test('UploadModal closes on cancel button click', async () => {
+        render(<Home />);
+
+        fireEvent.click(screen.getByLabelText('open-upload-button'));
+        await act(async () => {});
+
+        fireEvent.click(screen.getByLabelText('close-upload-button'));
+        await act(async () => {});
+
+        expect(screen.queryByText(/Upload File/)).not.toBeInTheDocument();
+    });
+
     test('one file unnamed, one file not found when getting files in filelist', async () => {
         const consoleSpy = vi.spyOn(console, 'error');
         render(<Home />);
         await act(async () => {});
 
-        expect(screen.getAllByText(/Document/)[0]).toBeInTheDocument();
-        expect(screen.getAllByText(/Document/)[1]).toBeInTheDocument();
+        expect(screen.getByText(/file1/)).toBeInTheDocument();
+        expect(screen.getByText(/file2/)).toBeInTheDocument();
         expect(consoleSpy).toHaveBeenNthCalledWith(
             2,
             expect.stringMatching('Error fetching metadata:'),

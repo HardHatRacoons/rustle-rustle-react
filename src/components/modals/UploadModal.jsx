@@ -27,9 +27,7 @@ function processFile(userAttributes) {
     return ({ file }) => {
         const fileExtension = file.name.split('.').pop();
 
-        const filepath = userAttributes
-            ? `annotated/${userAttributes.sub}/`
-            : 'annotated/';
+        const filepath = `annotated/${userAttributes.sub}/`
 
         return file
             .arrayBuffer()
