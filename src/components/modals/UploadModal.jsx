@@ -46,6 +46,7 @@ function processFile(userAttributes) {
                     'pdfjs-dist/build/pdf.worker.min.mjs',
                     import.meta.url,
                 ).toString();
+
                 const imageBlob = await convertPdfToImage(file);
                 const imageFilename = `${filepath}${hashHex}.png`;
 

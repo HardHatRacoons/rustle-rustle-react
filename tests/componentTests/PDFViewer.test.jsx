@@ -165,8 +165,6 @@ describe('Testing pdfviewer component', () => {
             bottom: 100,
         });
 
-        // Step 2: Apply the mock to the global document's elements prototype
-        // This is important to mock it for elements in the DOM
         global.Element.prototype.getBoundingClientRect =
             mockGetBoundingClientRect;
     });
