@@ -48,6 +48,7 @@ const fetchJSONData = async (csvURL, jsonPath, setData) => {
         if (!response.ok) {
             throw new Error('Failed to fetch JSON file');
         }
+
         //console.log('found file')
         const jsonData = await response.json(); // Read response as text
         // Set the parsed JSON data in state
