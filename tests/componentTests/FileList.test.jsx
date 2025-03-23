@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { list, getProperties, getUrl } from 'aws-amplify/storage'
+import { list, getProperties, getUrl } from 'aws-amplify/storage';
 import FileList from '../../src/components/FileList';
 import { useNavigate } from 'react-router';
 
@@ -9,11 +9,10 @@ vi.mock('react-router', () => ({
     useNavigate: vi.fn(),
 }));
 
-
 vi.mock(import('aws-amplify/storage'), () => ({
     list: vi.fn(),
     getProperties: vi.fn(),
-    getUrl: vi.fn()
+    getUrl: vi.fn(),
 }));
 
 describe('FileList Component', () => {
@@ -33,7 +32,7 @@ describe('FileList Component', () => {
                 setSelectedFile={mockSetSelectedFile}
                 setIsDeleteModalOpen={mockSetIsDeleteModalOpen}
                 {...props}
-            />
+            />,
         );
     };
 
@@ -73,13 +72,13 @@ describe('FileList Component', () => {
         const mockFile1 = {
             path: 'testFolder/12345/testfile.png',
         };
-    
+
         list.mockResolvedValueOnce({ items: [mockFile1] });
         getUrl.mockRejectedValueOnce(new Error('File not found'));
         getUrl.mockRejectedValueOnce(new Error('File not found'));
-    
+
         renderComponent();
-    
+
         expect(await screen.findByText('No files found.')).toBeInTheDocument();
     });
 });

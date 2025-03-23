@@ -76,13 +76,15 @@ describe('Testing home page', () => {
                             metadata: { name: path.path.split('/').at(-1) },
                         };
                     }),
-                uploadData: vi.fn().mockRejectedValueOnce(new Error("unsuccessful upload"))
-                .mockImplementation(async (params) => {
-                    //unknown if this is needed :/
-                    return {
-                        state: 'SUCCESS',
-                    };
-                }),
+                uploadData: vi
+                    .fn()
+                    .mockRejectedValueOnce(new Error('unsuccessful upload'))
+                    .mockImplementation(async (params) => {
+                        //unknown if this is needed :/
+                        return {
+                            state: 'SUCCESS',
+                        };
+                    }),
                 remove: vi
                     .fn()
                     .mockRejectedValueOnce(new Error('file not found'))
@@ -106,32 +108,31 @@ describe('Testing home page', () => {
                         numPages: 1, // Simulate a PDF with 2 pages for more complex testing
                         getPage: vi.fn().mockImplementation(async (pageNum) => {
                             // Simulate different pages based on pageNum
-                                return Promise.resolve({
-                                    pageNumber: 1,
-                                    rotate: 0, // The page rotation in degrees
-                                    width: standardA4Width, // Page width in PDF units (1/72 inch)
-                                    height: standardA4Height, // Page height in PDF units (1/72 inch)
+                            return Promise.resolve({
+                                pageNumber: 1,
+                                rotate: 0, // The page rotation in degrees
+                                width: standardA4Width, // Page width in PDF units (1/72 inch)
+                                height: standardA4Height, // Page height in PDF units (1/72 inch)
 
-                                    getViewport: vi
-                                        .fn()
-                                        .mockImplementation((options) => {
-                                            // Scale the width and height based on the provided scale factor
-                                            const scale = options.scale || 1;
-                                            const width =
-                                                standardA4Width * scale;
-                                            const height =
-                                                standardA4Height * scale;
+                                getViewport: vi
+                                    .fn()
+                                    .mockImplementation((options) => {
+                                        // Scale the width and height based on the provided scale factor
+                                        const scale = options.scale || 1;
+                                        const width = standardA4Width * scale;
+                                        const height = standardA4Height * scale;
 
-                                            // Return the viewport object that includes the scaled dimensions
-                                            return {
-                                                width,
-                                                height,
-                                                scale,
-                                            };
-                                        }),
-                                    render: vi
-                                        .fn()
-                                        .mockImplementation(async(renderContext) => {
+                                        // Return the viewport object that includes the scaled dimensions
+                                        return {
+                                            width,
+                                            height,
+                                            scale,
+                                        };
+                                    }),
+                                render: vi
+                                    .fn()
+                                    .mockImplementation(
+                                        async (renderContext) => {
                                             const ctx =
                                                 renderContext.canvasContext;
                                             ctx.fillText(
@@ -140,8 +141,9 @@ describe('Testing home page', () => {
                                                 0,
                                             );
                                             return true;
-                                        }),
-                                });
+                                        },
+                                    ),
+                            });
                         }),
                     },
                 };
@@ -171,17 +173,16 @@ describe('Testing home page', () => {
             return 'mocked-url';
         };
         const mockBlobbing = vi.fn().mockImplementation((callback) => {
-           // You can customize the fake Blob returned here
-           const fakeBlob = new Blob(['fake data'], { type: 'image/png' });
-           callback(fakeBlob);
-         });
+            // You can customize the fake Blob returned here
+            const fakeBlob = new Blob(['fake data'], { type: 'image/png' });
+            callback(fakeBlob);
+        });
 
-        HTMLCanvasElement.prototype.toBlob =
-            mockBlobbing;
+        HTMLCanvasElement.prototype.toBlob = mockBlobbing;
 
-            HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
-                        fillText: vi.fn(),
-                    }));
+        HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
+            fillText: vi.fn(),
+        }));
     });
 
     test('listing file error', async () => {
@@ -292,8 +293,10 @@ describe('Testing home page', () => {
         fireEvent.click(screen.getByLabelText('close-upload-button'));
         await act(async () => {});
 
-        expect(consoleSpy).toHaveBeenNthCalledWith(5,
-            expect.stringMatching('Error uploading image:'), expect.anything()
+        expect(consoleSpy).toHaveBeenNthCalledWith(
+            5,
+            expect.stringMatching('Error uploading image:'),
+            expect.anything(),
         );
     });
 
