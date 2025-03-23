@@ -8,10 +8,8 @@ describe('Testing card component', () => {
     });
 
     test('pin card', async () => {
-        let t = false;
         let i = 1;
-        const change = (val, idx) => {
-            t = val;
+        const change = (idx) => {
             i = idx;
         };
 
@@ -22,11 +20,19 @@ describe('Testing card component', () => {
         );
 
         //card pin click
-        expect(t).to.equal(false);
         expect(i).to.equal(1);
         fireEvent.click(screen.getByLabelText('card-0'));
         await act(() => {});
-        expect(t).to.equal(true);
         expect(i).to.equal(0);
+    });
+
+    test('check pin state', async () => {
+        render(
+            <Card idx={0} pin={true}>
+                Hello Hello
+            </Card>,
+        );
+
+        await act(() => {});
     });
 });

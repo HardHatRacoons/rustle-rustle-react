@@ -152,7 +152,7 @@ function FileLayout() {
         );
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full min-h-fit">
             <div className="flex flex-row justify-between px-3 pt-3">
                 <div className="flex">
                     <MdArrowBack
