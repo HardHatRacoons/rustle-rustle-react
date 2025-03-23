@@ -312,7 +312,6 @@ const generateText = (container, data, options) => {
             const sum = d3.sum(data, (d) => d[options[2]]);
             d3.select(container).html(`Total ${options[2]}: ${sum.toFixed(2)}`);
             break;
-        default:
     }
 };
 

@@ -1,5 +1,4 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
-
 import MetricView from '../../src/pages/MetricView';
 
 describe('Testing metric view page', () => {
@@ -91,6 +90,18 @@ describe('Testing metric view page', () => {
                             TopOfSteel: 1,
                             GUID: 'c_27UAyzOZf13AypYEBn7iFL',
                         },
+                        {
+                            PageNumber: 1,
+                            AreaName: 'test value',
+                            Quantity: 1,
+                            Shape: 'another shape',
+                            Size: 'W21X68',
+                            Length: 90.84,
+                            WeightFT: 68.0,
+                            WeightEA: 2097.12,
+                            TopOfSteel: 1,
+                            GUID: 'c_27UAyzOZf13AypYEBn7iFL',
+                        },
                     ]),
                 };
             }
@@ -133,8 +144,35 @@ describe('Testing metric view page', () => {
         expect(card2.compareDocumentPosition(card3)).toBe(4);
     });
 
-    test('render stuff idk', async () => {
+    test('mouse over for histograms additional information', async () => {
         render(<MetricView />);
         await act(() => {});
+
+        const rects = document.querySelectorAll('rect');
+        rects.forEach((rect) => {
+            fireEvent.mouseOver(rect);
+        });
+        global.dump(document.body, 'metric');
+        expect(screen.queryByText(/another shape: 1/)).toBeInTheDocument();
+        expect(screen.queryByText(/W21X68: 4/)).toBeInTheDocument();
+        rects.forEach((rect) => {
+            fireEvent.mouseMove(rect);
+            fireEvent.mouseOut(rect);
+        });
+    });
+
+    test('mouse over for charts additional information', async () => {
+        render(<MetricView />);
+        await act(() => {});
+
+        const paths = document.querySelectorAll('path');
+        paths.forEach((path) => {
+            fireEvent.mouseOver(path);
+        });
+        expect(screen.queryByText(/W21X68: 100.0%/)).toBeInTheDocument();
+        paths.forEach((rect) => {
+            fireEvent.mouseMove(rect);
+            fireEvent.mouseOut(rect);
+        });
     });
 });
