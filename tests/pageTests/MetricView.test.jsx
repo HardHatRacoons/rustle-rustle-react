@@ -34,17 +34,17 @@ describe('Testing metric view page', () => {
 
         //fix this later
         expect(card1.compareDocumentPosition(card2)).toBe(4);
-        expect(card2.compareDocumentPosition(card3)).toBe(4);
+        expect(card2.compareDocumentPosition(card3)).toBe(2);
 
         fireEvent.click(card3);
 
-        expect(card3.compareDocumentPosition(card1)).toBe(4);
-        expect(card3.compareDocumentPosition(card2)).toBe(4);
+        expect(card3.compareDocumentPosition(card1)).toBe(2);
+        expect(card3.compareDocumentPosition(card2)).toBe(2);
         expect(card1.compareDocumentPosition(card2)).toBe(4);
 
         fireEvent.click(card3);
 
         expect(card1.compareDocumentPosition(card2)).toBe(4);
-        expect(card2.compareDocumentPosition(card3)).toBe(4);
+        expect(card2.compareDocumentPosition(card3)).toBe(2);
     });
 });

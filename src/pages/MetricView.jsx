@@ -6,7 +6,7 @@ import graph from '../components/Grapher';
 
 function MetricView() {
     const pdfInfo = useOutletContext();
-    const [csvURL, setCsvURL] = useState(pdfInfo.url.annotated.csv); //alrdy a download url
+    const [csvURL, setCsvURL] = useState(pdfInfo?.url.annotated.csv); //alrdy a download url
     const [jsonPath, setJsonPath] = useState(
         pdfInfo?.path.annotated.csv
             ? pdfInfo.path.annotated.csv.split('.')[0] + '.json'
@@ -27,10 +27,8 @@ function MetricView() {
     const [data, setData] = useState([]);
 
     const generateGraphs = () => {
-        for (let idx = 0; idx < graphData.length; idx++) {
-            const container = document.getElementById(
-                graphData[idx].containerId,
-            );
+        for (let idx = 0; idx < defaultMetricLength; idx++) {
+            const container = document.getElementById(`graph-container-${idx}`);
             graph(container, data, defaultGraphTypes[idx], defaultOptions[idx]);
         }
     };

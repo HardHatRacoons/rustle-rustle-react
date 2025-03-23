@@ -1,7 +1,7 @@
 import { uploadData, getUrl } from 'aws-amplify/storage';
 import * as d3 from 'd3';
 
-const fetchCsvData = async (csvURl, jsonPath, setData) => {
+const fetchCsvData = async (csvURL, jsonPath, setData) => {
     try {
         const response = await fetch(csvURL);
 
@@ -55,7 +55,7 @@ const fetchJSONData = async (csvURL, jsonPath, setData) => {
     } catch (error) {
         //if cant find file
         if (error.message === 'NotFound')
-            fetchCsvData(csvURl, jsonPath, setRowData);
+            fetchCsvData(csvURL, jsonPath, setData);
         else console.error('Unexpected JSON error: ' + error.message);
     }
 };
