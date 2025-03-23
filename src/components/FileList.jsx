@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
-import { list, getProperties } from 'aws-amplify/storage';
+import { list, getProperties, getUrl } from 'aws-amplify/storage';
 import { useNavigate } from 'react-router';
 
 function FileList({
@@ -29,7 +29,6 @@ function FileList({
                     path: filepath,
                     options: { listAll: true },
                 });
-
                 const fileData = {}; // Stores fileID -> metadata name mapping
                 for (const file of result.items) {
                     const fileParts = file.path.split('/');
@@ -37,25 +36,46 @@ function FileList({
                     const fileID = fileParts.at(-1).slice(0, -4); // Extract fileID
 
                     if (fileType === 'pdf') {
+                        // initialize fileData for the file if it is not yet initialized
+                        if (fileData[fileID] === undefined)
+                            fileData[fileID] = {};
                         try {
                             const metadataResult = await getProperties({
                                 path: file.path, // Use the file path to get metadata
                             });
-
                             const docName =
                                 metadataResult.metadata &&
                                 metadataResult.metadata.name
                                     ? metadataResult.metadata.name
                                     : 'Document'; // Default name if no metadata found
 
-                            fileData[fileID] = docName; // Store fileID -> metadata name
+                            fileData[fileID]['name'] = docName; // Store fileID -> metadata name
                         } catch (error) {
                             console.error('Error fetching metadata:', error);
-                            fileData[fileID] = 'Document'; // Fallback to default name
+                            fileData[fileID]['name'] = 'Document'; // Fallback to default name
                         }
+                    } else if (fileType === 'png') {
+                        // initialize fileData for the file if it is not yet initialized
+                        if (fileData[fileID] === undefined)
+                            fileData[fileID] = {};
+                        try {
+                            let linkToStorageFile = null;
+                            linkToStorageFile = await getUrl({
+                                path: file.path,
+                                options: {
+                                    bucket: 'raccoonTeamDrive',
+                                    validateObjectExistence: true,
+                                    // url expiration time in seconds.
+                                    expiresIn: 20,
+                                },
+                            });
+                            if (linkToStorageFile) {
+                                fileData[fileID]['image'] =
+                                    linkToStorageFile.url.toString();
+                            }
+                        } catch (error) {}
                     }
                 }
-
                 setFiles(fileData);
             } catch (error) {
                 console.error('Error listing files:', error);
@@ -67,8 +87,10 @@ function FileList({
         fetchFiles();
     }, [userAttributes]); // Ensure effect runs only when userAttributes is available
 
-    const filteredFiles = Object.entries(files).filter(([fileId, fileName]) =>
-        fileName.toLowerCase().includes(searchQuery.toLowerCase()),
+    const filteredFiles = Object.entries(files).filter(
+        ([fileId, file]) =>
+            file.name &&
+            file.name.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
     // Show a loading message until both userAttributes and files are fetched
@@ -88,7 +110,7 @@ function FileList({
                 </p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    {filteredFiles.map(([fileId, fileName], idx) => (
+                    {filteredFiles.map(([fileId, file], idx) => (
                         <div
                             key={fileId}
                             className="cursor-pointer bg-sky-100 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102 hover:shadow-xl"
@@ -96,13 +118,17 @@ function FileList({
                             onClick={() => navigate(`/file/${fileId}`)}
                         >
                             <img
-                                src={`https://placehold.co/600x400/ECECEC/CACACA?text=placeholder`}
-                                alt={fileName}
+                                src={
+                                    file.image
+                                        ? file.image
+                                        : `https://placehold.co/600x400/ECECEC/CACACA?text=Loading`
+                                }
+                                alt={file.name}
                                 className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg"
                             />
                             <div className="flex flex-row py-2 content-center">
                                 <p className="text-lg font-bold text-sky-900">
-                                    {fileName}
+                                    {file.name}
                                 </p>
                                 <button
                                     className="ml-auto hover:text-red-500 hover:cursor-pointer"
@@ -110,7 +136,7 @@ function FileList({
                                         event.stopPropagation(); // Prevent card click event
                                         setSelectedFile({
                                             fileId,
-                                            fileName,
+                                            fileName: files[fileId].name,
                                             folder,
                                         });
                                         setIsDeleteModalOpen(true);
