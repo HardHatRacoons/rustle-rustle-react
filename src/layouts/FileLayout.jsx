@@ -62,7 +62,6 @@ function FileLayout() {
                 });
                 pdf.url.annotated.pdf = linkToStorageFile.url.toString();
             } catch (error) {}
-            setPdfInfo(pdf);
 
             try {
                 linkToStorageFile = await getUrl({
@@ -74,14 +73,12 @@ function FileLayout() {
                         expiresIn: 900,
                     },
                 });
+                pdf.url.unannotated.pdf = linkToStorageFile.url.toString();
+                if (pdf.url.unannotated.pdf) setValid(true);
+                pdf.name = 'Document';
             } catch (error) {
                 setValid(false);
-                return;
             }
-            pdf.url.unannotated.pdf = linkToStorageFile.url.toString();
-            if (pdf.url.unannotated.pdf) setValid(true);
-            pdf.name = 'Document';
-            setPdfInfo(pdf);
 
             try {
                 linkToStorageFile = await getUrl({
