@@ -27,7 +27,7 @@ function processFile(userAttributes) {
     return ({ file }) => {
         const fileExtension = file.name.split('.').pop();
 
-        const filepath = `annotated/${userAttributes.sub}/`;
+        const imagepath = `unannotated/${userAttributes.sub}/`
 
         return file
             .arrayBuffer()
@@ -48,7 +48,7 @@ function processFile(userAttributes) {
                 ).toString();
 
                 const imageBlob = await convertPdfToImage(file);
-                const imageFilename = `${filepath}${hashHex}.png`;
+                const imageFilename = `${imagepath}${hashHex}.png`;
 
                 // Upload image to S3
                 try {

@@ -28,54 +28,58 @@ function Home() {
     };
 
     const handleDeleteFile = async () => {
-        //        if (!selectedFile) return; //this is rlly hard to test bc i dont think this is possible without trying to open stuff somehow
-
-        // if the folder is annotated, delete the csv file, and the unnanotated pdf file
-        if (selectedFile.folder === 'annotated') {
-            try {
-                // Construct the csv file path
-                const csvPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.csv`; // Adjust extension as needed
-                // Construct the unannotated pdf file path
-                const pdfPath = `unannotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`; // Adjust extension as needed
-                const jsonPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.json`;
-                const pngPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.png`;
-
-                // Call Amplify remove function
-                await remove({
-                    path: csvPath,
-                });
-                await remove({
-                    path: pdfPath,
-                });
-                await remove({
-                    path: jsonPath,
-                });
-                await remove({
-                    path: pngPath,
-                });
-            } catch (error) {
-                console.error('Error deleting file:', error);
-            } finally {
-                setIsDeleteModalOpen(false);
-            }
-        }
-        // deleting the current pdf file
+        // individually try to remove each file
         try {
-            // Construct the full file path
-            const filePath = `${selectedFile.folder}/${userAttributes.sub}/${selectedFile.fileId}.pdf`; // Adjust extension as needed
+            // Construct the file path
+            const csvPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.csv`;
 
             // Call Amplify remove function
             await remove({
-                path: filePath,
+                path: csvPath,
             });
-
-            // trigger refresh
-            setRefreshKey((prev) => prev + 1);
         } catch (error) {
             console.error('Error deleting file:', error);
-        } finally {
-            setIsDeleteModalOpen(false);
         }
+
+        try{
+            const unannotatedPdfPath = `unannotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`;
+            await remove({
+                path: unannotatedPdfPath,
+            });
+        } catch (error) {
+            console.error('Error deleting file:', error);
+        }
+
+        try{
+            const annotatedPdfPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`;
+            await remove({
+                path: annotatedPdfPath,
+            });
+        } catch (error) {
+            console.error('Error deleting file:', error);
+        }
+
+        try{
+            const jsonPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.json`;
+            await remove({
+                path: jsonPath,
+            });
+        } catch (error) {
+            console.error('Error deleting file:', error);
+        }
+
+        try{
+            const pngPath = `unannotated/${userAttributes.sub}/${selectedFile.fileId}.png`;
+            await remove({
+                path: pngPath,
+            });
+        } catch (error) {
+            console.error('Error deleting file:', error);
+        }
+
+        // trigger refresh
+        setRefreshKey((prev) => prev + 1);
+        setIsDeleteModalOpen(false);
     };
 
     return (
@@ -123,8 +127,8 @@ function Home() {
 
                     <FileList
                         userAttributes={userAttributes}
-                        key={`annotated-${refreshKey}`}
-                        folder="annotated"
+                        key={`unannotated-${refreshKey}`}
+                        folder="unannotated"
                         searchQuery={searchQuery}
                         setSelectedFile={setSelectedFile}
                         setIsDeleteModalOpen={setIsDeleteModalOpen}
