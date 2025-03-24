@@ -126,9 +126,9 @@ function FileList({
                                 alt={file.name}
                                 className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg"
                             />
-                            <div className="flex flex-row py-2 content-center">
-                                <p className="text-lg font-bold text-sky-900">
-                                    {file.name}
+                            <div className="flex flex-row py-2 content-center w-full">
+                                <p className="text-lg font-bold text-sky-900 whitespace-normal break-words">
+                                    {file.name.replaceAll('_', '_\u200B')} 
                                 </p>
                                 <button
                                     className="ml-auto hover:text-red-500 hover:cursor-pointer"
