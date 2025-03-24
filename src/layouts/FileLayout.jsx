@@ -52,6 +52,21 @@ function FileLayout() {
 
             try {
                 linkToStorageFile = await getUrl({
+                    path: pdf.path.annotated.pdf,
+                    options: {
+                        bucket: 'raccoonTeamDrive',
+                        validateObjectExistence: true,
+                        // url expiration time in seconds.
+                        expiresIn: 900,
+                    },
+                });
+                pdf.url.annotated.pdf = linkToStorageFile.url.toString();
+            } catch (error) {
+            }
+            setPdfInfo(pdf);
+            
+            try {
+                linkToStorageFile = await getUrl({
                     path: pdf.path.unannotated.pdf,
                     options: {
                         bucket: 'raccoonTeamDrive',
@@ -66,22 +81,8 @@ function FileLayout() {
             }
             pdf.url.unannotated.pdf = linkToStorageFile.url.toString();
             if (pdf.url.unannotated.pdf) setValid(true);
-
-            try {
-                linkToStorageFile = await getUrl({
-                    path: pdf.path.annotated.pdf,
-                    options: {
-                        bucket: 'raccoonTeamDrive',
-                        validateObjectExistence: true,
-                        // url expiration time in seconds.
-                        expiresIn: 900,
-                    },
-                });
-                pdf.url.annotated.pdf = linkToStorageFile.url.toString();
-            } catch (error) {
-                setValid(false);
-                return;
-            }
+            pdf.name = 'Document';
+            setPdfInfo(pdf);
 
             try {
                 linkToStorageFile = await getUrl({
@@ -95,22 +96,15 @@ function FileLayout() {
                 });
                 pdf.url.annotated.csv = linkToStorageFile.url.toString();
             } catch (error) {
-                setValid(false);
-                return;
             }
 
             try {
                 const result = await getProperties({
                     path: `unannotated/${userAttributes.sub}/${id}.pdf`,
                 });
-                if (result.metadata && result.metadata.name) {
+                if (result.metadata && result.metadata.name)
                     pdf.name = result.metadata.name;
-                } else {
-                    pdf.name = 'Document';
-                }
-            } catch (error) {
-                pdf.name = 'Document';
-            }
+            } catch (error) {}
 
             setPdfInfo(pdf);
         };
