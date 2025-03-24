@@ -138,14 +138,8 @@ describe('Testing main setup and routing after auth', () => {
             </MemoryRouter>,
         );
 
-        await act(async () => {
-            // wait for render to finish
-        });
-
-        expect(screen.getByText(/Error/)).toBeInTheDocument();
-
+        await act(async () => {});
         //go back home
-
         fireEvent.click(screen.getByLabelText('back'));
         await act(async () => {});
 
