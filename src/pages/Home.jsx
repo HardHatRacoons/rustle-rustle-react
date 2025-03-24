@@ -28,54 +28,23 @@ function Home() {
     };
 
     const handleDeleteFile = async () => {
+        // Construct the file path
+        const paths = [
+            `unannotated/${userAttributes.sub}/${selectedFile.fileId}.png`,
+            `unannotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`,
+            `annotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`,
+            `annotated/${userAttributes.sub}/${selectedFile.fileId}.csv`,
+            `annotated/${userAttributes.sub}/${selectedFile.fileId}.json`,
+        ];
         // individually try to remove each file
-        try {
-            // Construct the file path
-            const csvPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.csv`;
-
-            // Call Amplify remove function
-            await remove({
-                path: csvPath,
-            });
-        } catch (error) {
-            console.error('Error deleting file:', error);
-        }
-
-        try{
-            const unannotatedPdfPath = `unannotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`;
-            await remove({
-                path: unannotatedPdfPath,
-            });
-        } catch (error) {
-            console.error('Error deleting file:', error);
-        }
-
-        try{
-            const annotatedPdfPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`;
-            await remove({
-                path: annotatedPdfPath,
-            });
-        } catch (error) {
-            console.error('Error deleting file:', error);
-        }
-
-        try{
-            const jsonPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.json`;
-            await remove({
-                path: jsonPath,
-            });
-        } catch (error) {
-            console.error('Error deleting file:', error);
-        }
-
-        try{
-            const pngPath = `unannotated/${userAttributes.sub}/${selectedFile.fileId}.png`;
-            await remove({
-                path: pngPath,
-            });
-        } catch (error) {
-            console.error('Error deleting file:', error);
-        }
+        paths.forEach(async (path) => {
+            try {
+                // Call Amplify remove function
+                await remove({ path });
+            } catch (error) {
+                console.error('Error deleting file:', error);
+            }
+        });
 
         // trigger refresh
         setRefreshKey((prev) => prev + 1);

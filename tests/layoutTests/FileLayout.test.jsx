@@ -60,7 +60,7 @@ describe('FileLayout Component', () => {
                 </Routes>
             </MemoryRouter>,
         );
-        
+
         await act(async () => {});
         expect(document.body).toHaveTextContent(/Error./);
     });
@@ -167,8 +167,7 @@ describe('FileLayout Component', () => {
         render(
             <MemoryRouter initialEntries={['/file/child']}>
                 <Routes>
-                    <Route path="/" element={<p>Home page</p>}>
-                    </Route>
+                    <Route path="/" element={<p>Home page</p>}></Route>
                     <Route path="/file" element={<FileLayout />}>
                         <Route
                             path="child"
