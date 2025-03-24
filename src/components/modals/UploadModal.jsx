@@ -27,7 +27,7 @@ function processFile(userAttributes) {
     return ({ file }) => {
         const fileExtension = file.name.split('.').pop();
 
-        const imagepath = `unannotated/${userAttributes.sub}/`
+        const imagepath = `unannotated/${userAttributes.sub}/`;
 
         return file
             .arrayBuffer()
@@ -56,7 +56,6 @@ function processFile(userAttributes) {
                         path: imageFilename,
                         data: imageBlob,
                     });
-                    console.log('Uploaded image to S3:', result);
                 } catch (error) {
                     console.error('Error uploading image:', error);
                 }

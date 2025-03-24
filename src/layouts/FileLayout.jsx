@@ -61,10 +61,9 @@ function FileLayout() {
                     },
                 });
                 pdf.url.annotated.pdf = linkToStorageFile.url.toString();
-            } catch (error) {
-            }
+            } catch (error) {}
             setPdfInfo(pdf);
-            
+
             try {
                 linkToStorageFile = await getUrl({
                     path: pdf.path.unannotated.pdf,
@@ -95,8 +94,7 @@ function FileLayout() {
                     },
                 });
                 pdf.url.annotated.csv = linkToStorageFile.url.toString();
-            } catch (error) {
-            }
+            } catch (error) {}
 
             try {
                 const result = await getProperties({
