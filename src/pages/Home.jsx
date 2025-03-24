@@ -28,54 +28,27 @@ function Home() {
     };
 
     const handleDeleteFile = async () => {
-        //        if (!selectedFile) return; //this is rlly hard to test bc i dont think this is possible without trying to open stuff somehow
-
-        // if the folder is annotated, delete the csv file, and the unnanotated pdf file
-        if (selectedFile.folder === 'annotated') {
+        // Construct the file path
+        const paths = [
+            `unannotated/${userAttributes.sub}/${selectedFile.fileId}.png`,
+            `unannotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`,
+            `annotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`,
+            `annotated/${userAttributes.sub}/${selectedFile.fileId}.csv`,
+            `annotated/${userAttributes.sub}/${selectedFile.fileId}.json`,
+        ];
+        // individually try to remove each file
+        paths.forEach(async (path) => {
             try {
-                // Construct the csv file path
-                const csvPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.csv`; // Adjust extension as needed
-                // Construct the unannotated pdf file path
-                const pdfPath = `unannotated/${userAttributes.sub}/${selectedFile.fileId}.pdf`; // Adjust extension as needed
-                const jsonPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.json`;
-                const pngPath = `annotated/${userAttributes.sub}/${selectedFile.fileId}.png`;
-
                 // Call Amplify remove function
-                await remove({
-                    path: csvPath,
-                });
-                await remove({
-                    path: pdfPath,
-                });
-                await remove({
-                    path: jsonPath,
-                });
-                await remove({
-                    path: pngPath,
-                });
+                await remove({ path });
             } catch (error) {
                 console.error('Error deleting file:', error);
-            } finally {
-                setIsDeleteModalOpen(false);
             }
-        }
-        // deleting the current pdf file
-        try {
-            // Construct the full file path
-            const filePath = `${selectedFile.folder}/${userAttributes.sub}/${selectedFile.fileId}.pdf`; // Adjust extension as needed
+        });
 
-            // Call Amplify remove function
-            await remove({
-                path: filePath,
-            });
-
-            // trigger refresh
-            setRefreshKey((prev) => prev + 1);
-        } catch (error) {
-            console.error('Error deleting file:', error);
-        } finally {
-            setIsDeleteModalOpen(false);
-        }
+        // trigger refresh
+        setRefreshKey((prev) => prev + 1);
+        setIsDeleteModalOpen(false);
     };
 
     return (
@@ -123,8 +96,8 @@ function Home() {
 
                     <FileList
                         userAttributes={userAttributes}
-                        key={`annotated-${refreshKey}`}
-                        folder="annotated"
+                        key={`unannotated-${refreshKey}`}
+                        folder="unannotated"
                         searchQuery={searchQuery}
                         setSelectedFile={setSelectedFile}
                         setIsDeleteModalOpen={setIsDeleteModalOpen}

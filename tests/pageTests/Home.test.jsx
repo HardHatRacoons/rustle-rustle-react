@@ -330,10 +330,8 @@ describe('Testing home page', () => {
         await act(async () => {});
         expect(screen.getByText(/file1/)).toBeInTheDocument();
         expect(screen.getByText(/file2/)).toBeInTheDocument();
-
         fireEvent.click(screen.getByLabelText('file-delete-button-1'));
         fireEvent.click(screen.getByLabelText('confirm-delete-button'));
-        fireEvent.click(screen.getByLabelText('refresh-button'));
         await act(async () => {});
         expect(screen.getByText(/file1/)).toBeInTheDocument();
         expect(screen.queryByText(/file2/)).not.toBeInTheDocument();
