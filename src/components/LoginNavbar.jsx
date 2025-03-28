@@ -1,7 +1,16 @@
 import { HiMiniSparkles } from 'react-icons/hi2';
+import { RiMoonClearLine, RiSunFill } from 'react-icons/ri';
 import GoogleSignOut from './GoogleSignOut';
+import Toggle from './Toggle';
 
-function LoginNavbar({ userAttributes }) {
+function LoginNavbar({ userAttributes, themeController }) {
+    const initialValue = localStorage.getItem('theme') === 'light';
+    const [theme, setTheme] = themeController;
+
+    const onChange = (value) => {
+        setTheme(value ? 'light' : 'dark');
+    };
+
     return (
         <div className="w-full h-20 flex text-white align-items-center p-5">
             <div className="flex flex-row gap-2 text-4xl grow-10 text-nowrap mx-2">
@@ -9,6 +18,14 @@ function LoginNavbar({ userAttributes }) {
                 {userAttributes
                     ? `Welcome, ${userAttributes.given_name}`
                     : 'Loading...'}
+            </div>
+            <div className="flex text-3xl mx-2 place-items-center">
+                {theme === 'light' ? <RiSunFill /> : <RiMoonClearLine />}
+                <Toggle
+                    initialValue={initialValue}
+                    onChange={onChange}
+                    className="mx-2"
+                />
             </div>
             <GoogleSignOut />
         </div>

@@ -6,14 +6,17 @@ import { HiMiniSparkles } from 'react-icons/hi2';
 import { IoMdRefreshCircle } from 'react-icons/io';
 import { remove } from 'aws-amplify/storage';
 import { useNavigate } from 'react-router';
-import { useUser } from '../components/UserContext';
+import { useOutletContext } from 'react-router';
 
+import { useUser } from '../components/UserContext';
 import LoginNavbar from '../components/LoginNavbar';
 import FileList from '../components/FileList';
 import DeleteConfirmationModal from '../components/modals/DeleteConfirmationModal';
 import UploadModal from '../components/modals/UploadModal';
 
 function Home() {
+    const themeController = useOutletContext();
+
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -52,8 +55,11 @@ function Home() {
     };
 
     return (
-        <div className="h-full bg-sky-300 flex flex-col">
-            <LoginNavbar userAttributes={userAttributes} />
+        <div className="h-full bg-sky-300 dark:bg-slate-800 flex flex-col">
+            <LoginNavbar
+                userAttributes={userAttributes}
+                themeController={themeController}
+            />
 
             <div className="bg-sky-200 grow overflow-y-auto">
                 <div className="m-6 flex flex-row bg-white p-8 rounded-lg">

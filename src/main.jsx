@@ -14,14 +14,10 @@ import './index.css';
 Amplify.configure(outputs);
 // logger.debug('Amplify debug logging enabled');
 
-const ThemeContext = createContext('light');
-
 createRoot(document.getElementById('root')).render(
-    <ThemeContext.Provider value="dark">
-        <UserProvider>
-            <BrowserRouter>
-                <App />
-            </BrowserRouter>
-        </UserProvider>
-    </ThemeContext.Provider>,
+    <UserProvider>
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    </UserProvider>,
 );
