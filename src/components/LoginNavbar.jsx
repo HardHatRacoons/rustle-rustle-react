@@ -1,4 +1,4 @@
-import { HiMiniSparkles } from 'react-icons/hi2';
+import { HiMiniSparkles, HiMiniCloud } from 'react-icons/hi2';
 import { RiMoonClearLine, RiSunFill } from 'react-icons/ri';
 import GoogleSignOut from './GoogleSignOut';
 import Toggle from './Toggle';
@@ -12,9 +12,9 @@ function LoginNavbar({ userAttributes, themeController }) {
     };
 
     return (
-        <div className="w-full h-20 flex text-white align-items-center p-5">
-            <div className="flex flex-row gap-2 text-4xl grow-10 text-nowrap mx-2">
-                <HiMiniSparkles />
+        <div className="w-full h-20 flex text-white align-items-center p-5 dark:text-slate-400">
+            <div className="flex flex-row gap-2 text-4xl grow-10 text-nowrap align-items-center mx-2">
+                {theme == "light"?<HiMiniCloud />: <HiMiniSparkles />}
                 {userAttributes
                     ? `Welcome, ${userAttributes.given_name}`
                     : 'Loading...'}

@@ -10,11 +10,12 @@ function RootLayout() {
     const [theme, setTheme] = useState(initialTheme);
 
     useEffect(() => {
-        localStorage.setItem('theme', theme);
+        if(theme)
+            localStorage.setItem('theme', theme);
     }, [theme]);
 
     return (
-        <div className={`h-screen bg-sky-300 min-h-fit ${theme}`}>
+        <div className={`h-screen bg-sky-300 dark:bg-slate-800 min-h-fit ${theme}`}>
             <Outlet context={[theme, setTheme]} />
         </div>
     );

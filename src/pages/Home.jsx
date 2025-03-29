@@ -61,15 +61,14 @@ function Home() {
                 themeController={themeController}
             />
 
-            <div className="bg-sky-200 grow overflow-y-auto">
-                <div className="m-6 flex flex-row bg-white p-8 rounded-lg">
-                    <h1 className="text-4xl font-bold text-sky-950">
-                        {' '}
-                        Gallery{' '}
+            <div className="bg-sky-200 dark:bg-slate-700 grow overflow-y-auto">
+                <div className="m-6 flex flex-row bg-white dark:bg-slate-500 p-8 rounded-lg">
+                    <h1 className="text-4xl font-bold text-sky-950 dark:text-slate-800">
+                        Gallery
                     </h1>
 
                     <button
-                        className="ml-auto bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 cursor-pointer"
+                        className="ml-auto bg-blue-500 dark:bg-slate-800 text-white dark:text-slate-300 px-6 py-2 rounded hover:bg-blue-600 dark:hover:bg-slate-700  cursor-pointer"
                         onClick={() => setIsUploadModalOpen(true)}
                         aria-label="open-upload-button"
                     >
@@ -79,7 +78,7 @@ function Home() {
                 <div className="ml-6 mr-6">
                     <div className="flex flex-row justify-between items-center gap-4">
                         <div className="w-full flex flex-row gap-2 items-center">
-                            <p className="font-bold text-sky-900 flex flex-row gap-1 items-center">
+                            <p className="font-bold text-sky-900 dark:text-slate-300 flex flex-row gap-1 items-center">
                                 <FaSearch />
                                 Search:
                             </p>
@@ -89,11 +88,11 @@ function Home() {
                                 placeholder="File name"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="p-2 border border-gray-300 rounded w-full bg-white"
+                                className="p-2 border border-gray-300 rounded w-full bg-white dark:bg-slate-300"
                             />
                         </div>
                         <IoMdRefreshCircle
-                            className="text-sky-900 hover:cursor-pointer hover:text-sky-700"
+                            className="text-sky-900 hover:cursor-pointer hover:text-sky-700 dark:text-slate-300"
                             onClick={() => setRefreshKey((prev) => prev + 1)}
                             size="30"
                             aria-label="refresh-button"
