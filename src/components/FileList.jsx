@@ -105,7 +105,7 @@ function FileList({
     return (
         <div className="mt-6 p-6 rounded-lg bg-opacity-50 overflow-y-auto">
             {filteredFiles.length === 0 ? (
-                <p className="text-lg font-bold text-sky-900">
+                <p className="text-lg font-bold text-sky-900 dark:text-slate-700">
                     No files found.
                 </p>
             ) : (
