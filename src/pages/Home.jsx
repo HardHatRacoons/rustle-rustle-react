@@ -62,18 +62,19 @@ function Home() {
             />
 
             <div className="px-6 w-full flex flex-row gap-2 items-center">
-                <p className="font-bold text-sky-900 dark:text-slate-300 flex flex-row gap-1 items-center">
-                    <FaSearch />
-                    Search:
-                </p>
-
-                <input
-                    type="text"
-                    placeholder="search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="p-2 border border-gray-300 rounded w-full bg-white dark:bg-slate-300"
-                />
+               <div className="flex flex-row px-2 py-0.5 border-2 border-sky-50 rounded-full w-full bg-sky-50 focus-within:border-sky-900 dark:bg-slate-300 dark:border-slate-300 dark:focus-within:border-white">
+                    <p className="font-bold text-sky-900 dark:text-slate-900 flex flex-row gap-1 items-center">
+                        <FaSearch />
+                        Search:
+                    </p>
+                    <input
+                        type="text"
+                        placeholder="File name"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full p-2 outline-none h-[30px]"
+                    />
+                </div>
             </div>
 
             <div className="bg-sky-200 dark:bg-slate-700 grow overflow-y-auto">
