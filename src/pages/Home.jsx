@@ -55,7 +55,7 @@ function Home() {
     };
 
     return (
-        <div className="h-full bg-sky-200 dark:bg-slate-700 flex flex-col">
+        <div className="h-full flex flex-col">
             <LoginNavbar
                 userAttributes={userAttributes}
                 themeController={themeController}
@@ -77,7 +77,7 @@ function Home() {
                 </div>
             </div>
 
-            <div className="bg-sky-200 dark:bg-slate-700 grow overflow-y-auto">
+            <div className="grow overflow-y-auto">
                 <div className="m-6 bg-white dark:bg-slate-500 p-8 rounded-lg">
                     <div className="flex flex-row items-center">
                         <h1 className="text-4xl font-bold text-sky-950 dark:text-slate-800">
