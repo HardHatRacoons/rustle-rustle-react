@@ -62,7 +62,7 @@ function Home() {
             />
 
             <div className="px-6 w-full flex flex-row gap-2 items-center">
-               <div className="flex flex-row px-2 py-0.5 border-2 border-sky-50 rounded-full w-full bg-sky-50 focus-within:border-sky-900 dark:bg-slate-300 dark:border-slate-300 dark:focus-within:border-white">
+                <div className="flex flex-row px-2 py-0.5 border-2 border-sky-50 rounded-full w-full bg-sky-50 focus-within:border-sky-900 dark:bg-slate-300 dark:border-slate-300 dark:focus-within:border-white">
                     <p className="font-bold text-sky-900 dark:text-slate-900 flex flex-row gap-1 items-center">
                         <FaSearch />
                         Search:
@@ -72,7 +72,7 @@ function Home() {
                         placeholder="File name"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full p-2 outline-none h-[30px]"
+                        className="w-full p-2 outline-none h-[30px] text-sky-700"
                     />
                 </div>
             </div>
@@ -84,24 +84,26 @@ function Home() {
                             Gallery
                         </h1>
 
-                        <div className="ml-4 flex flex-row justify-between items-center gap-4">
-                            <IoMdRefreshCircle
-                                className="text-sky-900 hover:cursor-pointer hover:text-sky-700 dark:text-slate-300"
-                                onClick={() =>
-                                    setRefreshKey((prev) => prev + 1)
-                                }
-                                size="30"
-                                aria-label="refresh-button"
-                            />
-                        </div>
+                        <div className="ml-auto flex flex-row gap-2 items-center">
+                            <div className="ml-4 flex flex-row justify-between items-center gap-4">
+                                <IoMdRefreshCircle
+                                    className="text-sky-300 hover:cursor-pointer hover:text-sky-200 dark:hover:text-slate-200 dark:text-slate-300"
+                                    onClick={() =>
+                                        setRefreshKey((prev) => prev + 1)
+                                    }
+                                    size="30"
+                                    aria-label="refresh-button"
+                                />
+                            </div>
 
-                        <button
-                            className="ml-auto bg-blue-500 dark:bg-slate-800 text-white dark:text-slate-300 px-6 py-2 rounded hover:bg-blue-600 dark:hover:bg-slate-700  cursor-pointer"
-                            onClick={() => setIsUploadModalOpen(true)}
-                            aria-label="open-upload-button"
-                        >
-                            Upload
-                        </button>
+                            <button
+                                className="bg-sky-300 dark:bg-slate-300 text-white dark:text-slate-700 px-6 py-2 rounded hover:bg-sky-200 dark:hover:bg-slate-200  cursor-pointer"
+                                onClick={() => setIsUploadModalOpen(true)}
+                                aria-label="open-upload-button"
+                            >
+                                Upload
+                            </button>
+                        </div>
                     </div>
                     <FileList
                         userAttributes={userAttributes}
