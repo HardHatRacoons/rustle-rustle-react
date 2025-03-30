@@ -77,8 +77,8 @@ function Home() {
                 </div>
             </div>
 
-            <div className="grow overflow-y-auto">
-                <div className="m-6 bg-white dark:bg-slate-500 p-8 rounded-lg">
+            <div className="grow flex flex-col">
+                <div className="m-6 grow max-h-[calc(100vh-10rem)] bg-white dark:bg-slate-500 p-8 rounded-xl flex flex-col">
                     <div className="flex flex-row items-center">
                         <h1 className="text-4xl font-bold text-sky-950 dark:text-slate-800">
                             Gallery
@@ -97,7 +97,7 @@ function Home() {
                             </div>
 
                             <button
-                                className="bg-sky-400 dark:bg-slate-300 text-white dark:text-slate-700 px-6 py-2 rounded hover:bg-sky-300 dark:hover:bg-slate-200  cursor-pointer"
+                                className="bg-sky-400 dark:bg-slate-300 text-white dark:text-slate-700 px-6 py-2 rounded-lg hover:bg-sky-300 dark:hover:bg-slate-200 cursor-pointer"
                                 onClick={() => setIsUploadModalOpen(true)}
                                 aria-label="open-upload-button"
                             >
@@ -105,14 +105,16 @@ function Home() {
                             </button>
                         </div>
                     </div>
-                    <FileList
-                        userAttributes={userAttributes}
-                        key={`unannotated-${refreshKey}`}
-                        folder="unannotated"
-                        searchQuery={searchQuery}
-                        setSelectedFile={setSelectedFile}
-                        setIsDeleteModalOpen={setIsDeleteModalOpen}
-                    />
+                    <div className="overflow-y-auto">
+                        <FileList
+                            userAttributes={userAttributes}
+                            key={`unannotated-${refreshKey}`}
+                            folder="unannotated"
+                            searchQuery={searchQuery}
+                            setSelectedFile={setSelectedFile}
+                            setIsDeleteModalOpen={setIsDeleteModalOpen}
+                        />
+                    </div>
                 </div>
             </div>
 
