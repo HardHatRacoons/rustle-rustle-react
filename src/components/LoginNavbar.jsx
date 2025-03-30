@@ -12,7 +12,7 @@ function LoginNavbar({ userAttributes, themeController }) {
     };
 
     return (
-        <div className="w-full h-20 flex text-white align-items-center p-5 dark:text-slate-400">
+        <div className="w-full h-20 flex text-white align-items-center px-6 py-5 dark:text-slate-400">
             <div className="flex flex-row gap-2 text-4xl grow-10 text-nowrap align-items-center mx-2">
                 {theme == "light"?<HiMiniCloud />: <HiMiniSparkles />}
                 {userAttributes
