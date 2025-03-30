@@ -87,7 +87,7 @@ function Home() {
                         <div className="ml-auto flex flex-row gap-2 items-center">
                             <div className="ml-4 flex flex-row justify-between items-center gap-4">
                                 <IoMdRefreshCircle
-                                    className="text-sky-300 hover:cursor-pointer hover:text-sky-200 dark:hover:text-slate-200 dark:text-slate-300"
+                                    className="text-sky-400 hover:cursor-pointer hover:text-sky-300 dark:hover:text-slate-200 dark:text-slate-300"
                                     onClick={() =>
                                         setRefreshKey((prev) => prev + 1)
                                     }
@@ -97,7 +97,7 @@ function Home() {
                             </div>
 
                             <button
-                                className="bg-sky-300 dark:bg-slate-300 text-white dark:text-slate-700 px-6 py-2 rounded hover:bg-sky-200 dark:hover:bg-slate-200  cursor-pointer"
+                                className="bg-sky-400 dark:bg-slate-300 text-white dark:text-slate-700 px-6 py-2 rounded hover:bg-sky-300 dark:hover:bg-slate-200  cursor-pointer"
                                 onClick={() => setIsUploadModalOpen(true)}
                                 aria-label="open-upload-button"
                             >

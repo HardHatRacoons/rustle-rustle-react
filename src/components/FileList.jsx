@@ -96,14 +96,14 @@ function FileList({
     // Show a loading message until both userAttributes and files are fetched
     if (!userAttributes || loading) {
         return (
-            <div className="bg-white text-lg font-bold text-sky-900 mt-3 mb-6 bg-white p-6 rounded-lg bg-opacity-50 overflow-y-auto">
+            <div className="bg-white text-lg font-bold text-sky-900 mt-3 mb-6 p-6 overflow-y-auto">
                 Loading files...
             </div>
         );
     }
 
     return (
-        <div className="mt-6 p-6 rounded-lg bg-opacity-50 overflow-y-auto">
+        <div className="mt-6 p-6 overflow-y-auto">
             {filteredFiles.length === 0 ? (
                 <p className="text-lg font-bold text-sky-900 dark:text-slate-700">
                     No files found.
