@@ -12,8 +12,8 @@ function LoginNavbar({ userAttributes, themeController }) {
     };
 
     return (
-        <div className="w-full h-20 flex text-white align-items-center px-6 py-5 dark:text-slate-400">
-            <div className="flex flex-row gap-2 text-4xl grow-10 text-nowrap align-items-center mx-2">
+        <div className="w-full min-h-20 flex flex-wrap text-white items-center px-6 py-5 dark:text-slate-400">
+            <div className="flex flex-row gap-2 text-wrap text-4xl grow-10 text-nowrap align-items-center mx-2">
                 {theme == "light"?<HiMiniCloud />: <HiMiniSparkles />}
                 {userAttributes
                     ? `Welcome, ${userAttributes.given_name}`
@@ -24,10 +24,12 @@ function LoginNavbar({ userAttributes, themeController }) {
                 <Toggle
                     initialValue={initialValue}
                     onChange={onChange}
-                    className="mx-2"
+                    className="mx-2 size-12"
                 />
             </div>
-            <GoogleSignOut />
+            <div className="ml-auto">
+                <GoogleSignOut />
+            </div>
         </div>
     );
 }

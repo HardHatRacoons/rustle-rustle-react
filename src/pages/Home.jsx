@@ -78,13 +78,14 @@ function Home() {
             </div>
 
             <div className="flex flex-col flex-1">
-                <div className="m-6 grow h-full max-h-[calc(100vh-10rem)] bg-white dark:bg-slate-500 p-8 rounded-xl flex flex-col">
+                <div className="m-6 grow h-full bg-white dark:bg-slate-500 p-8 rounded-xl flex flex-col
+                                max-h-[calc(100vh-15em)] xs:max-h-[calc(100vh-12rem)] sm:max-h-[calc(100vh-10rem)]">
                     <div className="flex flex-wrap items-center mb-6">
                         <h1 className="text-4xl font-bold text-sky-950 dark:text-slate-800">
                             Gallery
                         </h1>
 
-                        <div className="ml-auto flex flex-row gap-2 items-center overflow-y-wrap">
+                        <div className="ml-auto flex flex-row gap-2 items-center">
                             <div className="ml-4 flex flex-row justify-between items-center gap-4">
                                 <IoMdRefreshCircle
                                     className="text-sky-400 hover:cursor-pointer hover:text-sky-300 dark:hover:text-slate-200 dark:text-slate-300"
