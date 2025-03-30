@@ -6,16 +6,18 @@ function RootLayout() {
     const initialTheme =
         localStorage.getItem('theme') ||
         (window.matchMedia &&
-            window.matchMedia('(prefers-color-scheme: dark)').matches) || "light";
+            window.matchMedia('(prefers-color-scheme: dark)').matches) ||
+        'light';
     const [theme, setTheme] = useState(initialTheme);
 
     useEffect(() => {
-        if(theme)
-            localStorage.setItem('theme', theme);
+        if (theme) localStorage.setItem('theme', theme);
     }, [theme]);
 
     return (
-        <div className={`h-screen bg-linear-to-t from-purple-300 to-sky-300 dark:from-slate-800 dark:to-slate-900 min-h-fit ${theme}`}>
+        <div
+            className={`h-screen bg-sky-200 dark:bg-slate-800 min-h-fit ${theme}`}
+        >
             <Outlet context={[theme, setTheme]} />
         </div>
     );

@@ -78,8 +78,10 @@ function Home() {
             </div>
 
             <div className="flex flex-col flex-1">
-                <div className="m-6 grow h-full bg-white dark:bg-slate-500 p-8 rounded-xl flex flex-col
-                                max-h-[calc(100vh-15em)] xs:max-h-[calc(100vh-12rem)] sm:max-h-[calc(100vh-10rem)]">
+                <div
+                    className="m-6 grow h-full bg-white dark:bg-slate-500 p-8 rounded-xl flex flex-col
+                                max-h-[calc(100vh-15em)] xs:max-h-[calc(100vh-12rem)] sm:max-h-[calc(100vh-10rem)]"
+                >
                     <div className="flex flex-wrap items-center mb-6">
                         <h1 className="text-4xl font-bold text-sky-950 dark:text-slate-800">
                             Gallery

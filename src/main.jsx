@@ -9,7 +9,7 @@ import outputs from '../amplify_outputs.json';
 import App from './App';
 
 import './index.css';
-import "@fontsource/inter/500.css";
+import '@fontsource/inter/500.css';
 
 // const logger = new ConsoleLogger('Amplify', 'DEBUG');
 Amplify.configure(outputs);
