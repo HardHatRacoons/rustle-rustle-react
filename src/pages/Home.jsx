@@ -55,7 +55,7 @@ function Home() {
     };
 
     return (
-        <div className="flex flex-col overflow-hidden">
+        <div className="flex flex-col min-h-screen overflow-hidden">
             <LoginNavbar
                 userAttributes={userAttributes}
                 themeController={themeController}
@@ -77,9 +77,9 @@ function Home() {
                 </div>
             </div>
 
-            <div className="flex flex-col">
-                <div className="m-6 grow max-h-[calc(100vh-10rem)] bg-white dark:bg-slate-500 p-8 rounded-xl flex flex-col">
-                    <div className="flex flex-row items-center mb-6">
+            <div className="flex flex-col flex-1">
+                <div className="m-6 grow h-full max-h-[calc(100vh-10rem)] bg-white dark:bg-slate-500 p-8 rounded-xl flex flex-col">
+                    <div className="flex flex-wrap items-center mb-6">
                         <h1 className="text-4xl font-bold text-sky-950 dark:text-slate-800">
                             Gallery
                         </h1>
