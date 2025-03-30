@@ -103,13 +103,13 @@ function FileList({
     }
 
     return (
-        <div className="mt-6 p-6 overflow-y-auto">
+        <div>
             {filteredFiles.length === 0 ? (
                 <p className="text-lg font-bold text-sky-900 dark:text-slate-700">
                     No files found.
                 </p>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {filteredFiles.map(([fileId, file], idx) => (
                         <div
                             key={fileId}
