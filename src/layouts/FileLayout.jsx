@@ -142,14 +142,14 @@ function FileLayout() {
 
     return (
         <div className="flex flex-col h-full min-h-fit">
-            <div className="flex flex-row justify-between px-3 pt-3">
+            <div className="flex flex-row justify-between px-3 pt-3 dark:text-slate-300">
                 <div className="flex">
                     <MdArrowBack
                         onClick={() => {
                             navigate('/');
                         }}
                         size="40"
-                        className="align-self-center"
+                        className="align-self-center hover:cursor-pointer"
                         aria-label="back"
                     />
                     <span className="text-2xl mx-2 my-auto">
