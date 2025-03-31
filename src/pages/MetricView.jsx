@@ -84,23 +84,23 @@ function MetricView() {
     }, []);
 
     return (
-        <div className="select-none rounded-md border-solid border-2 border-sky-500 mx-2 mb-2 p-2 bg-white min-h-fit">
+        <div className="select-none grow rounded-md border-solid border-2 border-sky-500 dark:border-slate-800 mx-2 mb-2 p-2 bg-white dark:bg-slate-900 min-h-fit">
             <div
                 className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] p-5 gap-4"
                 aria-label="metrics"
             >
                 {grid().map((tile) => (
-                    <Card
-                        onChange={onPin}
-                        key={tile.idx}
-                        idx={tile.idx}
-                        pin={pinned ? pinned[tile.idx] : false}
-                    >
-                        <div
-                            className="relative"
-                            id={`graph-container-${tile.idx}`}
-                        ></div>
-                    </Card>
+                        <Card
+                            onChange={onPin}
+                            key={tile.idx}
+                            idx={tile.idx}
+                            pin={pinned ? pinned[tile.idx] : false}
+                        >
+                            <div
+                                className="relative dark:bg-slate-800"
+                                id={`graph-container-${tile.idx}`}
+                            ></div>
+                        </Card>
                 ))}
             </div>
         </div>
