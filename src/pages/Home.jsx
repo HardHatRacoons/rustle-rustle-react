@@ -62,7 +62,7 @@ function Home() {
             />
 
             <div className="px-6 w-full flex flex-row gap-2 items-center">
-                <div className="flex flex-row px-2 py-0.5 border-2 border-sky-50 rounded-full w-full bg-sky-50 focus-within:border-sky-900 dark:bg-slate-700 dark:border-slate-700 dark:focus-within:border-slate-300">
+                <div className="flex flex-row px-2 py-0.5 border-2 border-sky-50 rounded-full w-full bg-sky-50 focus-within:border-sky-900 dark:bg-slate-800 dark:border-slate-800 dark:focus-within:border-slate-500">
                     <p className="font-bold text-sky-900 dark:text-slate-300 flex flex-row gap-1 items-center">
                         <FaSearch />
                         Search:
@@ -79,7 +79,7 @@ function Home() {
 
             <div className="flex flex-col flex-1">
                 <div
-                    className="m-6 grow h-full bg-white dark:bg-gray-800 p-8 rounded-xl flex flex-col
+                    className="m-6 grow h-full bg-white dark:bg-slate-900 dark:border-2 dark:border-slate-800 p-8 rounded-xl flex flex-col
                                 max-h-[calc(100vh-15em)] xs:max-h-[calc(100vh-12rem)] sm:max-h-[calc(100vh-10rem)]"
                 >
                     <div className="flex flex-wrap items-center mb-6">
