@@ -132,7 +132,7 @@ function FileLayout() {
                         aria-label="back"
                     />
                 </div>
-                <div>
+                <div className="text-center text-2xl font-bold text-sky-900 dark:text-slate-300">
                     {valid === null
                         ? 'Loading...'
                         : 'Error. Invalid file specified.'}
