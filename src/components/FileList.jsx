@@ -113,7 +113,7 @@ function FileList({
                     {filteredFiles.map(([fileId, file], idx) => (
                         <div
                             key={fileId}
-                            className="cursor-pointer bg-sky-100 dark:bg-slate-600 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102"
+                            className="cursor-pointer bg-sky-100 dark:bg-slate-600 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102 hover:brightness-95 dark:hover:brightness-110"
                             aria-label={`file-navigate-${idx}`}
                             onClick={() => navigate(`/file/${fileId}`)}
                         >
