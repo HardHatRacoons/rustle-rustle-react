@@ -32,6 +32,9 @@ describe('Testing home page', () => {
                         console.log(params);
                     }),
                 ),
+                useOutletContext: vi.fn().mockReturnValue(
+                    ["light", vi.fn()]
+                ),
             };
         });
 
