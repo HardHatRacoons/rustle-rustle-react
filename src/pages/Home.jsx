@@ -62,8 +62,8 @@ function Home() {
             />
 
             <div className="px-6 w-full flex flex-row gap-2 items-center">
-                <div className="flex flex-row px-2 py-0.5 border-2 border-sky-50 rounded-full w-full bg-sky-50 focus-within:border-sky-900 dark:bg-slate-300 dark:border-slate-300 dark:focus-within:border-white">
-                    <p className="font-bold text-sky-900 dark:text-slate-900 flex flex-row gap-1 items-center">
+                <div className="flex flex-row px-2 py-0.5 border-2 border-sky-50 rounded-full w-full bg-sky-50 focus-within:border-sky-900 dark:bg-slate-700 dark:border-slate-700 dark:focus-within:border-slate-300">
+                    <p className="font-bold text-sky-900 dark:text-slate-300 flex flex-row gap-1 items-center">
                         <FaSearch />
                         Search:
                     </p>
@@ -72,18 +72,18 @@ function Home() {
                         placeholder="File name"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full p-2 outline-none h-[30px] text-sky-700"
+                        className="w-full p-2 outline-none h-[30px] text-sky-700 dark:text-slate-300"
                     />
                 </div>
             </div>
 
             <div className="flex flex-col flex-1">
                 <div
-                    className="m-6 grow h-full bg-white dark:bg-slate-500 p-8 rounded-xl flex flex-col
+                    className="m-6 grow h-full bg-white dark:bg-gray-800 p-8 rounded-xl flex flex-col
                                 max-h-[calc(100vh-15em)] xs:max-h-[calc(100vh-12rem)] sm:max-h-[calc(100vh-10rem)]"
                 >
                     <div className="flex flex-wrap items-center mb-6">
-                        <h1 className="text-4xl font-bold text-sky-950 dark:text-slate-800">
+                        <h1 className="text-4xl font-bold text-sky-950 dark:text-slate-300">
                             Gallery
                         </h1>
 

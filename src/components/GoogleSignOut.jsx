@@ -4,7 +4,7 @@ import { IoMdExit } from 'react-icons/io';
 export default function LogoutButton() {
     return (
         <button
-            className="px-3 py-1 gap-2 cursor-pointer text-sky-400 hover:bg-sky-100 rounded-lg shadow bg-white dark:bg-slate-400 dark:hover:bg-slate-500 dark:text-slate-700 margin-3"
+            className="px-3 py-1 gap-2 cursor-pointer text-sky-400 hover:bg-sky-100 rounded-lg shadow bg-white dark:bg-slate-300 dark:hover:bg-slate-200 dark:text-slate-700 margin-3"
             aria-label="sign-out-button"
             onClick={async () => {
                 try {

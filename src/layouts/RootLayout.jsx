@@ -16,7 +16,7 @@ function RootLayout() {
 
     return (
         <div
-            className={`h-screen bg-linear-to-t from-purple-300 to-sky-300 dark:from-slate-800 dark:to-slate-900 min-h-fit ${theme}`}
+            className={`h-screen bg-linear-to-t from-purple-300 to-sky-300 dark:from-purple-950 dark:to-slate-900 min-h-fit ${theme}`}
         >
             <Outlet context={[theme, setTheme]} />
         </div>

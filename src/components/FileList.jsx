@@ -96,7 +96,7 @@ function FileList({
     // Show a loading message until both userAttributes and files are fetched
     if (!userAttributes || loading) {
         return (
-            <div className="bg-white text-lg font-bold text-sky-900 overflow-y-auto">
+            <div className="text-lg font-bold text-sky-900 dark:text-slate-300">
                 Loading files...
             </div>
         );
@@ -105,7 +105,7 @@ function FileList({
     return (
         <div>
             {filteredFiles.length === 0 ? (
-                <p className="text-lg font-bold text-sky-900 dark:text-slate-700">
+                <p className="text-lg font-bold text-sky-900 dark:text-slate-300">
                     No files found.
                 </p>
             ) : (
@@ -113,7 +113,7 @@ function FileList({
                     {filteredFiles.map(([fileId, file], idx) => (
                         <div
                             key={fileId}
-                            className="cursor-pointer bg-sky-100 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102"
+                            className="cursor-pointer bg-sky-100 dark:bg-slate-600 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102"
                             aria-label={`file-navigate-${idx}`}
                             onClick={() => navigate(`/file/${fileId}`)}
                         >
@@ -124,10 +124,10 @@ function FileList({
                                         : `https://placehold.co/600x400/ECECEC/CACACA?text=Loading`
                                 }
                                 alt={file.name}
-                                className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg"
+                                className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg dark:brightness-80"
                             />
                             <div className="flex flex-row py-2 content-center w-full">
-                                <p className="text-lg font-bold text-sky-900 whitespace-normal break-words">
+                                <p className="text-lg font-bold text-sky-900 dark:text-slate-300 whitespace-normal break-words">
                                     {file.name.replaceAll('_', '_\u200B')}
                                 </p>
                                 <button
