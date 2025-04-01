@@ -21,10 +21,10 @@ function Tabs({ onChange, tabs, activeTab, setActiveTab, className }) {
             {tabs?.map((tab, num) => (
                 <div
                     key={num}
-                    className={`mt-4 select-none cursor-pointer rounded-t-md border-solid border-x-2 border-t-2 border-sky-500 dark:border-slate-800 p-2 truncate ${
+                    className={`mt-4 select-none cursor-pointer rounded-t-lg border-solid border-x-2 border-t-2 border-sky-100 dark:border-slate-800 p-2 truncate ${
                         activeTab === num
                             ? 'translate-y-[2px] bg-white hover:bg-white dark:bg-slate-900 dark:hover:bg-slate-900'
-                            : 'bg-sky-100 dark:bg-slate-950 hover:bg-sky-200 dark:hover:bg-slate-900'
+                            : 'bg-sky-100 dark:bg-slate-950 hover:bg-sky-100 dark:hover:bg-slate-900'
                     }`}
                     onClick={() => change(num)}
                 >
