@@ -10,7 +10,7 @@ function BPViewControlPanel({ pdfInfo }) {
                     href={pdfInfo.url.annotated.pdf}
                     target="_blank"
                     className={`border-2 border-slate-400 rounded-md p-4 flex flex-col items-center justify-center col-span-2 
-                        ${!pdfInfo.url.annotated.pdf ? 'bg-gray-300 dark:bg-slate-500 dark:text-slate-400' : 'text-sky-900 dark:text-slate-300 bg-sky-300 dark:bg-sky-800 hover:bg-sky-400 dark:hover:bg-sky-700'}`}
+                        ${!pdfInfo.url.annotated.pdf ? 'cursor-not-allowed bg-gray-300 dark:bg-slate-500 text-gray-500 dark:text-slate-400' : 'text-sky-900 dark:text-slate-300 bg-sky-300 dark:bg-sky-800 hover:bg-sky-400 dark:hover:bg-sky-700'}`}
                 >
                     <LuDownload className="text-3xl mb-1" />
                     <span>Annotations</span>
@@ -19,7 +19,7 @@ function BPViewControlPanel({ pdfInfo }) {
                     href={pdfInfo.url.annotated.csv}
                     target="_blank"
                     className={`border-2 border-slate-400 rounded-md p-4 flex flex-col items-center justify-center 
-                        ${!pdfInfo.url.annotated.csv ? 'bg-gray-200 dark:bg-slate-500 text-white-700 dark:text-slate-400' : 'text-sky-900 dark:text-slate-300 bg-green-200 dark:bg-green-700 hover:bg-green-30 dark:hover:bg-green-600 text-gray-700'}`}
+                        ${!pdfInfo.url.annotated.csv ? 'cursor-not-allowed bg-gray-200 dark:bg-slate-500 text-gray-500 dark:text-slate-400' : 'text-sky-900 dark:text-slate-300 bg-green-200 dark:bg-green-700 hover:bg-green-30 dark:hover:bg-green-600 text-gray-700'}`}
                 >
                     <BsFiletypeCsv className="text-3xl mb-1" />
                     <span>Data</span>
