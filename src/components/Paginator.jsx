@@ -20,7 +20,7 @@ function Paginator({ currPage, maxPages, onChange }) {
     }, [page]);
 
     return (
-        <div className="flex place-items-center dark:text-slate-300">
+        <div className="flex place-items-center text-sky-900 dark:text-slate-300">
             <button
                 onClick={goToPreviousPage}
                 className="mx-2 rounded-full cursor-pointer"

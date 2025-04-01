@@ -122,7 +122,7 @@ function FileLayout() {
     if (!valid || !pdfInfo)
         return (
             <div className="flex flex-col h-full">
-                <div className="flex flex-row justify-between px-3 pt-3">
+                <div className="flex flex-row justify-between px-3 pt-3 text-sky-900 dark:text-slate-300">
                     <MdArrowBack
                         onClick={() => {
                             navigate('/');
@@ -141,9 +141,9 @@ function FileLayout() {
         );
 
     return (
-        <div className="flex flex-col h-full min-h-fit">
-            <div className="flex flex-row justify-between px-3 pt-3 dark:text-slate-300">
-                <div className="flex">
+        <div className="flex flex-col h-full mx-6 mb-6">
+            <div className="flex flex-row justify-between px-3 pt-3 text-sky-900 dark:text-slate-300">
+                <div className="flex my-3">
                     <MdArrowBack
                         onClick={() => {
                             navigate('/');
@@ -161,7 +161,7 @@ function FileLayout() {
                     tabs={tabs}
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
-                    className="w-1/4"
+                    className="w-1/3"
                 />
             </div>
             <Outlet context={pdfInfo} />
