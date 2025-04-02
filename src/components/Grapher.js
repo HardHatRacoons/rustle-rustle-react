@@ -27,7 +27,7 @@ const generateBarGraph = (container, data, options) => {
     d3.select(container).selectAll('*').remove();
 
     d3.select(container)
-        .html(`Total Counts of Each ${options[1]}`)
+        .html(`Total ${options[2]}${options[4]? " By " + options[4]: "" } of Each ${options[1]}`)
         .style('text-align', 'center');
 
     const svg = d3
@@ -38,22 +38,36 @@ const generateBarGraph = (container, data, options) => {
         .attr('viewBox', [0, 0, width, height])
         .attr('style', 'max-width: 100%; height: auto;');
 
-    const categoryCounts = d3.group(data, (d) => d[options['1']]);
+    const categorySplit = d3.group(data, (d) => d[options['1']]);
 
-    const countData = Array.from(categoryCounts, ([cat, vals]) => ({
-        cat: cat,
-        count: vals.length,
-    }));
+    let parsedData;
+
+    switch (options[2]){
+        case "Sum":
+            parsedData = Array.from(categorySplit, ([cat, vals]) => ({
+                cat: cat,
+                val: d3.sum(vals, d => d[options[4]]),
+            }));
+            break;
+        case "Count":
+        default:
+            parsedData = Array.from(categorySplit, ([cat, vals]) => ({
+                cat: cat,
+                val: vals.length,
+            }));
+            break;
+    }
+
     // Set up scales
     const x = d3
         .scaleBand()
-        .domain(countData.map((d) => d.cat))
+        .domain(parsedData.map((d) => d.cat))
         .range([margin.left, width - margin.right])
         .padding(0.1);
 
     const y = d3
         .scaleLinear()
-        .domain([0, d3.max(countData, (d) => d.count)])
+        .domain([0, d3.max(parsedData, (d) => d.val)])
         //                   .nice()
         .range([height - margin.bottom, margin.top]);
 
@@ -61,11 +75,11 @@ const generateBarGraph = (container, data, options) => {
     svg.append('g')
         .attr('fill', 'steelblue')
         .selectAll()
-        .data(countData)
+        .data(parsedData)
         .join('rect')
         .attr('x', (d) => x(d.cat))
-        .attr('y', (d) => y(d.count))
-        .attr('height', (d) => y(0) - y(d.count))
+        .attr('y', (d) => y(d.val))
+        .attr('height', (d) => y(0) - y(d.val))
         .attr('width', x.bandwidth());
 
     // Add X axis
@@ -73,7 +87,7 @@ const generateBarGraph = (container, data, options) => {
         .append('g')
         .attr('transform', `translate(0,${height - margin.bottom})`);
 
-    if (options['2']) {
+    if (options['3']) {
         xAxis.call(d3.axisBottom(x).tickValues([]));
         xAxis.selectAll('text').remove();
     } else {
@@ -96,13 +110,13 @@ const generateBarGraph = (container, data, options) => {
 
     svg.selectAll('rect')
         .on('mouseover', (event, d) => {
-            tooltip.style('visibility', 'visible').text(`${d.cat}: ${d.count}`);
+            tooltip.style('visibility', 'visible').text(`${d.cat}: ${d.val % 1 !== 0 ? d.val.toFixed(2) : d.val}`);
         })
         .on('mousemove', (event) => {
             const svgRect = svg.node().getBoundingClientRect(); // Get SVG container's position
             tooltip
-                .style('top', event.pageY - svgRect.top + 5 + 'px')
-                .style('left', event.pageX - svgRect.left + 5 + 'px');
+                .style('top', event.clientY - svgRect.top + 5 + 'px')
+                .style('left', event.clientX - svgRect.left + 5 + 'px');
         })
         .on('mouseout', () => {
             tooltip.style('visibility', 'hidden');
@@ -212,8 +226,8 @@ const generateHistogram = (container, data, options) => {
         .on('mousemove', (event) => {
             const svgRect = svg.node().getBoundingClientRect(); // Get SVG container's position
             tooltip
-                .style('top', event.pageY - svgRect.top + 5 + 'px')
-                .style('left', event.pageX - svgRect.left + 5 + 'px');
+                .style('top', event.clientY - svgRect.top + 5 + 'px')
+                .style('left', event.clientX - svgRect.left + 5 + 'px');
         })
         .on('mouseout', () => {
             tooltip.style('visibility', 'hidden');
@@ -298,8 +312,8 @@ const generatePieGraph = (container, data, options) => {
         .on('mousemove', (event) => {
             const svgRect = svg.node().getBoundingClientRect(); // Get SVG container's position
             tooltip
-                .style('top', event.pageY - svgRect.top + 5 + 'px')
-                .style('left', event.pageX - svgRect.left + 5 + 'px');
+                .style('top', event.clientY - svgRect.top + 5 + 'px')
+                .style('left', event.clientX - svgRect.left + 5 + 'px');
         })
         .on('mouseout', () => {
             tooltip.style('visibility', 'hidden');
