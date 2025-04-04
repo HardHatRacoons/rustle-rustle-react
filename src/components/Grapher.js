@@ -27,7 +27,9 @@ const generateBarGraph = (container, data, options) => {
     d3.select(container).selectAll('*').remove();
 
     d3.select(container)
-        .html(`Total ${options[2]}${options[4]? " By " + options[4]: "" } of Each ${options[1]}`)
+        .html(
+            `Total ${options[2]}${options[4] ? ' By ' + options[4] : ''} of Each ${options[1]}`,
+        )
         .style('text-align', 'center');
 
     const svg = d3
@@ -42,14 +44,14 @@ const generateBarGraph = (container, data, options) => {
 
     let parsedData;
 
-    switch (options[2]){
-        case "Sum":
+    switch (options[2]) {
+        case 'Sum':
             parsedData = Array.from(categorySplit, ([cat, vals]) => ({
                 cat: cat,
-                val: d3.sum(vals, d => d[options[4]]),
+                val: d3.sum(vals, (d) => d[options[4]]),
             }));
             break;
-        case "Count":
+        case 'Count':
         default:
             parsedData = Array.from(categorySplit, ([cat, vals]) => ({
                 cat: cat,
@@ -110,7 +112,11 @@ const generateBarGraph = (container, data, options) => {
 
     svg.selectAll('rect')
         .on('mouseover', (event, d) => {
-            tooltip.style('visibility', 'visible').text(`${d.cat}: ${d.val % 1 !== 0 ? d.val.toFixed(2) : d.val}`);
+            tooltip
+                .style('visibility', 'visible')
+                .text(
+                    `${d.cat}: ${d.val % 1 !== 0 ? d.val.toFixed(2) : d.val}`,
+                );
         })
         .on('mousemove', (event) => {
             const svgRect = svg.node().getBoundingClientRect(); // Get SVG container's position

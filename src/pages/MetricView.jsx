@@ -13,15 +13,23 @@ function MetricView() {
             : null,
     );
 
-    const defaultGraphTypes = ['bar', 'bar', 'text', 'histogram', 'pie', 'bar', 'bar'];
+    const defaultGraphTypes = [
+        'bar',
+        'bar',
+        'text',
+        'histogram',
+        'pie',
+        'bar',
+        'bar',
+    ];
     const defaultOptions = [
         { 1: 'Shape', 2: 'Count' },
-        { 1: 'Size', 2:'Count', 3: true },
+        { 1: 'Size', 2: 'Count', 3: true },
         { 1: 'Sum', 2: 'WeightEA' },
         { 1: 'Length' },
         { 1: 'Size' },
-        {1: "Size", 2: 'Sum', 3: true, 4: 'Length' },
-        {1: "Shape", 2: 'Sum', 3: true, 4:'WeightEA' },
+        { 1: 'Size', 2: 'Sum', 3: true, 4: 'Length' },
+        { 1: 'Shape', 2: 'Sum', 3: true, 4: 'WeightEA' },
     ];
     const [defaultMetricLength, setDefaultMetricLength] = useState(7); //default 5 overview graphs
 
