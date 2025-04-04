@@ -98,6 +98,22 @@ function UploadModal({ userAttributes, isOpen, onClose }) {
                     isResumable={true}
                     autoUpload={false}
                     processFile={processFile(userAttributes)}
+                    onUploadSuccess={async ({ key }) =>  {
+                        let [, user_id, file_id] = key.split('/')
+                        let url = `${import.meta.env.VITE_API_ENDPOINT}/api/v1/pdf-proccessing/request`
+                        let response = await fetch(url, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-API-KEY': import.meta.env.VITE_API_KEY
+                                    },
+                                    body: JSON.stringify({
+                                        user_id: user_id,
+                                        file_id: file_id.split('.').slice(0, -1).join('.'),
+                                        bucket_name: import.meta.env.VITE_BUCKET_NAME
+                                    })
+                                })
+                    }}
                 />
             </div>
         </div>

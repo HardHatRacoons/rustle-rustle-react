@@ -1,5 +1,4 @@
 import { defineStorage } from '@aws-amplify/backend';
-import { uploadHandler } from '../functions/upload-handler/resource';
 
 export const storage = defineStorage({
     name: 'raccoonTeamDrive',
@@ -9,7 +8,6 @@ export const storage = defineStorage({
         ],
         'unannotated/*': [
             allow.authenticated.to(['read', 'write', 'delete']),
-            allow.resource(uploadHandler).to(['read']),
         ],
-    }),
+    })
 });
