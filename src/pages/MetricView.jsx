@@ -90,17 +90,17 @@ function MetricView() {
                 aria-label="metrics"
             >
                 {grid().map((tile) => (
-                        <Card
-                            onChange={onPin}
-                            key={tile.idx}
-                            idx={tile.idx}
-                            pin={pinned ? pinned[tile.idx] : false}
-                        >
-                            <div
-                                className="relative dark:bg-slate-800"
-                                id={`graph-container-${tile.idx}`}
-                            ></div>
-                        </Card>
+                    <Card
+                        onChange={onPin}
+                        key={tile.idx}
+                        idx={tile.idx}
+                        pin={pinned ? pinned[tile.idx] : false}
+                    >
+                        <div
+                            className="relative dark:bg-slate-800"
+                            id={`graph-container-${tile.idx}`}
+                        ></div>
+                    </Card>
                 ))}
             </div>
         </div>

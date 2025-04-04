@@ -4,7 +4,9 @@ import { BsFiletypePdf, BsFiletypeCsv } from 'react-icons/bs';
 function BPViewControlPanel({ pdfInfo }) {
     return (
         <div className="shadow-lg rounded-md border-2 border-slate-400 dark:border-slate-700 bg-white dark:bg-slate-800 flex flex-col h-full w-[300px] p-4">
-            <p className="text-lg text-sky-900 dark:text-slate-300">Downloads:</p>
+            <p className="text-lg text-sky-900 dark:text-slate-300">
+                Downloads:
+            </p>
             <div className="grid grid-cols-2 gap-4 p-4 max-w-sm">
                 <a
                     href={pdfInfo.url.annotated.pdf}
