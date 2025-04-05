@@ -110,7 +110,7 @@ function TableView() {
 
     return (
         <div
-            className="select-none grow rounded-md border-solid border-2 border-sky-500 mx-2 mb-2 p-2 bg-white"
+            className="select-none grow rounded-xl border-solid border-2 border-sky-100 mb-6 p-4 bg-white dark:bg-slate-900 dark:border-slate-800"
             aria-label="table"
         >
             <AgGridReact

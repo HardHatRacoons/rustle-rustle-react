@@ -96,24 +96,24 @@ function FileList({
     // Show a loading message until both userAttributes and files are fetched
     if (!userAttributes || loading) {
         return (
-            <div className="bg-white text-lg font-bold text-sky-900 mt-3 mb-6 bg-white p-6 rounded-lg bg-opacity-50 overflow-y-auto">
+            <div className="text-lg font-bold text-sky-900 dark:text-slate-300">
                 Loading files...
             </div>
         );
     }
 
     return (
-        <div className="mt-3 mb-6 bg-white p-6 rounded-lg bg-opacity-50 overflow-y-auto">
+        <div>
             {filteredFiles.length === 0 ? (
-                <p className="text-lg font-bold text-sky-900">
+                <p className="text-lg font-bold text-sky-900 dark:text-slate-300">
                     No files found.
                 </p>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {filteredFiles.map(([fileId, file], idx) => (
                         <div
                             key={fileId}
-                            className="cursor-pointer bg-sky-100 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102 hover:shadow-xl"
+                            className="cursor-pointer bg-sky-100 dark:bg-slate-700 shadow-lg rounded-lg px-4 pt-40 transition transform hover:scale-102 hover:brightness-95 dark:hover:brightness-110"
                             aria-label={`file-navigate-${idx}`}
                             onClick={() => navigate(`/file/${fileId}`)}
                         >
@@ -124,14 +124,14 @@ function FileList({
                                         : `https://placehold.co/600x400/ECECEC/CACACA?text=Loading`
                                 }
                                 alt={file.name}
-                                className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg"
+                                className="absolute top-0 left-0 w-full h-40 object-cover rounded-t-lg dark:brightness-80"
                             />
                             <div className="flex flex-row py-2 content-center w-full">
-                                <p className="text-lg font-bold text-sky-900 whitespace-normal break-words">
+                                <p className="text-lg font-bold text-sky-900 dark:text-slate-300 whitespace-normal break-words">
                                     {file.name.replaceAll('_', '_\u200B')}
                                 </p>
                                 <button
-                                    className="ml-auto hover:text-red-500 hover:cursor-pointer"
+                                    className="ml-auto text-sky-700 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-700 hover:cursor-pointer"
                                     onClick={(event) => {
                                         event.stopPropagation(); // Prevent card click event
                                         setSelectedFile({

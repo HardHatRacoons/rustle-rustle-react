@@ -8,7 +8,7 @@ function Card({ children, idx, pin, onChange }) {
 
     return (
         <div
-            className="w-full h-full shadow-lg rounded-md border-2 border-slate-100 flex flex-col place-items-center"
+            className="w-full h-full shadow-lg rounded-md dark:text-slate-300 border-2 border-slate-100 dark:border-slate-700 dark:bg-slate-800 flex flex-col place-items-center"
             aria-label={'card-' + idx}
             onClick={onPin}
         >

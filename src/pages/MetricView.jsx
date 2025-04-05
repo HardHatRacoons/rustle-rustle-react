@@ -84,7 +84,7 @@ function MetricView() {
     }, []);
 
     return (
-        <div className="select-none rounded-md border-solid border-2 border-sky-500 mx-2 mb-2 p-2 bg-white min-h-fit">
+        <div className="select-none grow rounded-xl border-solid border-2 border-sky-100 dark:border-slate-800 mb-6 p-4 bg-white dark:bg-slate-900 min-h-fit">
             <div
                 className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] p-5 gap-4"
                 aria-label="metrics"
@@ -97,7 +97,7 @@ function MetricView() {
                         pin={pinned ? pinned[tile.idx] : false}
                     >
                         <div
-                            className="relative"
+                            className="relative dark:bg-slate-800"
                             id={`graph-container-${tile.idx}`}
                         ></div>
                     </Card>
