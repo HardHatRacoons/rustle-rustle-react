@@ -101,7 +101,7 @@ function UploadModal({ userAttributes, isOpen, onClose }) {
                     onUploadSuccess={async ({ key }) =>  {
                         let [, user_id, file_id] = key.split('/')
                         let url = `${import.meta.env.VITE_API_ENDPOINT}/api/v1/pdf-proccessing/request`
-                        let response = await fetch(url, {
+                        await fetch(url, {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',
