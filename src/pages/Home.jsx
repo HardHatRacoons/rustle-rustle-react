@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MdClose } from 'react-icons/md';
-import { FaTrashAlt } from 'react-icons/fa';
-import { FaSearch } from 'react-icons/fa';
+import { FaTrashAlt, FaSearch } from 'react-icons/fa';
+import { IoClose } from "react-icons/io5";
 import { HiMiniSparkles } from 'react-icons/hi2';
 import { IoMdRefreshCircle } from 'react-icons/io';
 import { remove } from 'aws-amplify/storage';
@@ -72,8 +72,18 @@ function Home() {
                         placeholder="File name"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full p-2 outline-none h-[30px] text-sky-700 dark:text-slate-300"
+                        className="w-full p-2 outline-none h-[30px] text-sky-900 dark:text-slate-300"
                     />
+                    {searchQuery.length > 0?
+                    <div className="font-bold text-sky-900 dark:text-slate-300 flex flex-row gap-1 items-center cursor-pointer"
+                        onClick={() => {
+                            setSearchQuery("");
+                        }
+                    }>
+                        <IoClose />
+                    </div>
+                        : ""
+                    }
                 </div>
             </div>
 
