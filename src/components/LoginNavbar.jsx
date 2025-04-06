@@ -9,6 +9,7 @@ function LoginNavbar({ userAttributes, themeController }) {
 
     const onChange = (value) => {
         setTheme(value ? 'light' : 'dark');
+        console.log(theme);
     };
 
     return (

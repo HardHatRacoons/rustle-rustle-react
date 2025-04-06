@@ -25,6 +25,9 @@ describe('Testing home page', () => {
     beforeAll(() => {
         vi.mock(import('react-router'), async (importOriginal) => {
             const actual = await importOriginal();
+            const setTheme = vi.fn().mockImplementation((param) => {
+                console.log(param);
+            });
             return {
                 ...actual,
                 useNavigate: vi.fn().mockReturnValue(
@@ -32,7 +35,10 @@ describe('Testing home page', () => {
                         console.log(params);
                     }),
                 ),
-                useOutletContext: vi.fn().mockReturnValue(['light', vi.fn()]),
+                useOutletContext: vi
+                    .fn()
+                    .mockReturnValueOnce(['light', setTheme])
+                    .mockReturnValue(['dark', setTheme]),
             };
         });
 
@@ -351,7 +357,7 @@ describe('Testing home page', () => {
         );
 
         // Simulate entering a search query
-        const searchInput = screen.getByPlaceholderText('File name');
+        const searchInput = screen.getByLabelText('search-bar');
         fireEvent.change(searchInput, { target: { value: 'file1' } });
         await act(async () => {});
         // Assert that only matching files are displayed
@@ -359,12 +365,37 @@ describe('Testing home page', () => {
         expect(screen.getByText(/file1/)).toBeInTheDocument();
         expect(screen.queryByText(/file2/)).not.toBeInTheDocument();
 
-        // Clear the search query
-        fireEvent.change(searchInput, { target: { value: '' } });
+        // Clear the search query by clicking clear
+        fireEvent.click(screen.getByLabelText('clear-search-button'));
         global.dump(document.body, 'search2');
         await act(async () => {});
         // Assert that all files are displayed again
         expect(screen.getByText(/file1/)).toBeInTheDocument();
         expect(screen.getByText(/file2/)).toBeInTheDocument();
+    });
+
+    test('toggling theme', async () => {
+        const consoleSpy = vi.spyOn(console, 'log');
+        render(
+            <MemoryRouter>
+                <Home />
+            </MemoryRouter>,
+        );
+
+        fireEvent.click(screen.getByLabelText('theme-toggle'));
+        await act(async () => {});
+
+        expect(consoleSpy).toHaveBeenNthCalledWith(
+            2,
+            expect.stringMatching('light'),
+        );
+
+        fireEvent.click(screen.getByLabelText('theme-toggle'));
+        await act(async () => {});
+
+        expect(consoleSpy).toHaveBeenNthCalledWith(
+            3,
+            expect.stringMatching('dark'),
+        );
     });
 });

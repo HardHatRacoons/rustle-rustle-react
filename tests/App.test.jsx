@@ -91,6 +91,14 @@ describe('Testing main setup and routing after auth', () => {
                     }),
             };
         });
+
+        //mocking match media
+        window.matchMedia = vi
+            .fn()
+            .mockResolvedValueOnce(undefined)
+            .mockResolvedValue({
+                matches: 'dark',
+            });
     });
 
     test('auth blocks access to pages', async () => {

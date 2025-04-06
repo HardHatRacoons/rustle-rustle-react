@@ -14,6 +14,7 @@ function Toggle({ onChange, initialValue, className }) {
             className={`rounded-xl border-solid border-3 border-white dark:border-slate-300 relative h-3/5 aspect-2/1 cursor-pointer flex ${
                 className ? className : ''
             }`}
+            aria-label="theme-toggle"
             onClick={change}
         >
             <div
