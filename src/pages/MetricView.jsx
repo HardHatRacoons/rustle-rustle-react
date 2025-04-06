@@ -13,23 +13,46 @@ function MetricView() {
             : null,
     );
 
-    const defaultGraphTypes = ['bar', 'bar', 'text', 'histogram', 'pie'];
+    const defaultGraphTypes = [
+        'bar',
+        'bar',
+        'text',
+        'histogram',
+        'pie',
+        'bar',
+        'bar',
+    ];
     const defaultOptions = [
-        { 1: 'Shape' },
-        { 1: 'Size', 2: true },
-        { 1: 'Sum', 2: 'WeightFT' },
+        { 1: 'Shape', 2: 'Count' },
+        { 1: 'Size', 2: 'Count', 3: true },
+        {
+            1: 'Sum',
+            2: 'WeightEA',
+            3: 'Average',
+            4: 'WeightEA',
+            5: 'Sum',
+            6: 'Length',
+            7: 'Average',
+            8: 'Length',
+        },
         { 1: 'Length' },
         { 1: 'Size' },
+        { 1: 'Size', 2: 'Sum', 3: true, 4: 'Length' },
+        { 1: 'Shape', 2: 'Sum', 3: true, 4: 'WeightEA' },
     ];
-    const [defaultMetricLength, setDefaultMetricLength] = useState(5); //default 4 overview graphs
+    const [defaultMetricLength, setDefaultMetricLength] = useState(7); //default 5 overview graphs
 
     const [pinned, setPinned] = useState(null);
     const [data, setData] = useState([]);
 
     const generateGraphs = () => {
+        const theme = localStorage.getItem('theme') || 'light';
         for (let idx = 0; idx < defaultMetricLength; idx++) {
             const container = document.getElementById(`graph-container-${idx}`);
-            graph(container, data, defaultGraphTypes[idx], defaultOptions[idx]);
+            graph(container, data, defaultGraphTypes[idx], {
+                ...defaultOptions[idx],
+                theme: theme,
+            });
         }
     };
 
@@ -84,7 +107,7 @@ function MetricView() {
     }, []);
 
     return (
-        <div className="select-none rounded-md border-solid border-2 border-sky-500 mx-2 mb-2 p-2 bg-white min-h-fit">
+        <div className="select-none grow rounded-xl border-solid border-2 border-sky-100 dark:border-slate-800 mb-6 p-4 bg-white dark:bg-slate-900 min-h-fit">
             <div
                 className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] p-5 gap-4"
                 aria-label="metrics"
@@ -97,7 +120,7 @@ function MetricView() {
                         pin={pinned ? pinned[tile.idx] : false}
                     >
                         <div
-                            className="relative"
+                            className="relative dark:bg-slate-800 text-sky-900 dark:text-slate-300 fill-sky-900 dark:fill-slate-300"
                             id={`graph-container-${tile.idx}`}
                         ></div>
                     </Card>

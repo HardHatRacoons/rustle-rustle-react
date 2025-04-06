@@ -80,7 +80,7 @@ function UploadModal({ userAttributes, isOpen, onClose }) {
 
     return (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
-            <div className="bg-white w-2/5 max-w-3xl p-6 rounded-lg shadow-lg">
+            <div className="bg-white sm:w-3/5 sm:max-w-lg lg:w-2/5 lg:max-w-3xl p-6 rounded-lg shadow-lg">
                 <div className=" flex flex-row mb-6">
                     <h2 className="text-2xl font-bold">Upload File</h2>
                     <button

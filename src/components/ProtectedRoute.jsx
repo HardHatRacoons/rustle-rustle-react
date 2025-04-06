@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children }) => {
     }, []);
 
     return isAuthenticated === null ? (
-        <p>Loading...</p>
+        <p className="text-sky-900 dark:text-slate-300">Loading...</p>
     ) : isAuthenticated ? (
         children
     ) : (

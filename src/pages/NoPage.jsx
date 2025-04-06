@@ -8,7 +8,7 @@ function NoPage() {
     };
 
     return (
-        <div className="select-none">
+        <div className="select-none text-sky-900 dark:text-slate-300">
             Error. Page does not exist.
             <div onClick={back} aria-label="back">
                 Click here to return to home.

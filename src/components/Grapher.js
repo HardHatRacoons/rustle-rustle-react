@@ -22,12 +22,14 @@ const graph = (container, data, graphType, options = {}) => {
 const generateBarGraph = (container, data, options) => {
     const width = 300;
     const height = 200;
-    const margin = { top: 10, right: 20, bottom: 30, left: 30 };
+    const margin = { top: 5, right: 0, bottom: 40, left: 60 };
 
     d3.select(container).selectAll('*').remove();
 
     d3.select(container)
-        .html(`Total Counts of Each ${options[1]}`)
+        .html(
+            `Total ${options[2]}${options[4] ? ' By ' + options[4] : ''} of Each ${options[1]}`,
+        )
         .style('text-align', 'center');
 
     const svg = d3
@@ -38,34 +40,52 @@ const generateBarGraph = (container, data, options) => {
         .attr('viewBox', [0, 0, width, height])
         .attr('style', 'max-width: 100%; height: auto;');
 
-    const categoryCounts = d3.group(data, (d) => d[options['1']]);
+    const categorySplit = d3.group(data, (d) => d[options['1']]);
 
-    const countData = Array.from(categoryCounts, ([cat, vals]) => ({
-        cat: cat,
-        count: vals.length,
-    }));
+    let parsedData;
+
+    switch (options[2]) {
+        case 'Sum':
+            parsedData = Array.from(categorySplit, ([cat, vals]) => ({
+                cat: cat,
+                val: d3.sum(vals, (d) => d[options[4]]),
+            }));
+            break;
+        case 'Count':
+        default:
+            parsedData = Array.from(categorySplit, ([cat, vals]) => ({
+                cat: cat,
+                val: vals.length,
+            }));
+            break;
+    }
+
     // Set up scales
     const x = d3
         .scaleBand()
-        .domain(countData.map((d) => d.cat))
+        .domain(parsedData.map((d) => d.cat))
         .range([margin.left, width - margin.right])
         .padding(0.1);
 
     const y = d3
         .scaleLinear()
-        .domain([0, d3.max(countData, (d) => d.count)])
+        .domain([0, d3.max(parsedData, (d) => d.val)])
         //                   .nice()
         .range([height - margin.bottom, margin.top]);
 
+    let color;
+    if (options['theme'] === 'light') color = 'lightskyblue';
+    else color = 'darkslateblue';
+
     // Add rectangles for the bar chart
     svg.append('g')
-        .attr('fill', 'steelblue')
+        .attr('fill', color)
         .selectAll()
-        .data(countData)
+        .data(parsedData)
         .join('rect')
         .attr('x', (d) => x(d.cat))
-        .attr('y', (d) => y(d.count))
-        .attr('height', (d) => y(0) - y(d.count))
+        .attr('y', (d) => y(d.val))
+        .attr('height', (d) => y(0) - y(d.val))
         .attr('width', x.bandwidth());
 
     // Add X axis
@@ -73,7 +93,7 @@ const generateBarGraph = (container, data, options) => {
         .append('g')
         .attr('transform', `translate(0,${height - margin.bottom})`);
 
-    if (options['2']) {
+    if (options['3']) {
         xAxis.call(d3.axisBottom(x).tickValues([]));
         xAxis.selectAll('text').remove();
     } else {
@@ -84,6 +104,25 @@ const generateBarGraph = (container, data, options) => {
     svg.append('g')
         .attr('transform', `translate(${margin.left},0)`)
         .call(d3.axisLeft(y));
+
+    // Add X axis label
+    svg.append('text')
+        .attr('class', 'x-axis-label')
+        .attr('x', (width - margin.left - margin.right) / 2 + margin.left) // Position in the center of the X axis
+        .attr('y', height - 10) // Position just below the X axis
+        .style('text-anchor', 'middle') // Center align the text
+        .style('font-size', '12px')
+        .text(`${options[1]}`);
+
+    // Add Y axis label
+    svg.append('text')
+        .attr('class', 'y-axis-label')
+        .attr('x', -(height - margin.top - margin.bottom) / 2 - margin.top) // Position in the center of the Y axis
+        .attr('y', 12) // Position to the left of the Y axis
+        .style('text-anchor', 'middle') // Center align the text
+        .attr('transform', 'rotate(-90)') // Rotate the text to be vertical
+        .style('font-size', '12px')
+        .text(`${options[2]}`);
 
     const tooltip = d3
         .select(container)
@@ -96,13 +135,17 @@ const generateBarGraph = (container, data, options) => {
 
     svg.selectAll('rect')
         .on('mouseover', (event, d) => {
-            tooltip.style('visibility', 'visible').text(`${d.cat}: ${d.count}`);
+            tooltip
+                .style('visibility', 'visible')
+                .text(
+                    `${d.cat}: ${d.val % 1 !== 0 ? d.val.toFixed(2) : d.val}`,
+                );
         })
         .on('mousemove', (event) => {
             const svgRect = svg.node().getBoundingClientRect(); // Get SVG container's position
             tooltip
-                .style('top', event.pageY - svgRect.top + 5 + 'px')
-                .style('left', event.pageX - svgRect.left + 5 + 'px');
+                .style('top', event.clientY - svgRect.top + 5 + 'px')
+                .style('left', event.clientX - svgRect.left + 5 + 'px');
         })
         .on('mouseout', () => {
             tooltip.style('visibility', 'hidden');
@@ -112,7 +155,7 @@ const generateBarGraph = (container, data, options) => {
 const generateHistogram = (container, data, options) => {
     const width = 300;
     const height = 200;
-    const margin = { top: 10, right: 20, bottom: 30, left: 30 };
+    const margin = { top: 5, right: 0, bottom: 40, left: 50 };
 
     d3.select(container).selectAll('*').remove();
 
@@ -172,13 +215,16 @@ const generateHistogram = (container, data, options) => {
         .attr('transform', `translate(${margin.left},0)`)
         .call(d3.axisLeft(y));
 
-    //console.log(bins)
+    let color;
+    if (options['theme'] === 'light') color = 'lightskyblue';
+    else color = 'darkslateblue';
+
     // Create bars for the histogram
     svg.selectAll('.bar')
         .data(bins)
         .enter()
         .append('rect')
-        .attr('fill', 'steelblue')
+        .attr('fill', color)
         .attr('class', 'bar')
         .attr('x', (d) => x(d.x0))
         .attr('y', (d) => y(d.length))
@@ -196,6 +242,25 @@ const generateHistogram = (container, data, options) => {
         .attr('text-anchor', 'middle') // Center the text horizontally
         .text((d) => `${Math.round(d.x0)} - ${Math.round(d.x1)}`);
 
+    // Add X axis label
+    svg.append('text')
+        .attr('class', 'x-axis-label')
+        .attr('x', (width - margin.left - margin.right) / 2 + margin.left) // Position in the center of the X axis
+        .attr('y', height - 10) // Position just below the X axis
+        .style('text-anchor', 'middle') // Center align the text
+        .style('font-size', '12px')
+        .text(`Count`);
+
+    // Add Y axis label
+    svg.append('text')
+        .attr('class', 'y-axis-label')
+        .attr('x', -(height - margin.top - margin.bottom) / 2 - margin.top) // Position in the center of the Y axis
+        .attr('y', 12) // Position to the left of the Y axis
+        .style('text-anchor', 'middle') // Center align the text
+        .attr('transform', 'rotate(-90)') // Rotate the text to be vertical
+        .style('font-size', '12px')
+        .text(`${options[1]}`);
+
     const tooltip = d3
         .select(container)
         .append('div')
@@ -212,8 +277,8 @@ const generateHistogram = (container, data, options) => {
         .on('mousemove', (event) => {
             const svgRect = svg.node().getBoundingClientRect(); // Get SVG container's position
             tooltip
-                .style('top', event.pageY - svgRect.top + 5 + 'px')
-                .style('left', event.pageX - svgRect.left + 5 + 'px');
+                .style('top', event.clientY - svgRect.top + 5 + 'px')
+                .style('left', event.clientX - svgRect.left + 5 + 'px');
         })
         .on('mouseout', () => {
             tooltip.style('visibility', 'hidden');
@@ -251,7 +316,10 @@ const generatePieGraph = (container, data, options) => {
     const arc = d3.arc().outerRadius(radius).innerRadius(0); // Set innerRadius to 0 for a full pie chart
 
     // Create a color scale
-    const color = d3.scaleOrdinal(d3.schemeCategory10);
+    let color;
+    if (options['theme'] === 'light')
+        color = d3.scaleOrdinal(d3.schemePuBu[9].slice(1, 5));
+    else color = d3.scaleOrdinal(d3.schemePurples[9].slice(5));
 
     const categoryCounts = d3.group(data, (d) => d[options['1']]);
 
@@ -298,8 +366,8 @@ const generatePieGraph = (container, data, options) => {
         .on('mousemove', (event) => {
             const svgRect = svg.node().getBoundingClientRect(); // Get SVG container's position
             tooltip
-                .style('top', event.pageY - svgRect.top + 5 + 'px')
-                .style('left', event.pageX - svgRect.left + 5 + 'px');
+                .style('top', event.clientY - svgRect.top + 5 + 'px')
+                .style('left', event.clientX - svgRect.left + 5 + 'px');
         })
         .on('mouseout', () => {
             tooltip.style('visibility', 'hidden');
@@ -307,11 +375,27 @@ const generatePieGraph = (container, data, options) => {
 };
 
 const generateText = (container, data, options) => {
-    switch (options[1]) {
-        case 'Sum':
-            const sum = d3.sum(data, (d) => d[options[2]]);
-            d3.select(container).html(`Total ${options[2]}: ${sum.toFixed(2)}`);
-            break;
+    d3.select(container).selectAll('*').remove();
+
+    for (let idx = 1; ; idx += 2) {
+        if (!options[idx]) break;
+        switch (options[idx]) {
+            case 'Average':
+                const avg = d3.mean(data, (d) => d[options[idx + 1]]);
+                d3.select(container)
+                    .append('p')
+                    .text(`Average ${options[idx + 1]}: ${avg.toFixed(2)}`)
+                    .append('br');
+                break;
+            case 'Sum':
+            default:
+                const sum = d3.sum(data, (d) => d[options[idx + 1]]);
+                d3.select(container)
+                    .append('p')
+                    .text(`Total ${options[idx + 1]}: ${sum.toFixed(2)}`)
+                    .append('br');
+                break;
+        }
     }
 };
 
