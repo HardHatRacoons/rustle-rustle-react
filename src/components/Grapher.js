@@ -73,11 +73,9 @@ const generateBarGraph = (container, data, options) => {
         //                   .nice()
         .range([height - margin.bottom, margin.top]);
 
-        let color;
-        if(options["theme"] === "light")
-            color = "lightskyblue"
-        else
-            color = "darkslateblue"
+    let color;
+    if (options['theme'] === 'light') color = 'lightskyblue';
+    else color = 'darkslateblue';
 
     // Add rectangles for the bar chart
     svg.append('g')
@@ -107,24 +105,24 @@ const generateBarGraph = (container, data, options) => {
         .attr('transform', `translate(${margin.left},0)`)
         .call(d3.axisLeft(y));
 
-// Add X axis label
-svg.append("text")
-  .attr("class", "x-axis-label")
-  .attr("x", (width - margin.left - margin.right) / 2 + margin.left)  // Position in the center of the X axis
-  .attr("y", height - 10)  // Position just below the X axis
-  .style("text-anchor", "middle")  // Center align the text
-  .style("font-size", "12px")
-  .text(`${options[1]}`);
+    // Add X axis label
+    svg.append('text')
+        .attr('class', 'x-axis-label')
+        .attr('x', (width - margin.left - margin.right) / 2 + margin.left) // Position in the center of the X axis
+        .attr('y', height - 10) // Position just below the X axis
+        .style('text-anchor', 'middle') // Center align the text
+        .style('font-size', '12px')
+        .text(`${options[1]}`);
 
-// Add Y axis label
-svg.append("text")
-  .attr("class", "y-axis-label")
-  .attr("x", -(height - margin.top - margin.bottom) / 2 - margin.top)  // Position in the center of the Y axis
-  .attr("y", 12)  // Position to the left of the Y axis
-  .style("text-anchor", "middle")  // Center align the text
-  .attr("transform", "rotate(-90)")  // Rotate the text to be vertical
-  .style("font-size", "12px")
-  .text(`${options[2]}`);
+    // Add Y axis label
+    svg.append('text')
+        .attr('class', 'y-axis-label')
+        .attr('x', -(height - margin.top - margin.bottom) / 2 - margin.top) // Position in the center of the Y axis
+        .attr('y', 12) // Position to the left of the Y axis
+        .style('text-anchor', 'middle') // Center align the text
+        .attr('transform', 'rotate(-90)') // Rotate the text to be vertical
+        .style('font-size', '12px')
+        .text(`${options[2]}`);
 
     const tooltip = d3
         .select(container)
@@ -218,10 +216,8 @@ const generateHistogram = (container, data, options) => {
         .call(d3.axisLeft(y));
 
     let color;
-    if(options["theme"] === "light")
-        color = "lightskyblue"
-    else
-        color = "darkslateblue"
+    if (options['theme'] === 'light') color = 'lightskyblue';
+    else color = 'darkslateblue';
 
     // Create bars for the histogram
     svg.selectAll('.bar')
@@ -246,24 +242,24 @@ const generateHistogram = (container, data, options) => {
         .attr('text-anchor', 'middle') // Center the text horizontally
         .text((d) => `${Math.round(d.x0)} - ${Math.round(d.x1)}`);
 
-// Add X axis label
-svg.append("text")
-  .attr("class", "x-axis-label")
-  .attr("x", (width - margin.left - margin.right) / 2 + margin.left)  // Position in the center of the X axis
-  .attr("y", height - 10)  // Position just below the X axis
-  .style("text-anchor", "middle")  // Center align the text
-  .style("font-size", "12px")
-  .text(`Count`);
+    // Add X axis label
+    svg.append('text')
+        .attr('class', 'x-axis-label')
+        .attr('x', (width - margin.left - margin.right) / 2 + margin.left) // Position in the center of the X axis
+        .attr('y', height - 10) // Position just below the X axis
+        .style('text-anchor', 'middle') // Center align the text
+        .style('font-size', '12px')
+        .text(`Count`);
 
-// Add Y axis label
-svg.append("text")
-  .attr("class", "y-axis-label")
-  .attr("x", -(height - margin.top - margin.bottom) / 2 - margin.top)  // Position in the center of the Y axis
-  .attr("y", 12)  // Position to the left of the Y axis
-  .style("text-anchor", "middle")  // Center align the text
-  .attr("transform", "rotate(-90)")  // Rotate the text to be vertical
-  .style("font-size", "12px")
-  .text(`${options[1]}`);
+    // Add Y axis label
+    svg.append('text')
+        .attr('class', 'y-axis-label')
+        .attr('x', -(height - margin.top - margin.bottom) / 2 - margin.top) // Position in the center of the Y axis
+        .attr('y', 12) // Position to the left of the Y axis
+        .style('text-anchor', 'middle') // Center align the text
+        .attr('transform', 'rotate(-90)') // Rotate the text to be vertical
+        .style('font-size', '12px')
+        .text(`${options[1]}`);
 
     const tooltip = d3
         .select(container)
@@ -321,10 +317,9 @@ const generatePieGraph = (container, data, options) => {
 
     // Create a color scale
     let color;
-    if(options["theme"] === "light")
-        color = d3.scaleOrdinal(d3.schemePuBu[9].slice(1,5));
-    else
-        color = d3.scaleOrdinal(d3.schemePurples[9].slice(5));
+    if (options['theme'] === 'light')
+        color = d3.scaleOrdinal(d3.schemePuBu[9].slice(1, 5));
+    else color = d3.scaleOrdinal(d3.schemePurples[9].slice(5));
 
     const categoryCounts = d3.group(data, (d) => d[options['1']]);
 
@@ -382,26 +377,25 @@ const generatePieGraph = (container, data, options) => {
 const generateText = (container, data, options) => {
     d3.select(container).selectAll('*').remove();
 
-    for(let idx = 1; ; idx += 2){
-    if(!options[idx])
-        break;
-    switch (options[idx]) {
-        case 'Average':
-            const avg = d3.mean(data, (d) => d[options[idx+1]]);
-                        d3.select(container)
-                                            .append("p")
-                                          .text(`Average ${options[idx+1]}: ${avg.toFixed(2)}`)
-                                          .append("br");
-                        break;
-        case 'Sum':
-        default:
-            const sum = d3.sum(data, (d) => d[options[idx+1]]);
-            d3.select(container)
-                                .append("p")
-                              .text(`Total ${options[idx+1]}: ${sum.toFixed(2)}`)
-                              .append("br");
-            break;
-    }
+    for (let idx = 1; ; idx += 2) {
+        if (!options[idx]) break;
+        switch (options[idx]) {
+            case 'Average':
+                const avg = d3.mean(data, (d) => d[options[idx + 1]]);
+                d3.select(container)
+                    .append('p')
+                    .text(`Average ${options[idx + 1]}: ${avg.toFixed(2)}`)
+                    .append('br');
+                break;
+            case 'Sum':
+            default:
+                const sum = d3.sum(data, (d) => d[options[idx + 1]]);
+                d3.select(container)
+                    .append('p')
+                    .text(`Total ${options[idx + 1]}: ${sum.toFixed(2)}`)
+                    .append('br');
+                break;
+        }
     }
 };
 

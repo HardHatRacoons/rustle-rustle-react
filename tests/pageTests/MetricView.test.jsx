@@ -113,7 +113,46 @@ describe('Testing metric view page', () => {
         await act(() => {});
     });
 
-    test('Normal Load MetricView page', async () => {
+    test('Normal Load MetricView page light theme', async () => {
+        //test light theme
+        global.localStorage = {
+            getItem: vi.fn().mockImplementation((key) => {
+                let t = 0;
+                if (key === 'theme') return 'light';
+                return key in localStorage ? localStorage[key] : null;
+            }),
+            setItem: vi.fn().mockImplementation((key, value) => {
+                localStorage[key] = value; // Store in a local mock object
+            }),
+            removeItem: vi.fn().mockImplementation((key) => {
+                delete localStorage[key]; // Remove the key from the mock object
+            }),
+            clear: vi.fn().mockImplementation(() => {
+                localStorage = {}; // Clear all items in the mock
+            }),
+        };
+        render(<MetricView />);
+        await act(() => {});
+    });
+
+    test('Normal Load MetricView page dark theme', async () => {
+        //test light theme
+        global.localStorage = {
+            getItem: vi.fn().mockImplementation((key) => {
+                let t = 0;
+                if (key === 'theme') return 'dark';
+                return key in localStorage ? localStorage[key] : null;
+            }),
+            setItem: vi.fn().mockImplementation((key, value) => {
+                localStorage[key] = value; // Store in a local mock object
+            }),
+            removeItem: vi.fn().mockImplementation((key) => {
+                delete localStorage[key]; // Remove the key from the mock object
+            }),
+            clear: vi.fn().mockImplementation(() => {
+                localStorage = {}; // Clear all items in the mock
+            }),
+        };
         render(<MetricView />);
         await act(() => {});
     });

@@ -25,7 +25,16 @@ function MetricView() {
     const defaultOptions = [
         { 1: 'Shape', 2: 'Count' },
         { 1: 'Size', 2: 'Count', 3: true },
-        { 1: 'Sum', 2: 'WeightEA', 3: 'Average', 4:'WeightEA',  5: 'Sum', 6: 'Length', 7:'Average', 8: 'Length' },
+        {
+            1: 'Sum',
+            2: 'WeightEA',
+            3: 'Average',
+            4: 'WeightEA',
+            5: 'Sum',
+            6: 'Length',
+            7: 'Average',
+            8: 'Length',
+        },
         { 1: 'Length' },
         { 1: 'Size' },
         { 1: 'Size', 2: 'Sum', 3: true, 4: 'Length' },
@@ -37,10 +46,13 @@ function MetricView() {
     const [data, setData] = useState([]);
 
     const generateGraphs = () => {
-        const theme = localStorage.getItem("theme") || "light";
+        const theme = localStorage.getItem('theme') || 'light';
         for (let idx = 0; idx < defaultMetricLength; idx++) {
             const container = document.getElementById(`graph-container-${idx}`);
-            graph(container, data, defaultGraphTypes[idx], {...defaultOptions[idx], "theme": theme});
+            graph(container, data, defaultGraphTypes[idx], {
+                ...defaultOptions[idx],
+                theme: theme,
+            });
         }
     };
 
