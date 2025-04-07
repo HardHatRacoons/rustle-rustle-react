@@ -25,7 +25,9 @@ function BPViewControlPanel({ pdfInfo }) {
                     shadow-lg rounded-md border-2 border-slate-400 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 flex flex-col
                 `}
             >
-                <p className="text-lg text-sky-900 dark:text-slate-300">Downloads:</p>
+                <p className="text-lg text-sky-900 dark:text-slate-300">
+                    Downloads:
+                </p>
                 <div className="grid grid-cols-2 gap-4 p-4 max-w-sm">
                     <a
                         href={pdfInfo.url.annotated.pdf}

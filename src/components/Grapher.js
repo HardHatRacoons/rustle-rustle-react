@@ -385,8 +385,8 @@ const generateText = (container, data, options) => {
                 d3.select(container)
                     .append('p')
                     .text(
-                        `Average ${options[idx + 1]}: ${typeof avg === 'number' ? avg.toFixed(2) : 'N/A'}`
-                      )
+                        `Average ${options[idx + 1]}: ${typeof avg === 'number' ? avg.toFixed(2) : 'N/A'}`,
+                    )
                     .append('br');
                 break;
             case 'Sum':

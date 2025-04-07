@@ -153,7 +153,8 @@ function FileLayout() {
                         aria-label="back"
                     />
                     <span className="text-2xl mx-2 my-auto whitespace-normal break-words">
-                        {pdfInfo?.name?.replaceAll('_', '_\u200B') || 'Document'}
+                        {pdfInfo?.name?.replaceAll('_', '_\u200B') ||
+                            'Document'}
                     </span>
                     {/* <span className="text-2xl mx-2 my-auto">
                         {pdfInfo.name}
