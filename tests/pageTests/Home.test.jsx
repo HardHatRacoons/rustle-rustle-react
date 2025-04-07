@@ -209,6 +209,8 @@ describe('Testing home page', () => {
         fireEvent.click(screen.getByLabelText('open-upload-button'));
         await act(async () => {});
 
+        expect(screen.queryByText(/Upload File/)).toBeInTheDocument();
+
         fireEvent.click(screen.getByLabelText('close-upload-button'));
         await act(async () => {});
 
@@ -397,5 +399,32 @@ describe('Testing home page', () => {
             3,
             expect.stringMatching('dark'),
         );
+    });
+
+    test('UploadModal uploads a file successfully', async () => {
+        const consoleSpy = vi.spyOn(console, 'log');
+        render(<Home />);
+
+        fireEvent.click(screen.getByLabelText('open-upload-button'));
+        await act(async () => {});
+
+        const input = document.querySelector(
+            'input[type="file"][accept=".pdf"]',
+        );
+
+        const fakeFile = new MockFile(['file content'], 'testfile.pdf', {
+            type: 'application/pdf',
+            lastModified: new Date().getTime(),
+        });
+
+        fireEvent.change(input, {
+            target: { files: [fakeFile] },
+        });
+        global.dump(document.body, 'upload');
+        fireEvent.click(screen.getByText('Upload 1 file'));
+        fireEvent.click(screen.getByLabelText('close-upload-button'));
+        await act(async () => {});
+
+        expect(screen.queryByText(/Upload File/)).not.toBeInTheDocument();
     });
 });
