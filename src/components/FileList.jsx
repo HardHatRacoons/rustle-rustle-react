@@ -131,7 +131,7 @@ function FileList({
                                     {file.name.replaceAll('_', '_\u200B')}
                                 </p>
                                 <button
-                                    className="ml-auto text-sky-700 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-700 hover:cursor-pointer"
+                                    className="ml-auto text-sky-700 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-700 hover:cursor-pointer p-2"
                                     onClick={(event) => {
                                         event.stopPropagation(); // Prevent card click event
                                         setSelectedFile({
@@ -143,7 +143,7 @@ function FileList({
                                     }}
                                     aria-label={`file-delete-button-${idx}`}
                                 >
-                                    <FaTrashAlt size="20" />
+                                    <FaTrashAlt size="25" />
                                 </button>
                             </div>
                         </div>
