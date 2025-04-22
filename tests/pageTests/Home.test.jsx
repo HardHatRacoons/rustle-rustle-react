@@ -301,7 +301,7 @@ describe('Testing home page', () => {
         await act(async () => {});
 
         expect(consoleSpy).toHaveBeenNthCalledWith(
-            4,
+            5,
             expect.stringMatching('Error uploading image:'),
             expect.anything(),
         );
