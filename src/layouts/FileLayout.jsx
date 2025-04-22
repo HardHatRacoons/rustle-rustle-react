@@ -127,8 +127,8 @@ function FileLayout() {
                         onClick={() => {
                             navigate('/');
                         }}
-                        size="40"
-                        className="align-self-center cursor-pointer"
+                        size="45"
+                        className="align-self-center hover:cursor-pointer hover:text-sky-700 hover:border-2 hover:rounded-lg dark:hover:text-slate-200"
                         aria-label="back"
                     />
                 </div>
@@ -148,8 +148,8 @@ function FileLayout() {
                         onClick={() => {
                             navigate('/');
                         }}
-                        size="40"
-                        className="align-self-center hover:cursor-pointer"
+                        size="45"
+                        className="align-self-center hover:cursor-pointer hover:text-sky-700 hover:border-2 hover:rounded-lg dark:hover:text-slate-200"
                         aria-label="back"
                     />
                     <span className="text-2xl mx-2 my-auto whitespace-normal break-words">

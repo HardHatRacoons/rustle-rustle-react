@@ -14,14 +14,14 @@ function DeleteConfirmationModal({ isOpen, onClose, onConfirm, fileName }) {
                 <div className="flex flex-row justify-end mt-6 gap-4">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition"
+                        className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition hover:cursor-pointer"
                         aria-label="cancel-delete-button"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={onConfirm}
-                        className="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition"
+                        className="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition hover:cursor-pointer"
                         aria-label="confirm-delete-button"
                     >
                         Delete
