@@ -87,11 +87,13 @@ function FileList({
         fetchFiles();
     }, [userAttributes]); // Ensure effect runs only when userAttributes is available
 
-    const filteredFiles = Object.entries(files).filter(
-        ([fileId, file]) =>
-            file.name &&
-            file.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+    const filteredFiles = Object.entries(files)
+        .filter(
+            ([fileId, file]) =>
+                file.name &&
+                file.name.toLowerCase().includes(searchQuery.toLowerCase()),
+        )
+        .sort(([, a], [, b]) => a.name.localeCompare(b.name));
 
     // Show a loading message until both userAttributes and files are fetched
     if (!userAttributes || loading) {

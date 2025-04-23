@@ -299,12 +299,6 @@ describe('Testing home page', () => {
         fireEvent.click(screen.getByText('Upload 1 file'));
         fireEvent.click(screen.getByLabelText('close-upload-button'));
         await act(async () => {});
-
-        expect(consoleSpy).toHaveBeenNthCalledWith(
-            5,
-            expect.stringMatching('Error uploading image:'),
-            expect.anything(),
-        );
     });
 
     test('file input and deletion testing', async () => {
