@@ -3,7 +3,7 @@ import { FileUploader } from '@aws-amplify/ui-react-storage';
 import { uploadData } from 'aws-amplify/storage';
 import '@aws-amplify/ui-react/styles.css';
 import * as pdfjsLib from 'pdfjs-dist/build/pdf';
-import {useRef} from 'react';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router';
 
 // Convert first page of PDF to an image
@@ -108,41 +108,42 @@ function UploadModal({ userAttributes, isOpen, onClose }) {
                     onUploadSuccess={async ({ key }) => {
                         let [, user_id, file_id] = key.split('/');
 
-                        try{
-                        let url = `${import.meta.env.VITE_API_ENDPOINT}/api/v1/pdf-proccessing/request`;
-                        await fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-API-KEY': import.meta.env.VITE_API_KEY,
-                            },
-                            body: JSON.stringify({
-                                user_id: user_id,
-                                file_id: file_id
-                                    .split('.')
-                                    .slice(0, -1)
-                                    .join('.'),
-                                bucket_name: import.meta.env.VITE_BUCKET_NAME,
-                            }),
-                        });
-                        }
-                        catch (error){
-                            console.log(error)
+                        try {
+                            let url = `${import.meta.env.VITE_API_ENDPOINT}/api/v1/pdf-proccessing/request`;
+                            await fetch(url, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-API-KEY': import.meta.env.VITE_API_KEY,
+                                },
+                                body: JSON.stringify({
+                                    user_id: user_id,
+                                    file_id: file_id
+                                        .split('.')
+                                        .slice(0, -1)
+                                        .join('.'),
+                                    bucket_name: import.meta.env
+                                        .VITE_BUCKET_NAME,
+                                }),
+                            });
+                        } catch (error) {
+                            console.log(error);
                         }
 
-                        const elements = document.querySelectorAll(".amplify-fileuploader__file__name");
+                        const elements = document.querySelectorAll(
+                            '.amplify-fileuploader__file__name',
+                        );
 
-                        for(const el of elements){
-                            const id = file_id.split(".")[0];
+                        for (const el of elements) {
+                            const id = file_id.split('.')[0];
                             const name = fileMappings.current.get(id);
-                            if (el.innerHTML === name){
+                            if (el.innerHTML === name) {
                                 el.onclick = () => {
-                                   navigate("/file/" + id);
-                                }
+                                    navigate('/file/' + id);
+                                };
                                 el.style.cursor = 'pointer';
                             }
                         }
-
                     }}
                 />
             </div>
