@@ -161,9 +161,10 @@ function PDFViewer({ pdfURL }) {
         >
             <div
                 ref={containerRef}
-                className="grow h-full"
-                style={{ flexGrow: 1 }}
-            ></div>
+                className="grow h-full text-sky-900 dark:text-slate-300"
+            >
+                Loading...
+            </div>
             <Paginator
                 currPage={pageNum}
                 maxPages={pdfDocument?.numPages}
