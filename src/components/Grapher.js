@@ -342,8 +342,8 @@ const generatePieGraph = (container, data, options) => {
         .attr('class', 'slice')
         .attr('d', arc)
         .attr('fill', (d, i) => color(i % color.range().length))
-        .attr('stroke', 'black')
-        .style('stroke-width', '2px')
+        .attr('stroke', options['theme'] === 'light'? '#0c4a6e' : 'black')
+        .style('stroke-width', '1px')
         .style('opacity', 0.7);
 
     const tooltip = d3
