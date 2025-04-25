@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { LuDownload } from 'react-icons/lu';
 import { BsFiletypePdf, BsFiletypeCsv } from 'react-icons/bs';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-import { ImSpinner2 } from "react-icons/im";
+import { ImSpinner2 } from 'react-icons/im';
 
 function BPViewControlPanel({ pdfInfo }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -60,7 +60,7 @@ function BPViewControlPanel({ pdfInfo }) {
                 </div>
                 {!pdfInfo.url.annotated.pdf && (
                     <p className="text-lg text-sky-900 dark:text-slate-300 inline-flex">
-                        <ImSpinner2 className="text-3xl mx-3 animate-spin"/>
+                        <ImSpinner2 className="text-3xl mx-3 animate-spin" />
                         <span>Blueprint currently processing</span>
                     </p>
                 )}

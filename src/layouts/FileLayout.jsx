@@ -170,7 +170,7 @@ function FileLayout() {
                     className="w-1/3"
                 />
             </div>
-            <Outlet context={{pdfInfo, pageNum, setPageNum}} />
+            <Outlet context={{ pdfInfo, pageNum, setPageNum }} />
         </div>
     );
 }
