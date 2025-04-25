@@ -123,8 +123,6 @@ describe('TableView', () => {
                 ok: true,
                 json: async () => jsonData,
             });
-
-        const setRowData = vi.fn();
     });
 
     test('failing csv data when json doesnt exist', async () => {
@@ -156,6 +154,8 @@ describe('TableView', () => {
     });
 
     test('getting csv data bc json doesnt exist', async () => {
+        const setRowData = vi.fn();
+
         render(
             <MemoryRouter initialEntries={['/tableview']}>
                 <Routes>
