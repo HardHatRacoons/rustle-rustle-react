@@ -21,14 +21,17 @@ describe('TableView', () => {
                 path: { annotated: { csv: null } },
             };
 
+            let pageNum = 1;
+            let setPageNum = vi.fn();
+
             return {
                 ...actual,
                 useOutletContext: vi
                     .fn()
-                    .mockReturnValueOnce(pdfInfo)
-                    .mockReturnValueOnce(pdfInfo)
-                    .mockReturnValueOnce(emptyPdfInfo)
-                    .mockReturnValue(pdfInfo),
+                    .mockReturnValueOnce({ pdfInfo, pageNum, setPageNum })
+                    .mockReturnValueOnce({ pdfInfo, pageNum, setPageNum })
+                    .mockReturnValueOnce({ emptyPdfInfo, pageNum, setPageNum })
+                    .mockReturnValue({ pdfInfo, pageNum, setPageNum }),
             };
         });
 

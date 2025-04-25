@@ -18,34 +18,33 @@ describe('Testing metric view page', () => {
 
         vi.mock(import('react-router'), async (importOriginal) => {
             const actual = await importOriginal();
+
+            let pageNum = 1;
+            let setPageNum = vi.fn();
+
+            const pdfInfo = {
+                url: {
+                    annotated: {
+                        pdf: 'annotated.pdf',
+                        csv: 'annotated.csv',
+                    },
+                    unannotated: { pdf: 'unannotated.pdf' },
+                },
+                path: {
+                    annotated: {
+                        pdf: 'annotated.pdf',
+                        csv: 'annotated.csv',
+                    },
+                    unannotated: { pdf: 'unannotated.pdf' },
+                },
+            };
             return {
                 ...actual,
-                useOutletContext: vi
-                    .fn()
-                    .mockReturnValueOnce({
-                        url: {
-                            annotated: { pdf: 'annotated.pdf' },
-                        },
-                        path: {
-                            annotated: { pdf: 'annotated.pdf' },
-                        },
-                    })
-                    .mockReturnValue({
-                        url: {
-                            annotated: {
-                                pdf: 'annotated.pdf',
-                                csv: 'annotated.csv',
-                            },
-                            unannotated: { pdf: 'unannotated.pdf' },
-                        },
-                        path: {
-                            annotated: {
-                                pdf: 'annotated.pdf',
-                                csv: 'annotated.csv',
-                            },
-                            unannotated: { pdf: 'unannotated.pdf' },
-                        },
-                    }),
+                useOutletContext: vi.fn().mockReturnValue({
+                    pdfInfo,
+                    pageNum,
+                    setPageNum,
+                }),
             };
         });
 
