@@ -4,14 +4,13 @@ import * as pdfjs from 'pdfjs-dist/build/pdf';
 
 import Paginator from './Paginator';
 
-function PDFViewer({ pdfURL }) {
+function PDFViewer({ pdfURL, pageNum, setPageNum }) {
     const containerRef = useRef(null);
 
     const resizeTimeoutRef = useRef(null); //debounce resizing
     const observerRef = useRef(null);
     const isMounted = useRef(false);
 
-    const [pageNum, setPageNum] = useState(1);
     const [pdfDocument, setPdfDocument] = useState(null);
     //const [anno, setAnno] = useState([]);
     const anno = useRef([]);

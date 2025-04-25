@@ -10,7 +10,7 @@ import * as d3 from 'd3';
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 function TableView() {
-    const pdfInfo = useOutletContext();
+    const {pdfInfo} = useOutletContext();
     const [csvURL, setCsvURL] = useState(pdfInfo.url.annotated.csv); //alrdy a download url
     const [jsonPath, setJsonPath] = useState(
         pdfInfo?.path.annotated.csv
