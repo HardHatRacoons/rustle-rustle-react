@@ -6,12 +6,11 @@ function RootLayout() {
     const initialTheme =
         localStorage.getItem('theme') ||
         (window.matchMedia &&
-            window.matchMedia('(prefers-color-scheme: dark)').matches) ||
-        'light';
+            window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     const [theme, setTheme] = useState(initialTheme);
 
     useEffect(() => {
-        if (theme) localStorage.setItem('theme', theme);
+        localStorage.setItem('theme', theme);
     }, [theme]);
 
     return (
