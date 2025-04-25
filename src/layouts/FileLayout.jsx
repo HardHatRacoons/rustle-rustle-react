@@ -30,6 +30,8 @@ function FileLayout() {
     const [valid, setValid] = useState(null);
     const userAttributes = useUser();
 
+    const [pageNum, setPageNum] = useState(1);
+
     const { id } = useParams();
     useEffect(() => {
         if (!userAttributes) return;
@@ -168,7 +170,7 @@ function FileLayout() {
                     className="w-1/3"
                 />
             </div>
-            <Outlet context={pdfInfo} />
+            <Outlet context={{ pdfInfo, pageNum, setPageNum }} />
         </div>
     );
 }

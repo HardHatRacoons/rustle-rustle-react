@@ -5,7 +5,7 @@ import fetchJSONData from '../components/JsonFetch';
 import graph from '../components/Grapher';
 
 function MetricView() {
-    const pdfInfo = useOutletContext();
+    const { pdfInfo } = useOutletContext();
     const [csvURL, setCsvURL] = useState(pdfInfo?.url.annotated.csv); //alrdy a download url
     const [jsonPath, setJsonPath] = useState(
         pdfInfo?.path.annotated.csv

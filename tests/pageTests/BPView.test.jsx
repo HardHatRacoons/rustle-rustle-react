@@ -36,8 +36,9 @@ describe('BPView', () => {
                 unannotated: { pdf: 'unannotated.pdf' },
             },
         };
-
-        useOutletContext.mockReturnValue(pdfInfo);
+        let pageNum = 1;
+        let setPageNum = vi.fn();
+        useOutletContext.mockReturnValue({ pdfInfo, pageNum, setPageNum });
 
         render(
             <MemoryRouter initialEntries={['/bpview']}>
@@ -63,7 +64,9 @@ describe('BPView', () => {
             },
         };
 
-        useOutletContext.mockReturnValue(pdfInfo);
+        let pageNum = 1;
+        let setPageNum = vi.fn();
+        useOutletContext.mockReturnValue({ pdfInfo, pageNum, setPageNum });
 
         render(
             <MemoryRouter initialEntries={['/bpview']}>
