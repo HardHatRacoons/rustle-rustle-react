@@ -18,7 +18,7 @@ function FileLayout() {
     //console.log(activeTab)
     const navigate = useNavigate();
 
-        const [pageNum, setPageNum] = useState(1);
+    const [pageNum, setPageNum] = useState(1);
     const [pdfInfo, setPdfInfo] = useState({
         path: {
             annotated: { pdf: null, csv: null },
