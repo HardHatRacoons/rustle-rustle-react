@@ -17,6 +17,8 @@ function FileLayout() {
     const [activeTab, setActiveTab] = useState(t === -1 ? 0 : t);
     //console.log(activeTab)
     const navigate = useNavigate();
+
+        const [pageNum, setPageNum] = useState(1);
     const [pdfInfo, setPdfInfo] = useState({
         path: {
             annotated: { pdf: null, csv: null },
@@ -26,11 +28,11 @@ function FileLayout() {
             annotated: { pdf: null, csv: null },
             unannotated: { pdf: null },
         },
+        page: pageNum,
+        setPage: setPageNum,
     });
     const [valid, setValid] = useState(null);
     const userAttributes = useUser();
-
-    const [pageNum, setPageNum] = useState(1);
 
     const { id } = useParams();
     useEffect(() => {
@@ -170,7 +172,7 @@ function FileLayout() {
                     className="w-1/3"
                 />
             </div>
-            <Outlet context={{ pdfInfo, pageNum, setPageNum }} />
+            <Outlet context={pdfInfo} />
         </div>
     );
 }

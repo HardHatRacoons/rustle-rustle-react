@@ -72,7 +72,7 @@ function PDFViewer({ pdfURL, pageNum, setPageNum }) {
             canvasContainer.innerHTML = '';
 
             const canvas = document.createElement('canvas');
-            canvas.setAttribute('aria-label', 'pdf display canvas');
+            canvas.setAttribute('aria-label', 'pdf-display-canvas');
 
             canvasContainer.appendChild(canvas);
 

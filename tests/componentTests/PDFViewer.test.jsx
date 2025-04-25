@@ -6,6 +6,7 @@ import {
     unmountComponentAtNode,
 } from '@testing-library/react';
 import React from 'react';
+import {useState} from 'react';
 
 import PDFViewer from '../../src/components/PDFViewer';
 
@@ -178,7 +179,12 @@ describe('Testing pdfviewer component', () => {
     });
 
     test('classname test', async () => {
-        render(<PDFViewer className="bg-sky-200" />);
+                let page = 1;
+                let setPage = vi.fn().mockImplementation((num) => {
+                    page = num;
+                })
+
+        render(<PDFViewer className="bg-sky-200" pageNum={page} setPageNum={setPage} />);
 
         await act(async () => {
             // wait for render to finish
@@ -186,8 +192,14 @@ describe('Testing pdfviewer component', () => {
     });
 
     test('Incorrect url', async () => {
+
+            let page = 1;
+            let setPage = vi.fn().mockImplementation((num) => {
+                page = num;
+            })
+
         //test no pdf found error branch
-        render(<PDFViewer pdfURL="https://pdf-not-found.pdf" />);
+        render(<PDFViewer pdfURL="https://pdf-not-found.pdf" pageNum={page} setPageNum={setPage} />);
 
         await act(async () => {
             // wait for render to finish
@@ -201,12 +213,21 @@ describe('Testing pdfviewer component', () => {
             fillText: fillTextSpy,
         }));
 
+        function Wrapper() {
+          const [page, setPage] = useState(1);
+          return (
+            <>
+              <PDFViewer pdfURL={'https://fake-pdf-endpoint/pdf.pdf'} pageNum={page} setPageNum={setPage} />
+            </>
+          );
+          }
+
         vi.useFakeTimers();
 
         //call in strict mode to test double use effect calls
         const { unmount } = render(
             <React.StrictMode>
-                <PDFViewer pdfURL={'https://fake-pdf-endpoint/pdf.pdf'} />
+                <Wrapper />
             </React.StrictMode>,
         );
 
@@ -241,12 +262,17 @@ describe('Testing pdfviewer component', () => {
             fillText: fillTextSpy,
         }));
 
+        let page = 1;
+        let setPage = vi.fn().mockImplementation((num) => {
+            page = num;
+        })
+
         vi.useFakeTimers();
 
         //call in strict mode to test double use effect calls
         const { unmount } = render(
             <React.StrictMode>
-                <PDFViewer pdfURL={'https://fake-pdf-endpoint/pdf.pdf'} />
+                <PDFViewer pdfURL={'https://fake-pdf-endpoint/pdf.pdf'} pageNum={page} setPageNum={setPage} />
             </React.StrictMode>,
         );
 
@@ -282,16 +308,21 @@ describe('Testing pdfviewer component', () => {
             fillText: fillTextSpy,
         }));
 
+        let page = 1;
+        let setPage = vi.fn().mockImplementation((num) => {
+            page = num;
+        })
+
         vi.useFakeTimers();
 
         //call in strict mode to test double use effect calls
-        render(<PDFViewer pdfURL={'https://fake-pdf-endpoint/pdf.pdf'} />);
+        render(<PDFViewer pdfURL={'https://fake-pdf-endpoint/pdf.pdf'} pageNum={page} setPageNum={setPage} />);
 
         await act(async () => {
             // wait for render to finish
         });
 
-        const canvas = screen.getByLabelText('pdf display canvas');
+        const canvas = screen.getByLabelText('pdf-display-canvas');
 
         await act(async () => {
             fireEvent.mouseMove(canvas, {
