@@ -109,7 +109,7 @@ function MetricView() {
     return (
         <div className="select-none grow rounded-xl border-solid border-2 border-sky-100 dark:border-slate-800 mb-6 p-4 bg-white dark:bg-slate-900 min-h-fit">
             <div
-                className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] p-5 gap-4 overflow-y-auto max-h-[84vh]"
+                className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] p-5 gap-4 overflow-y-auto max-h-[82vh]"
                 aria-label="metrics"
             >
                 {grid().map((tile) => (
