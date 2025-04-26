@@ -1,6 +1,17 @@
 import { useState, useEffect } from 'react';
 import { TbPinFilled, TbPin } from 'react-icons/tb';
 
+/*
+ * Renders a pinnable card container with given children.
+ *
+ * @component
+ * @param {Object} props
+ * @param {ReactNode} props.children The children to be rendered inside the card.
+ * @param {number} props.idx The index of the card, if applicable.
+ * @param {boolean} props.pin The pin status of the card.
+ * @param {(idx: number) => void} props.onChange function to be called when the pin is clicked
+ * @returns rendered card component.
+ */
 function Card({ children, idx, pin, onChange }) {
     const onPin = () => {
         onChange(idx);

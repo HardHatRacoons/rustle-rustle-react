@@ -1,5 +1,15 @@
 import { useState } from 'react';
 
+/*
+ * Renders tabs with the given tab titles.
+ *
+ * @component
+ * @param {Object} props
+ * @param {number} props.onChange The .
+ * @param {number} props.pageNum The page number to be displayed intially.
+ * @param {(i: number) => void} props.setPageNum The setter function to change the page number.
+ * @returns rendered pdf.
+ */
 function Tabs({ onChange, tabs, activeTab, setActiveTab, className }) {
     const longestWord = tabs?.reduce(
         (savedText, text) =>

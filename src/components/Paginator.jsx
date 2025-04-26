@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
 
+/*
+ * Renders a paginator with the given starting page, max pages, and callback on change.
+ *
+ * @component
+ * @param {Object} props
+ * @param {number} props.currPage The current page.
+ * @param {number} props.maxPages The maximum number of pages.
+ * @param {(i: number) => void} props.onChange The function to call on successful page change.
+ * @returns rendered paginator.
+ */
 function Paginator({ currPage, maxPages, onChange }) {
     const [page, setPage] = useState(currPage);
 

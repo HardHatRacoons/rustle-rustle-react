@@ -3,6 +3,15 @@ import { RiMoonClearLine, RiSunFill } from 'react-icons/ri';
 import GoogleSignOut from './GoogleSignOut';
 import Toggle from './Toggle';
 
+/*
+ * Renders a navbar that greets the user and holds some functional interactables.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Object<string, any>} props.userAttributes The attributes of the logged in user.
+ * @param {[ theme: 'light' | 'dark', setTheme: (theme: 'light' | 'dark') => void ]} props.themeController The controller of the theme; holds current value and setter function.
+ * @returns rendered navbar.
+ */
 function LoginNavbar({ userAttributes, themeController }) {
     const initialValue = localStorage.getItem('theme') === 'light';
     const [theme, setTheme] = themeController;
