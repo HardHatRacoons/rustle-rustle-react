@@ -204,6 +204,17 @@ describe('Testing main setup and routing after auth', () => {
     });
 
     test('can move to metric page', async () => {
+        window.matchMedia = vi.fn().mockImplementation((query) => ({
+            matches: query === '(prefers-color-scheme: dark)',
+            media: query,
+            onchange: null,
+            addListener: vi.fn(), // Deprecated
+            removeListener: vi.fn(), // Deprecated
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            dispatchEvent: vi.fn(),
+        }));
+        
         render(
             <MemoryRouter initialEntries={['/file/123/metrics']}>
                 <UserProvider>
