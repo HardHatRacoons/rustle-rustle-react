@@ -3,6 +3,7 @@ import Card from '../components/Card';
 import { useOutletContext } from 'react-router';
 import fetchJSONData from '../components/JsonFetch';
 import graph from '../components/Grapher';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function MetricView() {
     const { pdfInfo } = useOutletContext();
@@ -113,17 +114,18 @@ function MetricView() {
                 aria-label="metrics"
             >
                 {grid().map((tile) => (
-                    <Card
-                        onChange={onPin}
-                        key={tile.idx}
-                        idx={tile.idx}
-                        pin={pinned ? pinned[tile.idx] : false}
-                    >
-                        <div
-                            className="relative dark:bg-slate-800 text-sky-900 dark:text-slate-300 fill-sky-900 dark:fill-slate-300"
-                            id={`graph-container-${tile.idx}`}
-                        ></div>
-                    </Card>
+                    <motion.div layout key={tile.idx}>
+                        <Card
+                            onChange={onPin}
+                            idx={tile.idx}
+                            pin={pinned ? pinned[tile.idx] : false}
+                        >
+                            <div
+                                className="relative dark:bg-slate-800 text-sky-900 dark:text-slate-300 fill-sky-900 dark:fill-slate-300"
+                                id={`graph-container-${tile.idx}`}
+                            ></div>
+                        </Card>
+                    </motion.div>
                 ))}
             </div>
         </div>
