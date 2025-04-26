@@ -214,7 +214,7 @@ describe('Testing main setup and routing after auth', () => {
             removeEventListener: vi.fn(),
             dispatchEvent: vi.fn(),
         }));
-        
+
         render(
             <MemoryRouter initialEntries={['/file/123/metrics']}>
                 <UserProvider>
