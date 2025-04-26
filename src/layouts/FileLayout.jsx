@@ -6,6 +6,12 @@ import { useUser } from '../components/UserContext';
 
 import Tabs from '../components/Tabs';
 
+/*
+ * Renders a file layout that holds one of three subviews for a file.
+ *
+ * @component
+ * @returns {React.ReactElement} the rendered file layout.
+ */
 function FileLayout() {
     const tabs = ['blueprint', 'table', 'metrics'];
 

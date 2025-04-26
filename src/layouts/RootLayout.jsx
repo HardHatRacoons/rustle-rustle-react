@@ -6,7 +6,7 @@ import { Outlet } from 'react-router';
  * The root layout through which all other views must pass and render. Controls theme.
  *
  * @component
- * @returns {React.ReactElement} child which is the whole app view rendered.
+ * @returns {React.ReactElement} the whole app view render.
  */
 function RootLayout() {
     const initialTheme =

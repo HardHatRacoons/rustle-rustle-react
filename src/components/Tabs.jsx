@@ -5,12 +5,15 @@ import { useState } from 'react';
  *
  * @component
  * @param {Object} props
- * @param {number} props.onChange The .
- * @param {number} props.pageNum The page number to be displayed intially.
- * @param {(i: number) => void} props.setPageNum The setter function to change the page number.
- * @returns rendered pdf.
+ * @param {(i: number) => void} props.onChange The function to call when a tab is clicked.
+ * @param {Array} props.tabs Tab titles to render.
+ * @param {number} props.activeTab current active tab.
+ * @param {(i: number) => void} props.setActiveTab function to change active tab.
+ * @param {String} props.className classNames to add to the tabs for styling.
+ * @returns {React.ReactElement} the rendered tabs.
  */
 function Tabs({ onChange, tabs, activeTab, setActiveTab, className }) {
+    //calculate the longest word to make tab sizing consistent
     const longestWord = tabs?.reduce(
         (savedText, text) =>
             text.length > savedText.length ? text : savedText,

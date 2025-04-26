@@ -1,5 +1,15 @@
 import { useState } from 'react';
 
+/*
+ * Renders a toggle interactable.
+ *
+ * @component
+ * @param {Object} props
+ * @param {(i: boolean) => void} props.onChange The function to call when the toggle is clicked.
+ * @param {boolean} props.initialValue initial value of the toggle.
+ * @param {String} props.className classNames to add to the tabs for styling.
+ * @returns {React.ReactElement} the rendered toggle.
+ */
 function Toggle({ onChange, initialValue, className }) {
     const [toggleValue, setToggleValue] = useState(initialValue);
 

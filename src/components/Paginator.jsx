@@ -9,7 +9,7 @@ import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
  * @param {number} props.currPage The current page.
  * @param {number} props.maxPages The maximum number of pages.
  * @param {(i: number) => void} props.onChange The function to call on successful page change.
- * @returns rendered paginator.
+ * @returns {React.ReactElement} rendered paginator.
  */
 function Paginator({ currPage, maxPages, onChange }) {
     const [page, setPage] = useState(currPage);

@@ -12,7 +12,7 @@ import Paginator from './Paginator';
  * @param {number} props.pdfURL The url of the pdf to be rendered.
  * @param {number} props.pageNum The page number to be displayed intially.
  * @param {(i: number) => void} props.setPageNum The setter function to change the page number.
- * @returns rendered pdf.
+ * @returns {React.ReactElement} rendered pdf.
  */
 function PDFViewer({ pdfURL, pageNum, setPageNum }) {
     const containerRef = useRef(null);
