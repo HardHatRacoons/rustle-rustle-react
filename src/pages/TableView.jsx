@@ -6,9 +6,15 @@ import fetchJSONData from '../components/JsonFetch';
 
 import * as d3 from 'd3';
 
-// Register all Community features
+//register all Community features of aggrid
 ModuleRegistry.registerModules([AllCommunityModule]);
 
+/*
+ * The table view for a file.
+ *
+ * @component
+ * @returns {React.ReactElement} the rendered table view.
+ */
 function TableView() {
     const { pdfInfo } = useOutletContext();
     const [csvURL, setCsvURL] = useState(pdfInfo?.url.annotated.csv); //alrdy a download url
@@ -20,7 +26,7 @@ function TableView() {
 
     const [rowData, setRowData] = useState([]);
 
-    // Column Definitions: Defines the columns to be displayed.
+    //defines the columns to be displayed.
     const [colDefs, setColDefs] = useState([
         {
             headerName: 'Page Number',
@@ -84,6 +90,7 @@ function TableView() {
         },
     ]);
 
+    //row selection detailing
     const rowSelection = useMemo(() => {
         return {
             mode: 'multiRow',
@@ -92,6 +99,7 @@ function TableView() {
         };
     }, []);
 
+    //cell sizing is automatic
     const autoSizeStrategy = {
         type: 'fitCellContents',
     };

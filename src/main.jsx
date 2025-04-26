@@ -11,10 +11,10 @@ import App from './App';
 import './index.css';
 import '@fontsource/inter/500.css';
 
-// const logger = new ConsoleLogger('Amplify', 'DEBUG');
+//necessary to configure aws amplify linkature
 Amplify.configure(outputs);
-// logger.debug('Amplify debug logging enabled');
 
+//links react to html
 createRoot(document.getElementById('root')).render(
     <UserProvider>
         <BrowserRouter>

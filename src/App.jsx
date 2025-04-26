@@ -10,6 +10,12 @@ import NoPage from './pages/NoPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 
+/*
+ * Controls the routing of the app.
+ *
+ * @component
+ * @returns {React.ReactElement} the app routes.
+ */
 export default function App() {
     return (
         <Routes>

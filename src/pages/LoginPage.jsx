@@ -2,6 +2,12 @@ import { signInWithRedirect, signOut } from 'aws-amplify/auth';
 import { FcGoogle } from 'react-icons/fc';
 import { useUser } from '../components/UserContext';
 
+/*
+ * The login page that is displayed when the user is not authenticated.
+ *
+ * @component
+ * @returns {React.ReactElement} the login page render.
+ */
 export default function LoginButton() {
     const userAttributes = useUser();
     return (

@@ -13,6 +13,11 @@ import { useState } from 'react';
 function Toggle({ onChange, initialValue, className }) {
     const [toggleValue, setToggleValue] = useState(initialValue);
 
+/*
+ * The callback for a toggle event.
+ *
+ * @function
+ */
     const change = () => {
         let tempValue = !toggleValue;
         setToggleValue(tempValue);

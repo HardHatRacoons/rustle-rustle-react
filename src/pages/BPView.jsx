@@ -2,6 +2,12 @@ import BPViewControlPanel from '../components/BPViewControlPanel';
 import PDFViewer from '../components/PDFViewer';
 import { useOutletContext } from 'react-router';
 
+/*
+ * The blueprint pdf view for a file.
+ *
+ * @component
+ * @returns {React.ReactElement} the rendered pdf view.
+ */
 function BPView() {
     const { pdfInfo, pageNum, setPageNum } = useOutletContext();
     const pdfURL = pdfInfo.url.annotated.pdf || pdfInfo.url.unannotated.pdf;

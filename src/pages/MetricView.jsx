@@ -5,6 +5,12 @@ import fetchJSONData from '../components/JsonFetch';
 import graph from '../components/Grapher';
 import { motion, AnimatePresence } from 'framer-motion';
 
+/*
+ * The metric view for a file. Contains graphs on pinnable cards to show the user data about the pdf.
+ *
+ * @component
+ * @returns {React.ReactElement} the rendered metric view.
+ */
 function MetricView() {
     const { pdfInfo } = useOutletContext();
     const [csvURL, setCsvURL] = useState(pdfInfo?.url.annotated.csv); //alrdy a download url
@@ -41,11 +47,16 @@ function MetricView() {
         { 1: 'Size', 2: 'Sum', 3: true, 4: 'Length' },
         { 1: 'Shape', 2: 'Sum', 3: true, 4: 'WeightEA' },
     ];
-    const [defaultMetricLength, setDefaultMetricLength] = useState(7); //default 5 overview graphs
+    const [defaultMetricLength, setDefaultMetricLength] = useState(7); //default 7 overview graphs
 
     const [pinned, setPinned] = useState(null);
     const [data, setData] = useState([]);
 
+    /*
+     * Calls the grapher function with the right graphing options to generate graphs
+     *
+     * @function
+     */
     const generateGraphs = () => {
         const theme = localStorage.getItem('theme') || 'light';
         for (let idx = 0; idx < defaultMetricLength; idx++) {
@@ -57,6 +68,12 @@ function MetricView() {
         }
     };
 
+    /*
+         * Calls the grapher function with the right graphing options to generate graphs
+         *
+         * @function
+         * @param {number} key The key of the clicked card
+         */
     const onPin = (key) => {
         let set = { ...pinned };
         if (!set[key]) {
@@ -69,6 +86,12 @@ function MetricView() {
         localStorage.setItem('pinned', JSON.stringify(set));
     };
 
+/*
+ * Generates the order of the graph cards.
+ *
+ * @function
+ * @returns {Array} the display order of the graph cards.
+ */
     const grid = () => {
         let ordered = [];
         let map = {};
