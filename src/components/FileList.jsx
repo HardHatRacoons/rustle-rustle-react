@@ -10,8 +10,9 @@ function FileList({
     setSelectedFile,
     setIsDeleteModalOpen,
 }) {
-    const [files, setFiles] = useState({}); // file contains {fileID: docName} pairs
-    const [loading, setLoading] = useState(true);
+    const [files, setFiles] = useState(
+        JSON.parse(localStorage.getItem('files')) || {},
+    ); // file contains {fileID: docName} pairs
 
     const navigate = useNavigate();
 
@@ -22,7 +23,6 @@ function FileList({
         const filepath = `${folder}/${userAttributes.sub}/`;
 
         const fetchFiles = async () => {
-            setLoading(true); // Start loading
             // get the file name
             try {
                 const result = await list({
@@ -77,10 +77,9 @@ function FileList({
                     }
                 }
                 setFiles(fileData);
+                localStorage.setItem('files', JSON.stringify(fileData));
             } catch (error) {
                 console.error('Error listing files:', error);
-            } finally {
-                setLoading(false); // Stop loading after fetching files
             }
         };
 
@@ -94,15 +93,6 @@ function FileList({
                 file.name.toLowerCase().includes(searchQuery.toLowerCase()),
         )
         .sort(([, a], [, b]) => a.name.localeCompare(b.name));
-
-    // Show a loading message until both userAttributes and files are fetched
-    if (!userAttributes || loading) {
-        return (
-            <div className="text-lg font-bold text-sky-900 dark:text-slate-300">
-                Loading files...
-            </div>
-        );
-    }
 
     return (
         <div>
