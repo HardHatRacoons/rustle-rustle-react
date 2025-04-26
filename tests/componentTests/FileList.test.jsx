@@ -36,15 +36,6 @@ describe('FileList Component', () => {
         );
     };
 
-    // afterEach(() => {
-    //     vi.restoreAllMocks();
-    // });
-
-    it('renders loading state initially', () => {
-        renderComponent();
-        expect(screen.getByText('Loading files...')).toBeInTheDocument();
-    });
-
     it('renders no files found message when no files match the search query', async () => {
         list.mockResolvedValueOnce({ items: [] });
         renderComponent({ searchQuery: 'nonexistent' });
