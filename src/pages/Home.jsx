@@ -14,6 +14,15 @@ import FileList from '../components/FileList';
 import DeleteConfirmationModal from '../components/modals/DeleteConfirmationModal';
 import UploadModal from '../components/modals/UploadModal';
 
+/*
+* The home page of the application, displaying a gallery of files.
+* 
+* It includes a search bar, an upload button, and a refresh button.
+* Users can view, search, and delete files. 
+*
+* @component
+* @returns {React.ReactElement} the rendered home page.
+*/
 function Home() {
     const themeController = useOutletContext();
 
@@ -25,11 +34,27 @@ function Home() {
 
     const userAttributes = useUser();
 
+    /*
+    * Handles the closing of the upload modal and triggers a refresh of the file list.
+    *
+    * @function
+    * @returns {void}
+    */
     const handleCloseUploadModal = () => {
         setIsUploadModalOpen(false);
         setRefreshKey((prev) => prev + 1); // Incrementing key triggers re-render
     };
 
+    /*
+    * Handles the deletion of a file.
+    *
+    * Constructs the file path based on the selected file and user attributes.
+    * Iterates through the paths and attempts to remove each file using Amplify's remove function.
+    * Triggers a refresh of the file list and closes the delete modal.
+    *   
+    * @function
+    * @returns {void}
+    */
     const handleDeleteFile = async () => {
         // Construct the file path
         const paths = [
