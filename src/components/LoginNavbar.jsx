@@ -16,12 +16,12 @@ function LoginNavbar({ userAttributes, themeController }) {
     const initialValue = localStorage.getItem('theme') === 'light';
     const [theme, setTheme] = themeController;
 
-/*
- * function called on theme toggle event.
- *
- * @function
- * @param {boolean} value the value of the toggle
- */
+    /*
+     * function called on theme toggle event.
+     *
+     * @function
+     * @param {boolean} value the value of the toggle
+     */
     const onChange = (value) => {
         setTheme(value ? 'light' : 'dark');
         console.log(theme);

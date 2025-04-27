@@ -69,11 +69,11 @@ function MetricView() {
     };
 
     /*
-         * Calls the grapher function with the right graphing options to generate graphs
-         *
-         * @function
-         * @param {number} key The key of the clicked card
-         */
+     * Calls the grapher function with the right graphing options to generate graphs
+     *
+     * @function
+     * @param {number} key The key of the clicked card
+     */
     const onPin = (key) => {
         let set = { ...pinned };
         if (!set[key]) {
@@ -86,12 +86,12 @@ function MetricView() {
         localStorage.setItem('pinned', JSON.stringify(set));
     };
 
-/*
- * Generates the order of the graph cards.
- *
- * @function
- * @returns {Array} the display order of the graph cards.
- */
+    /*
+     * Generates the order of the graph cards.
+     *
+     * @function
+     * @returns {Array} the display order of the graph cards.
+     */
     const grid = () => {
         let ordered = [];
         let map = {};

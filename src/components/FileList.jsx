@@ -3,7 +3,6 @@ import { FaTrashAlt } from 'react-icons/fa';
 import { list, getProperties, getUrl } from 'aws-amplify/storage';
 import { useNavigate } from 'react-router';
 
-
 /*
  * Displays a searchable and interactive list of uploaded files for the current user.
  *
@@ -52,14 +51,14 @@ function FileList({
         const filepath = `${folder}/${userAttributes.sub}/`;
 
         /*
-        * Fetches files from AWS Amplify Storage and updates the state with file metadata.
-        * The function retrieves the file name from metadata and the first page of the PDF as a PNG image.
-        * It also caches the file data in localStorage for improved performance.
-        * 
-        * @function
-        * @returns {Promise<void>} A promise that resolves when the file data is fetched and state is updated.
-        * @throws {Error} If there is an error while fetching the file list or metadata.      
-        * */
+         * Fetches files from AWS Amplify Storage and updates the state with file metadata.
+         * The function retrieves the file name from metadata and the first page of the PDF as a PNG image.
+         * It also caches the file data in localStorage for improved performance.
+         *
+         * @function
+         * @returns {Promise<void>} A promise that resolves when the file data is fetched and state is updated.
+         * @throws {Error} If there is an error while fetching the file list or metadata.
+         * */
         const fetchFiles = async () => {
             // get the file name
             try {
@@ -125,11 +124,11 @@ function FileList({
     }, [userAttributes]); // Ensure effect runs only when userAttributes is available
 
     /*
-    * Filters and sorts the files based on the search query.
-    * The filtered files are then sorted alphabetically by their names.
-    * @function 
-    * @returns {Array} An array of filtered and sorted file entries.
-    */
+     * Filters and sorts the files based on the search query.
+     * The filtered files are then sorted alphabetically by their names.
+     * @function
+     * @returns {Array} An array of filtered and sorted file entries.
+     */
     const filteredFiles = Object.entries(files)
         .filter(
             ([fileId, file]) =>

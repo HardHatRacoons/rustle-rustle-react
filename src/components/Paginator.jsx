@@ -14,22 +14,22 @@ import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
 function Paginator({ currPage, maxPages, onChange }) {
     const [page, setPage] = useState(currPage);
 
-/*
- * The callback for next page event. Does not allow overflowing.
- *
- * @function
- */
+    /*
+     * The callback for next page event. Does not allow overflowing.
+     *
+     * @function
+     */
     const goToNextPage = () => {
         const p = parseInt(page);
         if (!isNaN(p) && p < maxPages) setPage(p + 1);
     };
 
-/*
- * The callback for the previous page event. Does not allow underflowing.
- *
- * @component
- * @returns {React.ReactElement} the rendered pdf view.
- */
+    /*
+     * The callback for the previous page event. Does not allow underflowing.
+     *
+     * @component
+     * @returns {React.ReactElement} the rendered pdf view.
+     */
     const goToPreviousPage = () => {
         const p = parseInt(page);
         if (!isNaN(p) && p > 1) setPage(p - 1);

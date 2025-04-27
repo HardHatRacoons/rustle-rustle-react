@@ -42,11 +42,11 @@ function FileLayout() {
     useEffect(() => {
         if (!userAttributes) return;
 
-/*
- * Retrieves file data and makes links to the correct file parts from aws
- *
- * @function
- */
+        /*
+         * Retrieves file data and makes links to the correct file parts from aws
+         *
+         * @function
+         */
         const getFileFromAWS = async () => {
             let pdf = {
                 path: {
@@ -120,12 +120,12 @@ function FileLayout() {
         getFileFromAWS();
     }, [userAttributes, id]);
 
-/*
- * makes navigation to the correct file part
- *
- * @function
- * @param {number} num the tab index that was clicked.
- */
+    /*
+     * makes navigation to the correct file part
+     *
+     * @function
+     * @param {number} num the tab index that was clicked.
+     */
     const change = (num) => {
         navigate(`/file/${id}/${tabs[num]}`);
     };

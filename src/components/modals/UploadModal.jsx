@@ -40,7 +40,7 @@ const convertPdfToImage = async (file) => {
 };
 
 /*
- * A modal component for uploading PDF files, converting the first page to an image, uploading both to S3, 
+ * A modal component for uploading PDF files, converting the first page to an image, uploading both to S3,
  * and sending a file processing request to an API. The file can then be clicked to navigate to its viewer.
  *
  * This component uses AWS Amplify's FileUploader for resumable uploads. It also hashes the uploaded file's content
@@ -71,10 +71,10 @@ function UploadModal({ userAttributes, isOpen, onClose }) {
     const fileMappings = useRef(new Map());
     const navigate = useNavigate();
     /*
-    * Processes the uploaded file by converting it to an image, hashing the file name, and uploading it to S3.
-    *
-    * @function
-    */
+     * Processes the uploaded file by converting it to an image, hashing the file name, and uploading it to S3.
+     *
+     * @function
+     */
     function processFile(userAttributes) {
         return ({ file }) => {
             const fileExtension = file.name.split('.').pop();

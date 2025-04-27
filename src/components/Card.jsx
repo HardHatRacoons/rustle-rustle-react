@@ -13,7 +13,6 @@ import { TbPinFilled, TbPin } from 'react-icons/tb';
  * @returns {React.ReactElement} rendered card component.
  */
 function Card({ children, idx, pin, onChange }) {
-
     /*
      * function called on pin event.
      *

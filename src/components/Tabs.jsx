@@ -20,11 +20,11 @@ function Tabs({ onChange, tabs, activeTab, setActiveTab, className }) {
         '',
     );
 
-/*
- * The callback for a tab click event.
- *
- * @function
- */
+    /*
+     * The callback for a tab click event.
+     *
+     * @function
+     */
     const change = (num) => {
         setActiveTab(num);
         onChange(num);

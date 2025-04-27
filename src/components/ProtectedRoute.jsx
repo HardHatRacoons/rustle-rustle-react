@@ -3,12 +3,12 @@ import { Navigate } from 'react-router';
 import { getCurrentUser } from 'aws-amplify/auth';
 
 /*
-* Renders a protected route that checks if the user is authenticated.
-*
-* @component
-* @param {React.ReactNode} children - The child components to render if authenticated.
-* @returns {React.ReactNode} The rendered protected route or a redirect to the login page.
-*/
+ * Renders a protected route that checks if the user is authenticated.
+ *
+ * @component
+ * @param {React.ReactNode} children - The child components to render if authenticated.
+ * @returns {React.ReactNode} The rendered protected route or a redirect to the login page.
+ */
 const ProtectedRoute = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(null);
 
