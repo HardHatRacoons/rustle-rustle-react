@@ -2,6 +2,12 @@ import { useState, useEffect } from 'react';
 import { Authenticator } from '@aws-amplify/ui-react';
 import { Outlet } from 'react-router';
 
+/*
+ * The root layout through which all other views must pass and render. Controls theme.
+ *
+ * @component
+ * @returns {React.ReactElement} the whole app view render.
+ */
 function RootLayout() {
     const initialTheme =
         localStorage.getItem('theme') ||
@@ -11,6 +17,7 @@ function RootLayout() {
             : 'light');
     const [theme, setTheme] = useState(initialTheme);
 
+    //update local storage on theme change
     useEffect(() => {
         localStorage.setItem('theme', theme);
     }, [theme]);

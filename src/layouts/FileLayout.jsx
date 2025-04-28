@@ -6,6 +6,12 @@ import { useUser } from '../components/UserContext';
 
 import Tabs from '../components/Tabs';
 
+/*
+ * Renders a file layout that holds one of three subviews for a file.
+ *
+ * @component
+ * @returns {React.ReactElement} the rendered file layout.
+ */
 function FileLayout() {
     const tabs = ['blueprint', 'table', 'metrics'];
 
@@ -36,6 +42,11 @@ function FileLayout() {
     useEffect(() => {
         if (!userAttributes) return;
 
+        /*
+         * Retrieves file data and makes links to the correct file parts from aws
+         *
+         * @function
+         */
         const getFileFromAWS = async () => {
             let pdf = {
                 path: {
@@ -109,6 +120,12 @@ function FileLayout() {
         getFileFromAWS();
     }, [userAttributes, id]);
 
+    /*
+     * makes navigation to the correct file part
+     *
+     * @function
+     * @param {number} num the tab index that was clicked.
+     */
     const change = (num) => {
         navigate(`/file/${id}/${tabs[num]}`);
     };

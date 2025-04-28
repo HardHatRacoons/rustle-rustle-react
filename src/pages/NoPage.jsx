@@ -1,5 +1,11 @@
 import { useNavigate } from 'react-router';
 
+/*
+ * The incorrect route page.
+ *
+ * @component
+ * @returns {React.ReactElement} the rendered incorrect route page.
+ */
 function NoPage() {
     const navigate = useNavigate();
 

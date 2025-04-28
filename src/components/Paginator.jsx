@@ -1,14 +1,35 @@
 import { useState, useEffect } from 'react';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
 
+/*
+ * Renders a paginator with the given starting page, max pages, and callback on change.
+ *
+ * @component
+ * @param {Object} props
+ * @param {number} props.currPage The current page.
+ * @param {number} props.maxPages The maximum number of pages.
+ * @param {(i: number) => void} props.onChange The function to call on successful page change.
+ * @returns {React.ReactElement} rendered paginator.
+ */
 function Paginator({ currPage, maxPages, onChange }) {
     const [page, setPage] = useState(currPage);
 
+    /*
+     * The callback for next page event. Does not allow overflowing.
+     *
+     * @function
+     */
     const goToNextPage = () => {
         const p = parseInt(page);
         if (!isNaN(p) && p < maxPages) setPage(p + 1);
     };
 
+    /*
+     * The callback for the previous page event. Does not allow underflowing.
+     *
+     * @component
+     * @returns {React.ReactElement} the rendered pdf view.
+     */
     const goToPreviousPage = () => {
         const p = parseInt(page);
         if (!isNaN(p) && p > 1) setPage(p - 1);

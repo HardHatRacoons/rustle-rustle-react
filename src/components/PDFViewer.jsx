@@ -4,6 +4,16 @@ import * as pdfjs from 'pdfjs-dist/build/pdf';
 
 import Paginator from './Paginator';
 
+/*
+ * Renders a canvas containing the given pdf with pagination.
+ *
+ * @component
+ * @param {Object} props
+ * @param {number} props.pdfURL The url of the pdf to be rendered.
+ * @param {number} props.pageNum The page number to be displayed intially.
+ * @param {(i: number) => void} props.setPageNum The setter function to change the page number.
+ * @returns {React.ReactElement} rendered pdf.
+ */
 function PDFViewer({ pdfURL, pageNum, setPageNum }) {
     const containerRef = useRef(null);
 
@@ -12,7 +22,6 @@ function PDFViewer({ pdfURL, pageNum, setPageNum }) {
     const isMounted = useRef(false);
 
     const [pdfDocument, setPdfDocument] = useState(null);
-    //const [anno, setAnno] = useState([]);
     const anno = useRef([]);
 
     pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -20,6 +29,13 @@ function PDFViewer({ pdfURL, pageNum, setPageNum }) {
         import.meta.url,
     ).toString();
 
+    /*
+     * calculates the correct scale of the page to fit the canvas
+     *
+     * @function
+     * @param {Object} page The page of the document find the correct render scale of.
+     * @returns the scale to use.
+     */
     const calculateScale = (page) => {
         //must happen after containerRef is loaded so checking is irrelevant
         const containerRect = containerRef.current.getBoundingClientRect();
@@ -32,43 +48,39 @@ function PDFViewer({ pdfURL, pageNum, setPageNum }) {
         let scaleWidth = containerWidth / viewport.width;
         let scaleHeight = containerHeight / viewport.height;
 
-        //console.log(containerHeight)
-
         return Math.min(scaleWidth, scaleHeight);
     };
 
+    /*
+     * Calculates if a user is mousing over an annotation.
+     *
+     * @function
+     * @param {number} mouseX x value position of the mouse.
+     * @param {number} mouseY y value position of the mouse.
+     */
     const calculateCollision = (mouseX, mouseY) => {
-        //         console.log(mouseX)
-        //         console.log(mouseY)
-        //         console.log(anno)
         for (const element of anno.current) {
-            //             if (element.subtype == 'Square') {
-            //                 if (
-            //                     mouseX >= element.rect[0] &&
-            //                     mouseX <= element.rect[0] + element.rect[2] &&
-            //                     mouseY >= element.rect[1] &&
-            //                     mouseY <= element.rect[1] + element.rect[3]
-            //                 ) {
-            //                 }
-            //             }
+            // feature was removed from feature list so function is unfilled
         }
     };
 
+    /*
+     * Renders the pdf page.
+     *
+     * @function
+     * @param {number} pageNum The page number of the page to be rendered.
+     */
     const renderPDF = async (pageNum) => {
         if (!pdfURL) return;
         try {
-            //console.log(pdfjs.getDocument(""));
             const pdf = await pdfjs.getDocument(pdfURL).promise;
             setPdfDocument(pdf);
 
             const page = await pdf.getPage(pageNum);
-            //console.log(page)
 
             const canvasContainer = containerRef.current;
-            //some weird issue when toggling between pages sometime -> look into later?
-            //             if(canvasContainer === null)
-            //                 return;
 
+            //clear canvas container of previous content
             canvasContainer.innerHTML = '';
 
             const canvas = document.createElement('canvas');
@@ -85,28 +97,18 @@ function PDFViewer({ pdfURL, pageNum, setPageNum }) {
 
             //annotation processing
             const trackMousePosition = (event) => {
-                const canvasRect = canvas.getBoundingClientRect(); // Get canvas position on the page
-                const mouseX = event.clientX - canvasRect.left; // Calculate mouse X relative to canvas
-                let mouseY = event.clientY - canvasRect.top; // Calculate mouse Y relative to canvas
-                //mouseY = canvasRect.bottom - mouseY; //this logic is wrongn
-
-                //console.log(mouseX);
-                //console.log(mouseY);
-                //console.log(scale)
+                const canvasRect = canvas.getBoundingClientRect(); //get canvas position on the page
+                const mouseX = event.clientX - canvasRect.left;
+                let mouseY = event.clientY - canvasRect.top; //logic is messed up due to pdf diffs
 
                 calculateCollision(mouseX / scale, mouseY / scale);
             };
             canvas.addEventListener('mousemove', trackMousePosition);
 
             page.getAnnotations().then((annotations) => {
-                //let newAnnos = [];
                 for (const element of annotations) {
-                    // if (element.annotationType == 5) {
-                    //newAnnos.push(element);
-                    anno.current.push(element);
-                    //}
+                    //parse annotations here
                 }
-                //setAnno(newAnnos);
             });
 
             await page.render({
@@ -134,11 +136,11 @@ function PDFViewer({ pdfURL, pageNum, setPageNum }) {
                 } else {
                     renderPDF(pageNum);
                 }
-            }, 500); // debounce
+            }, 500); //debounce
         };
 
         if (observerRef.current) {
-            // Disconnect the old observer first
+            //disconnect the old observer
             observerRef.current.disconnect();
         }
 
@@ -147,7 +149,7 @@ function PDFViewer({ pdfURL, pageNum, setPageNum }) {
 
         resizeObserver.observe(document.body);
 
-        // Clean up the observer when the component is unmounted
+        //clean up the observer on unmount
         return () => {
             resizeObserver.disconnect();
         };

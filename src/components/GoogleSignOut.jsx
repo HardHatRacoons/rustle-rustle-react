@@ -1,6 +1,12 @@
 import { signOut } from 'aws-amplify/auth';
 import { IoMdExit } from 'react-icons/io';
 
+/*
+ * Renders a button that allows for signing out of Google OAuth.
+ *
+ * @component
+ * @returns rendered google signout button.
+ */
 export default function LogoutButton() {
     return (
         <button

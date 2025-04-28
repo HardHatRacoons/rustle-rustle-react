@@ -3,6 +3,34 @@ import { FaTrashAlt } from 'react-icons/fa';
 import { list, getProperties, getUrl } from 'aws-amplify/storage';
 import { useNavigate } from 'react-router';
 
+/*
+ * Displays a searchable and interactive list of uploaded files for the current user.
+ *
+ * Fetches files from AWS Amplify Storage based on the authenticated user's ID and the provided folder.
+ * For each file, it displays a card with a thumbnail (first page of the PDF rendered as a PNG),
+ * the user-defined name (from metadata), and a delete button. Files can be clicked to navigate to a detailed view.
+ *
+ * If no matching files are found, a message is shown. File data is cached in localStorage for improved performance.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.userAttributes - AWS Cognito user attributes, used to determine the file path.
+ * @param {string} props.folder - The folder name in which to search for files (e.g., 'unannotated').
+ * @param {string} props.searchQuery - The current text used to filter the displayed files by name.
+ * @param {(file: { fileId: string, fileName: string, folder: string }) => void} props.setSelectedFile - Callback to set the selected file for deletion.
+ * @param {(isOpen: boolean) => void} props.setIsDeleteModalOpen - Callback to control visibility of the delete confirmation modal.
+ *
+ * @returns {React.ReactElement} A responsive grid of file cards, each with an image preview, name, and delete option.
+ *
+ * @example
+ * <FileList
+ *   userAttributes={user}
+ *   folder="unannotated"
+ *   searchQuery={search}
+ *   setSelectedFile={setSelectedFile}
+ *   setIsDeleteModalOpen={setIsDeleteModalOpen}
+ * />
+ */
 function FileList({
     userAttributes,
     folder,
@@ -22,6 +50,15 @@ function FileList({
 
         const filepath = `${folder}/${userAttributes.sub}/`;
 
+        /*
+         * Fetches files from AWS Amplify Storage and updates the state with file metadata.
+         * The function retrieves the file name from metadata and the first page of the PDF as a PNG image.
+         * It also caches the file data in localStorage for improved performance.
+         *
+         * @function
+         * @returns {Promise<void>} A promise that resolves when the file data is fetched and state is updated.
+         * @throws {Error} If there is an error while fetching the file list or metadata.
+         * */
         const fetchFiles = async () => {
             // get the file name
             try {
@@ -86,6 +123,12 @@ function FileList({
         fetchFiles();
     }, [userAttributes]); // Ensure effect runs only when userAttributes is available
 
+    /*
+     * Filters and sorts the files based on the search query.
+     * The filtered files are then sorted alphabetically by their names.
+     * @function
+     * @returns {Array} An array of filtered and sorted file entries.
+     */
     const filteredFiles = Object.entries(files)
         .filter(
             ([fileId, file]) =>

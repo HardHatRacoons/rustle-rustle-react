@@ -3,6 +3,13 @@ import { fetchUserAttributes } from 'aws-amplify/auth'; // Adjust import path
 
 const UserContext = createContext(null);
 
+/*
+ * The UserProvider component fetches AWS Cognito user attributes and provides them to its children.
+ *
+ * @component
+ * @param {React.ReactNode} children - The child components to render within the provider.
+ * @returns {React.ReactElement} The rendered UserProvider component.
+ */
 export function UserProvider({ children }) {
     const [userAttributes, setUserAttributes] = useState(null);
 

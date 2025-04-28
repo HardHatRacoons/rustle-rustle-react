@@ -4,6 +4,33 @@ import { BsFiletypePdf, BsFiletypeCsv } from 'react-icons/bs';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { ImSpinner2 } from 'react-icons/im';
 
+/*
+ * A collapsible control panel for blueprint view downloads.
+ *
+ * This component provides download links for various PDF and CSV files related to a blueprint:
+ * - Annotated PDF
+ * - Annotated CSV (data)
+ * - Original unannotated PDF
+ *
+ * On mobile, the panel is hidden by default and can be toggled via a button. On larger screens,
+ * the panel is always visible.
+ *
+ * If the annotated PDF is not yet available, a spinner with a processing message is shown.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.pdfInfo - Contains URL paths to various versions of the uploaded blueprint.
+ * @param {Object} props.pdfInfo.url - An object containing downloadable file URLs.
+ * @param {Object} props.pdfInfo.url.annotated - Annotated versions of the file.
+ * @param {string} props.pdfInfo.url.annotated.pdf - URL to the annotated PDF version.
+ * @param {string} props.pdfInfo.url.annotated.csv - URL to the associated CSV data.
+ * @param {string} props.pdfInfo.url.unannotated.pdf - URL to the original unannotated PDF.
+ *
+ * @returns {React.ReactElement} A control panel with file download buttons and dynamic rendering based on availability.
+ *
+ * @example
+ * <BPViewControlPanel pdfInfo={pdfInfo} />
+ */
 function BPViewControlPanel({ pdfInfo }) {
     const [isOpen, setIsOpen] = useState(false);
 

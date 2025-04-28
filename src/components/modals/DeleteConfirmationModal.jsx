@@ -1,3 +1,17 @@
+/*
+ * A modal component for confirming file deletion.
+ *
+ * This modal prompts the user to confirm or cancel deletion of a file.
+ * It appears centered on the screen with a darkened backdrop when `isOpen` is `true`.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {boolean} props.isOpen - Controls whether the modal is visible.
+ * @param {() => void} props.onClose - Function to call when the user cancels the deletion.
+ * @param {() => void} props.onConfirm - Function to call when the user confirms the deletion.
+ * @param {string} props.fileName - Name of the file being deleted, displayed in the modal message.
+ * @returns {React.ReactElement|null} A React modal component or `null` if not open.
+ */
 function DeleteConfirmationModal({ isOpen, onClose, onConfirm, fileName }) {
     if (!isOpen) return null;
     return (
